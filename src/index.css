@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-brand-darker text-slate-100 font-sans overflow-x-hidden antialiased;
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar layout */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-brand-darker;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brand-slateAccent rounded-full border-2 border-brand-darker hover:bg-slate-700 transition-colors;
+  }
+}
+
+/* Glassmorphism Styles */
+.glass-card {
+  background: rgba(30, 41, 59, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-nav {
+  background: rgba(2, 6, 23, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.glass-panel {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Input Fields styling */
+.glass-input {
+  @apply w-full bg-brand-slateAccent/40 border border-brand-slateAccent text-white rounded-md px-4 py-2.5 text-sm outline-none transition-all placeholder:text-slate-500 focus:border-brand-primary/50 focus:bg-brand-slateAccent/60 focus:ring-1 focus:ring-brand-primary/30;
+}
+
+/* Text glow */
+.text-glow {
+  text-shadow: 0 0 20px rgba(24, 183, 245, 0.25);
+}
+
+/* Custom interactive grid backgrounds */
+.bg-grid-glow {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
