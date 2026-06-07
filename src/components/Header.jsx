@@ -46,33 +46,11 @@ export default function Header() {
           
           {/* Logo Left */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <svg
-              width="36"
-              height="36"
-              viewBox="0 0 100 100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="transform group-hover:rotate-12 transition-transform duration-300"
-            >
-              <polygon
-                points="50,15 85,35 85,75 50,95 15,75 15,35"
-                stroke="rgba(255,255,255,0.15)"
-                strokeWidth="3"
-              />
-              <path
-                d="M32 68 L32 32 L50 56 L68 32 L68 68"
-                stroke="url(#header-logo-grad)"
-                strokeWidth="8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <defs>
-                <linearGradient id="header-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#18B7F5" />
-                  <stop offset="100%" stopColor="#2563EB" />
-                </linearGradient>
-              </defs>
-            </svg>
+            <img
+              src="/NEXTORA-LOGO.png"
+              alt="Nextora Logo"
+              className="w-9 h-9 object-contain transform group-hover:scale-105 transition-transform duration-300"
+            />
             <div className="flex flex-col">
               <span className="text-lg font-bold tracking-[0.2em] font-display text-white">NEXTORA</span>
               <span className="text-[8px] uppercase tracking-[0.25em] text-brand-primary font-medium">STUDIO</span>
