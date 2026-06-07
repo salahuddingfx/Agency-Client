@@ -18,6 +18,7 @@ export default function ClientPortal() {
   const [registerName, setRegisterName] = useState('');
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [registerCompany, setRegisterCompany] = useState('');
 
   const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'invoices' | 'tickets' | 'files'
@@ -376,14 +377,23 @@ export default function ClientPortal() {
 
                 <div>
                   <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Workspace Password</label>
-                  <input
-                    type="password"
-                    required
-                    value={registerPassword}
-                    onChange={(e) => setRegisterPassword(e.target.value)}
-                    placeholder="Min 6 characters"
-                    className="glass-input"
-                  />
+                  <div className="relative flex items-center">
+                    <input
+                      type={showRegisterPassword ? 'text' : 'password'}
+                      required
+                      value={registerPassword}
+                      onChange={(e) => setRegisterPassword(e.target.value)}
+                      placeholder="Min 6 characters"
+                      className="glass-input !pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                      className="absolute right-3 text-slate-400 hover:text-slate-200 transition-colors"
+                    >
+                      {showRegisterPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                  </div>
                 </div>
 
                 <div>
