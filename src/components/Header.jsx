@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowRight, User } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,11 +47,7 @@ export default function Header() {
           
           {/* Logo Left */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <img
-              src="/NEXTORA-LOGO.png"
-              alt="Nextora Logo"
-              className="w-9 h-9 object-contain transform group-hover:scale-105 transition-transform duration-300"
-            />
+            <Logo size={36} className="transform group-hover:scale-105 transition-transform duration-300" />
             <div className="flex flex-col">
               <span className="text-lg font-bold tracking-[0.2em] font-display text-white">NEXTORA</span>
               <span className="text-[8px] uppercase tracking-[0.25em] text-brand-primary font-medium">STUDIO</span>
