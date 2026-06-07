@@ -1,4 +1,158 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShieldAlert, User, FileText, CheckCircle2, AlertTriangle, FileUp, Send, MessageSquare, Download, LogOut, Plus, Clock, HelpCircle, X, Eye, EyeOff } from 'lucide-react';
+import SEO from '../components/SEO';
+import { clientPortalInitialData } from '../data/mockData';
 
+export default function ClientPortal() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'invoices' | 'tickets' | 'files'
+  const [portalState, setPortalState] = useState(clientPortalInitialData);
+  const [invoicePreview, setInvoicePreview] = useState(null);
+  const [showNewTicketModal, setShowNewTicketModal] = useState(false);
+  const [newTicket, setNewTicket] = useState({ subject: '', category: 'UI Bug', urgency: 'Low', message: '' });
+
+  // Handle Demo login bypass
+  const handleDemoLogin = () => {
+    setUsername('alex.rivera@apexretail.com');
+    setPassword('demopassword');
+    setIsLoggedIn(true);
+  };
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    if (username.trim() && password.trim()) {
+      setIsLoggedIn(true);
+    } else {
+      alert('Please fill out login credentials or use Demo Login.');
+    }
+  };
+
+  // Submit dynamic ticket in portal state
+  const handleCreateTicket = (e) => {
+    e.preventDefault();
+    if (!newTicket.subject.trim() || !newTicket.message.trim()) {
+      alert('Please fill ticket subject and message.');
+      return;
+    }
+
+    const created = {
+      id: `TCK-${Math.floor(1000 + Math.random() * 9000)}`,
+      subject: newTicket.subject,
+      category: newTicket.category,
+      urgency: newTicket.urgency,
+      status: 'Open',
+      messages: [
+        { sender: 'client', text: newTicket.message, time: 'Just Now' }
+      ]
+    };
+
+    setPortalState(prev => ({
+      ...prev,
+      supportTickets: [created, ...prev.supportTickets]
+    }));
+
+    setNewTicket({ subject: '', category: 'UI Bug', urgency: 'Low', message: '' });
+    setShowNewTicketModal(false);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="pt-24 pb-16 min-h-screen relative"
+    >
+      <SEO 
+        title="Client Management Portal" 
+        description="Access Nextora Studio's secure customer workspace to review project milestones, view invoices, download design files, and lodge support tickets." 
+      />
+
+      <div className="absolute top-[10%] left-[5%] w-[300px] h-[300px] bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[5%] w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* --- LOGIN SCREEN --- */}
+      {!isLoggedIn ? (
+        <section className="max-w-md mx-auto px-4 py-16 relative z-10">
+          <div className="glass-card p-8 rounded-xl border border-brand-slateAccent">
+            <div className="text-center mb-6">
+              <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="mx-auto mb-3">
+                <polygon points="50,15 85,35 85,75 50,95 15,75 15,35" stroke="rgba(255,255,255,0.15)" strokeWidth="3" />
+                <path d="M32 68 L32 32 L50 56 L68 32 L68 68" stroke="url(#portal-logo-grad)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+                <defs>
+                  <linearGradient id="portal-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#18B7F5" />
+                    <stop offset="100%" stopColor="#2563EB" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <h2 className="text-lg font-bold text-white font-display">Nextora Client Portal</h2>
+              <p className="text-xs text-slate-500 mt-1">Access your secure corporate sandbox environments</p>
+            </div>
+
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
+              <div>
+                <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Corporate Email</label>
+                <input
+                  type="email"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="name@company.com"
+                  className="glass-input"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Workspace Password</label>
+                <div className="relative flex items-center">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                    className="glass-input !pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 text-slate-400 hover:text-slate-200 transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-col gap-3">
+                <button
+                  type="submit"
+                  className="w-full py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all"
+                >
+                  Enter Workspace
+                </button>
+                
+                <div className="flex items-center justify-between text-[10px] text-slate-500 my-1">
+                  <span className="h-[1px] bg-brand-slateAccent w-full mr-2" />
+                  <span>OR</span>
+                  <span className="h-[1px] bg-brand-slateAccent w-full ml-2" />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleDemoLogin}
+                  className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-brand-slateAccent text-white text-xs font-bold rounded-md transition-all flex items-center justify-center space-x-1.5"
+                >
+                  <User size={12} className="text-brand-primary" />
+                  <span>Demo Access Portal</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+      ) : (
         /* --- PORTAL DASHBOARD SCREEN --- */
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
