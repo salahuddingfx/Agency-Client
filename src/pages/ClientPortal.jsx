@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, User, FileText, CheckCircle2, AlertTriangle, FileUp, Send, MessageSquare, Download, LogOut, Plus, Clock, HelpCircle, X, Eye, EyeOff } from 'lucide-react';
 import SEO from '../components/SEO';
+import { api } from '../api/api';
 
 export default function ClientPortal() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register' | 'forgot' | 'reset'
   const [isLoading, setIsLoading] = useState(false);
 
   // Login Form States
@@ -21,6 +22,12 @@ export default function ClientPortal() {
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [registerCompany, setRegisterCompany] = useState('');
 
+  // Forgot Password & Reset Form States
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [resetToken, setResetToken] = useState('');
+  const [resetPasswordVal, setResetPasswordVal] = useState('');
+  const [showResetPassword, setShowResetPassword] = useState(false);
+
   const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'invoices' | 'tickets' | 'files'
   const [portalState, setPortalState] = useState({
     user: { name: '', company: '', joinedDate: 'Joined recently', avatar: 'U' },
@@ -34,6 +41,7 @@ export default function ClientPortal() {
   const [newTicket, setNewTicket] = useState({ subject: '', category: 'UI Bug', urgency: 'Low', message: '' });
 
   const isLoggedIn = !!token;
+  const isRegistering = authMode === 'register';
 
   // Handle Demo login bypass
   const handleDemoLogin = () => {
@@ -45,19 +53,9 @@ export default function ClientPortal() {
   const fetchPortalData = async (authToken) => {
     try {
       setIsLoading(true);
-      const headers = { 'Authorization': `Bearer ${authToken}` };
-      
-      const [projRes, invRes, tckRes] = await Promise.all([
-        fetch('http://localhost:5000/api/v1/projects', { headers }),
-        fetch('http://localhost:5000/api/v1/invoices', { headers }),
-        fetch('http://localhost:5000/api/v1/tickets', { headers })
-      ]);
-
-      const [projData, invData, tckData] = await Promise.all([
-        projRes.json(),
-        invRes.json(),
-        tckRes.json()
-      ]);
+      const projData = await api.getProjects();
+      const invData = await api.getInvoices();
+      const tckData = await api.getTickets();
 
       const projects = projData.success ? projData.data : [];
       const invoices = invData.success ? invData.data : [];
@@ -136,12 +134,7 @@ export default function ClientPortal() {
     
     try {
       setIsLoading(true);
-      const res = await fetch('http://localhost:5000/api/v1/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: username, password })
-      });
-      const data = await res.json();
+      const data = await api.login(username, password);
       
       if (data.success) {
         localStorage.setItem('token', data.accessToken);
@@ -152,7 +145,7 @@ export default function ClientPortal() {
         alert(data.message || 'Login failed.');
       }
     } catch (err) {
-      alert('Network error connecting to auth server.');
+      alert(err.message || 'Login credentials incorrect.');
     } finally {
       setIsLoading(false);
     }
@@ -167,29 +160,72 @@ export default function ClientPortal() {
     
     try {
       setIsLoading(true);
-      const res = await fetch('http://localhost:5000/api/v1/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: registerName,
-          email: registerEmail,
-          password: registerPassword,
-          company: registerCompany
-        })
-      });
-      const data = await res.json();
+      const data = await api.register(
+        registerName,
+        registerEmail,
+        registerPassword,
+        registerCompany
+      );
       
       if (data.success) {
         localStorage.setItem('token', data.accessToken);
         localStorage.setItem('user', JSON.stringify(data.user));
         setToken(data.accessToken);
         setUser(data.user);
-        setIsRegistering(false);
+        setAuthMode('login');
       } else {
         alert(data.message || 'Registration failed.');
       }
     } catch (err) {
-      alert('Network error connecting to auth server.');
+      alert(err.message || 'Failed to create workspace.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPasswordSubmit = async (e) => {
+    e.preventDefault();
+    if (!forgotEmail.trim()) {
+      alert('Please enter your workspace email.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const data = await api.forgotPassword(forgotEmail);
+      if (data.success) {
+        alert('A password reset link containing a security token has been sent to your email.');
+        setAuthMode('reset');
+      } else {
+        alert(data.message || 'Failed to request reset.');
+      }
+    } catch (err) {
+      alert(err.message || 'Error occurred during password reset request.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResetPasswordSubmit = async (e) => {
+    e.preventDefault();
+    if (!resetToken.trim() || !resetPasswordVal.trim()) {
+      alert('Please provide all details.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const data = await api.resetPassword(resetToken, resetPasswordVal);
+      if (data.success) {
+        alert('Password updated successfully! Please login.');
+        setAuthMode('login');
+        setUsername(forgotEmail);
+        setPassword('');
+      } else {
+        alert(data.message || 'Reset failed.');
+      }
+    } catch (err) {
+      alert(err.message || 'Reset token expired or invalid.');
     } finally {
       setIsLoading(false);
     }
@@ -211,20 +247,12 @@ export default function ClientPortal() {
 
     try {
       setIsLoading(true);
-      const res = await fetch('http://localhost:5000/api/v1/tickets', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          subject: newTicket.subject,
-          category: newTicket.category,
-          urgency: newTicket.urgency,
-          message: newTicket.message
-        })
-      });
-      const data = await res.json();
+      const data = await api.createTicket(
+        newTicket.subject,
+        newTicket.category,
+        newTicket.urgency,
+        newTicket.message
+      );
 
       if (data.success) {
         setNewTicket({ subject: '', category: 'UI Bug', urgency: 'Low', message: '' });
@@ -234,7 +262,7 @@ export default function ClientPortal() {
         alert(data.message || 'Failed to submit ticket.');
       }
     } catch (err) {
-      alert('Network error submitting ticket.');
+      alert(err.message || 'Network error submitting ticket.');
     } finally {
       setIsLoading(false);
     }
@@ -256,7 +284,7 @@ export default function ClientPortal() {
       <div className="absolute top-[10%] left-[5%] w-[300px] h-[300px] bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[20%] right-[5%] w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* --- LOGIN / REGISTER SCREEN --- */}
+      {/* --- LOGIN / REGISTER / FORGOT / RESET SCREEN --- */}
       {!isLoggedIn ? (
         <section className="max-w-md mx-auto px-4 py-16 relative z-10">
           <div className="glass-card p-8 rounded-xl border border-brand-slateAccent">
@@ -272,14 +300,20 @@ export default function ClientPortal() {
                 </defs>
               </svg>
               <h2 className="text-lg font-bold text-white font-display">
-                {isRegistering ? 'Create Client Workspace' : 'Nextora Client Portal'}
+                {authMode === 'login' && 'Nextora Client Portal'}
+                {authMode === 'register' && 'Create Client Workspace'}
+                {authMode === 'forgot' && 'Reset Secure Workspace'}
+                {authMode === 'reset' && 'Create New Password'}
               </h2>
               <p className="text-xs text-slate-500 mt-1">
-                {isRegistering ? 'Sign up for secure project & billing dashboards' : 'Access your secure corporate sandbox environments'}
+                {authMode === 'login' && 'Access your secure corporate sandbox environments'}
+                {authMode === 'register' && 'Sign up for secure project & billing dashboards'}
+                {authMode === 'forgot' && 'Provide your email to receive a secure authorization link'}
+                {authMode === 'reset' && 'Provide your reset token and define a new secure password'}
               </p>
             </div>
 
-            {!isRegistering ? (
+            {authMode === 'login' && (
               /* --- LOGIN FORM --- */
               <form onSubmit={handleLoginSubmit} className="space-y-4">
                 <div>
@@ -294,7 +328,16 @@ export default function ClientPortal() {
                 </div>
 
                 <div>
-                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Workspace Password</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-[10px] uppercase font-semibold text-slate-400">Workspace Password</label>
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('forgot')}
+                      className="text-[10px] text-brand-primary hover:underline"
+                    >
+                      Forgot?
+                    </button>
+                  </div>
                   <div className="relative flex items-center">
                     <input
                       type={showPassword ? 'text' : 'password'}
@@ -325,7 +368,7 @@ export default function ClientPortal() {
                   <div className="text-center mt-2">
                     <button
                       type="button"
-                      onClick={() => setIsRegistering(true)}
+                      onClick={() => setAuthMode('register')}
                       className="text-xs text-brand-primary hover:underline"
                     >
                       Don't have an account? Sign Up
@@ -348,7 +391,9 @@ export default function ClientPortal() {
                   </button>
                 </div>
               </form>
-            ) : (
+            )}
+
+            {authMode === 'register' && (
               /* --- REGISTER FORM --- */
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
                 <div>
@@ -420,10 +465,113 @@ export default function ClientPortal() {
                   <div className="text-center mt-2">
                     <button
                       type="button"
-                      onClick={() => setIsRegistering(false)}
+                      onClick={() => setAuthMode('login')}
                       className="text-xs text-brand-primary hover:underline"
                     >
                       Already have an account? Sign In
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+
+            {authMode === 'forgot' && (
+              /* --- FORGOT PASSWORD FORM --- */
+              <form onSubmit={handleForgotPasswordSubmit} className="space-y-4">
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Corporate Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    placeholder="name@company.com"
+                    className="glass-input"
+                  />
+                </div>
+
+                <div className="pt-2 flex flex-col gap-3">
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all disabled:opacity-50"
+                  >
+                    {isLoading ? 'Sending Request...' : 'Send Reset Link'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode('reset')}
+                    className="w-full py-2 bg-white/5 border border-brand-slateAccent text-white text-xs font-semibold rounded-md hover:bg-white/10"
+                  >
+                    Already have a Reset Token?
+                  </button>
+
+                  <div className="text-center mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('login')}
+                      className="text-xs text-brand-primary hover:underline"
+                    >
+                      Back to Sign In
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+
+            {authMode === 'reset' && (
+              /* --- RESET PASSWORD FORM --- */
+              <form onSubmit={handleResetPasswordSubmit} className="space-y-4">
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Reset Authorization Token</label>
+                  <input
+                    type="text"
+                    required
+                    value={resetToken}
+                    onChange={(e) => setResetToken(e.target.value)}
+                    placeholder="Paste security token from email"
+                    className="glass-input text-center font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">New Workspace Password</label>
+                  <div className="relative flex items-center">
+                    <input
+                      type={showResetPassword ? 'text' : 'password'}
+                      required
+                      value={resetPasswordVal}
+                      onChange={(e) => setResetPasswordVal(e.target.value)}
+                      placeholder="Min 6 characters"
+                      className="glass-input !pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowResetPassword(!showResetPassword)}
+                      className="absolute right-3 text-slate-400 hover:text-slate-200 transition-colors"
+                    >
+                      {showResetPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col gap-3">
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all disabled:opacity-50"
+                  >
+                    {isLoading ? 'Resetting Password...' : 'Save New Password'}
+                  </button>
+
+                  <div className="text-center mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('login')}
+                      className="text-xs text-brand-primary hover:underline"
+                    >
+                      Back to Sign In
                     </button>
                   </div>
                 </div>
