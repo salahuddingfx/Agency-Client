@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -47,11 +48,7 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center space-x-3 mb-4">
-              <img
-                src="/NEXTORA-LOGO.png"
-                alt="Nextora Logo"
-                className="w-8 h-8 object-contain"
-              />
+              <Logo size={32} />
               <div className="flex flex-col">
                 <span className="text-base font-bold tracking-[0.2em] font-display text-white">NEXTORA</span>
                 <span className="text-[7px] uppercase tracking-[0.25em] text-brand-primary font-medium">STUDIO</span>
