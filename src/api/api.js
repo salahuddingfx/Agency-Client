@@ -43,16 +43,22 @@ export const api = {
       body: { name, email, password, company }
     }),
 
+  verifyOtp: (email, otpCode) => 
+    request('/auth/verify-otp', {
+      method: 'POST',
+      body: { email, otpCode }
+    }),
+
   forgotPassword: (email) => 
     request('/auth/forgot-password', {
       method: 'POST',
       body: { email }
     }),
 
-  resetPassword: (token, password) => 
-    request(`/auth/reset-password/user/${token}`, {
-      method: 'PUT',
-      body: { password }
+  resetPasswordOtp: (email, otpCode, password) => 
+    request('/auth/reset-password-otp', {
+      method: 'POST',
+      body: { email, otpCode, password }
     }),
 
   // Client Data API endpoints
