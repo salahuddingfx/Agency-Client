@@ -149,7 +149,13 @@ export default function ClientPortal() {
         alert(data.message || 'Login failed.');
       }
     } catch (err) {
-      alert(err.message || 'Login credentials incorrect.');
+      if (err.message && (err.message.toLowerCase().includes('verification') || err.message.toLowerCase().includes('pending'))) {
+        alert(err.message);
+        setVerifyEmail(username);
+        setAuthMode('verify');
+      } else {
+        alert(err.message || 'Login credentials incorrect.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -172,16 +178,62 @@ export default function ClientPortal() {
       );
       
       if (data.success) {
-        localStorage.setItem('token', data.accessToken);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        setToken(data.accessToken);
-        setUser(data.user);
-        setAuthMode('login');
+        alert(data.message || 'Registration pending verification. Verification code sent.');
+        setVerifyEmail(registerEmail);
+        setAuthMode('verify');
       } else {
         alert(data.message || 'Registration failed.');
       }
     } catch (err) {
       alert(err.message || 'Failed to create workspace.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOtpSubmit = async (e) => {
+    e.preventDefault();
+    if (!verifyEmail.trim() || !verifyOtpVal.trim()) {
+      alert('Please provide your email and the 6-digit verification code.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const data = await api.verifyOtp(verifyEmail, verifyOtpVal);
+      if (data.success) {
+        localStorage.setItem('token', data.accessToken);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        setToken(data.accessToken);
+        setUser(data.user);
+        setVerifyOtpVal('');
+        alert('Email verified successfully! Welcome to your workspace.');
+      } else {
+        alert(data.message || 'Verification failed.');
+      }
+    } catch (err) {
+      alert(err.message || 'Invalid or expired OTP.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!verifyEmail.trim()) {
+      alert('Please enter your verification email.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const data = await api.resendOtp(verifyEmail);
+      if (data.success) {
+        alert(data.message || 'A new verification code has been sent.');
+      } else {
+        alert(data.message || 'Failed to resend code.');
+      }
+    } catch (err) {
+      alert(err.message || 'Error resending verification code.');
     } finally {
       setIsLoading(false);
     }
@@ -198,7 +250,7 @@ export default function ClientPortal() {
       setIsLoading(true);
       const data = await api.forgotPassword(forgotEmail);
       if (data.success) {
-        alert('A password reset link containing a security token has been sent to your email.');
+        alert('A verification code has been sent to your email.');
         setAuthMode('reset');
       } else {
         alert(data.message || 'Failed to request reset.');
@@ -212,24 +264,26 @@ export default function ClientPortal() {
 
   const handleResetPasswordSubmit = async (e) => {
     e.preventDefault();
-    if (!resetToken.trim() || !resetPasswordVal.trim()) {
-      alert('Please provide all details.');
+    if (!forgotEmail.trim() || !resetOtpVal.trim() || !resetPasswordVal.trim()) {
+      alert('Please provide email, verification code, and new password.');
       return;
     }
 
     try {
       setIsLoading(true);
-      const data = await api.resetPassword(resetToken, resetPasswordVal);
+      const data = await api.resetPasswordOtp(forgotEmail, resetOtpVal, resetPasswordVal);
       if (data.success) {
         alert('Password updated successfully! Please login.');
         setAuthMode('login');
         setUsername(forgotEmail);
         setPassword('');
+        setResetOtpVal('');
+        setResetPasswordVal('');
       } else {
         alert(data.message || 'Reset failed.');
       }
     } catch (err) {
-      alert(err.message || 'Reset token expired or invalid.');
+      alert(err.message || 'Verification code expired or invalid.');
     } finally {
       setIsLoading(false);
     }
