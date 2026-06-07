@@ -1,62 +1,242 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, User, FileText, CheckCircle2, AlertTriangle, FileUp, Send, MessageSquare, Download, LogOut, Plus, Clock, HelpCircle, X, Eye, EyeOff } from 'lucide-react';
 import SEO from '../components/SEO';
-import { clientPortalInitialData } from '../data/mockData';
 
 export default function ClientPortal() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Login Form States
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  // Register Form States
+  const [registerName, setRegisterName] = useState('');
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [registerCompany, setRegisterCompany] = useState('');
+
   const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'invoices' | 'tickets' | 'files'
-  const [portalState, setPortalState] = useState(clientPortalInitialData);
+  const [portalState, setPortalState] = useState({
+    user: { name: '', company: '', joinedDate: 'Joined recently', avatar: 'U' },
+    projects: [],
+    invoices: [],
+    supportTickets: [],
+    files: []
+  });
   const [invoicePreview, setInvoicePreview] = useState(null);
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   const [newTicket, setNewTicket] = useState({ subject: '', category: 'UI Bug', urgency: 'Low', message: '' });
+
+  const isLoggedIn = !!token;
 
   // Handle Demo login bypass
   const handleDemoLogin = () => {
     setUsername('alex.rivera@apexretail.com');
     setPassword('demopassword');
-    setIsLoggedIn(true);
   };
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    if (username.trim() && password.trim()) {
-      setIsLoggedIn(true);
-    } else {
-      alert('Please fill out login credentials or use Demo Login.');
+  // Fetch all dynamic client data from backend
+  const fetchPortalData = async (authToken) => {
+    try {
+      setIsLoading(true);
+      const headers = { 'Authorization': `Bearer ${authToken}` };
+      
+      const [projRes, invRes, tckRes] = await Promise.all([
+        fetch('http://localhost:5000/api/v1/projects', { headers }),
+        fetch('http://localhost:5000/api/v1/invoices', { headers }),
+        fetch('http://localhost:5000/api/v1/tickets', { headers })
+      ]);
+
+      const [projData, invData, tckData] = await Promise.all([
+        projRes.json(),
+        invRes.json(),
+        tckRes.json()
+      ]);
+
+      const projects = projData.success ? projData.data : [];
+      const invoices = invData.success ? invData.data : [];
+      const supportTickets = tckData.success ? tckData.data : [];
+      
+      const files = projects.flatMap(p => (p.files || []).map(f => ({
+        category: f.category || 'Shared Asset',
+        name: f.name,
+        size: f.size || 'N/A',
+        date: f.date || 'N/A',
+        url: f.url
+      })));
+
+      const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+      const nameParts = (currentUser.name || 'Client').split(' ');
+      const avatarInitials = nameParts.map(part => part[0]).join('').substring(0, 2).toUpperCase();
+
+      setPortalState({
+        user: {
+          name: currentUser.name || 'Client Partner',
+          company: currentUser.company || 'Partner',
+          joinedDate: 'Joined recently',
+          avatar: avatarInitials || 'CP'
+        },
+        projects: projects.map(p => ({
+          id: p._id,
+          name: p.title,
+          description: p.description || '',
+          status: p.status || 'Planning',
+          completeness: p.progress || 0,
+          milestones: p.milestones || []
+        })),
+        invoices: invoices.map(i => ({
+          id: i.invoiceId,
+          project: i.project,
+          amount: i.amount,
+          date: i.date,
+          status: i.status,
+          pdfUrl: i.pdfUrl
+        })),
+        supportTickets: supportTickets.map(t => ({
+          id: t._id,
+          ticketId: t.ticketId,
+          subject: t.subject,
+          category: t.category || 'General',
+          urgency: t.urgency || 'Low',
+          status: t.status || 'Open',
+          messages: (t.messages || []).map(m => ({
+            sender: m.sender,
+            text: m.text,
+            time: new Date(m.time).toLocaleDateString() + ' ' + new Date(m.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }))
+        })),
+        files: files
+      });
+    } catch (err) {
+      console.error('Failed to retrieve client portal data:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Submit dynamic ticket in portal state
-  const handleCreateTicket = (e) => {
+  // Load client data on state changes or initial mounting
+  useEffect(() => {
+    if (token) {
+      fetchPortalData(token);
+    }
+  }, [token]);
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    if (!username.trim() || !password.trim()) {
+      alert('Please fill out login credentials.');
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      const res = await fetch('http://localhost:5000/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: username, password })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        localStorage.setItem('token', data.accessToken);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        setToken(data.accessToken);
+        setUser(data.user);
+      } else {
+        alert(data.message || 'Login failed.');
+      }
+    } catch (err) {
+      alert('Network error connecting to auth server.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    if (!registerName.trim() || !registerEmail.trim() || !registerPassword.trim() || !registerCompany.trim()) {
+      alert('Please fill out all registration fields.');
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      const res = await fetch('http://localhost:5000/api/v1/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: registerName,
+          email: registerEmail,
+          password: registerPassword,
+          company: registerCompany
+        })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        localStorage.setItem('token', data.accessToken);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        setToken(data.accessToken);
+        setUser(data.user);
+        setIsRegistering(false);
+      } else {
+        alert(data.message || 'Registration failed.');
+      }
+    } catch (err) {
+      alert('Network error connecting to auth server.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setToken('');
+    setUser(null);
+  };
+
+  const handleCreateTicket = async (e) => {
     e.preventDefault();
     if (!newTicket.subject.trim() || !newTicket.message.trim()) {
       alert('Please fill ticket subject and message.');
       return;
     }
 
-    const created = {
-      id: `TCK-${Math.floor(1000 + Math.random() * 9000)}`,
-      subject: newTicket.subject,
-      category: newTicket.category,
-      urgency: newTicket.urgency,
-      status: 'Open',
-      messages: [
-        { sender: 'client', text: newTicket.message, time: 'Just Now' }
-      ]
-    };
+    try {
+      setIsLoading(true);
+      const res = await fetch('http://localhost:5000/api/v1/tickets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          subject: newTicket.subject,
+          category: newTicket.category,
+          urgency: newTicket.urgency,
+          message: newTicket.message
+        })
+      });
+      const data = await res.json();
 
-    setPortalState(prev => ({
-      ...prev,
-      supportTickets: [created, ...prev.supportTickets]
-    }));
-
-    setNewTicket({ subject: '', category: 'UI Bug', urgency: 'Low', message: '' });
-    setShowNewTicketModal(false);
+      if (data.success) {
+        setNewTicket({ subject: '', category: 'UI Bug', urgency: 'Low', message: '' });
+        setShowNewTicketModal(false);
+        await fetchPortalData(token);
+      } else {
+        alert(data.message || 'Failed to submit ticket.');
+      }
+    } catch (err) {
+      alert('Network error submitting ticket.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -75,7 +255,7 @@ export default function ClientPortal() {
       <div className="absolute top-[10%] left-[5%] w-[300px] h-[300px] bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[20%] right-[5%] w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* --- LOGIN SCREEN --- */}
+      {/* --- LOGIN / REGISTER SCREEN --- */}
       {!isLoggedIn ? (
         <section className="max-w-md mx-auto px-4 py-16 relative z-10">
           <div className="glass-card p-8 rounded-xl border border-brand-slateAccent">
@@ -90,66 +270,155 @@ export default function ClientPortal() {
                   </linearGradient>
                 </defs>
               </svg>
-              <h2 className="text-lg font-bold text-white font-display">Nextora Client Portal</h2>
-              <p className="text-xs text-slate-500 mt-1">Access your secure corporate sandbox environments</p>
+              <h2 className="text-lg font-bold text-white font-display">
+                {isRegistering ? 'Create Client Workspace' : 'Nextora Client Portal'}
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                {isRegistering ? 'Sign up for secure project & billing dashboards' : 'Access your secure corporate sandbox environments'}
+              </p>
             </div>
 
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
-              <div>
-                <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Corporate Email</label>
-                <input
-                  type="email"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="name@company.com"
-                  className="glass-input"
-                />
-              </div>
-
-              <div>
-                <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Workspace Password</label>
-                <div className="relative flex items-center">
+            {!isRegistering ? (
+              /* --- LOGIN FORM --- */
+              <form onSubmit={handleLoginSubmit} className="space-y-4">
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Corporate Email</label>
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
-                    className="glass-input !pr-10"
+                    type="email"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="name@company.com"
+                    className="glass-input"
                   />
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Workspace Password</label>
+                  <div className="relative flex items-center">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                      className="glass-input !pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 text-slate-400 hover:text-slate-200 transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col gap-3">
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all disabled:opacity-50"
+                  >
+                    {isLoading ? 'Connecting...' : 'Enter Workspace'}
+                  </button>
+                  
+                  <div className="text-center mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsRegistering(true)}
+                      className="text-xs text-brand-primary hover:underline"
+                    >
+                      Don't have an account? Sign Up
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10px] text-slate-500 my-1">
+                    <span className="h-[1px] bg-brand-slateAccent w-full mr-2" />
+                    <span>OR</span>
+                    <span className="h-[1px] bg-brand-slateAccent w-full ml-2" />
+                  </div>
+
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 text-slate-400 hover:text-slate-200 transition-colors"
+                    onClick={handleDemoLogin}
+                    className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-brand-slateAccent text-white text-xs font-bold rounded-md transition-all flex items-center justify-center space-x-1.5"
                   >
-                    {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                    <User size={12} className="text-brand-primary" />
+                    <span>Autofill Demo Login</span>
                   </button>
                 </div>
-              </div>
-
-              <div className="pt-2 flex flex-col gap-3">
-                <button
-                  type="submit"
-                  className="w-full py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all"
-                >
-                  Enter Workspace
-                </button>
-                
-                <div className="flex items-center justify-between text-[10px] text-slate-500 my-1">
-                  <span className="h-[1px] bg-brand-slateAccent w-full mr-2" />
-                  <span>OR</span>
-                  <span className="h-[1px] bg-brand-slateAccent w-full ml-2" />
+              </form>
+            ) : (
+              /* --- REGISTER FORM --- */
+              <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={registerName}
+                    onChange={(e) => setRegisterName(e.target.value)}
+                    placeholder="Alex Rivera"
+                    className="glass-input"
+                  />
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleDemoLogin}
-                  className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-brand-slateAccent text-white text-xs font-bold rounded-md transition-all flex items-center justify-center space-x-1.5"
-                >
-                  <User size={12} className="text-brand-primary" />
-                  <span>Demo Access Portal</span>
-                </button>
-              </div>
-            </form>
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Corporate Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={registerEmail}
+                    onChange={(e) => setRegisterEmail(e.target.value)}
+                    placeholder="alex@company.com"
+                    className="glass-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Workspace Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={registerPassword}
+                    onChange={(e) => setRegisterPassword(e.target.value)}
+                    placeholder="Min 6 characters"
+                    className="glass-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Company Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={registerCompany}
+                    onChange={(e) => setRegisterCompany(e.target.value)}
+                    placeholder="Apex Retail Int."
+                    className="glass-input"
+                  />
+                </div>
+
+                <div className="pt-2 flex flex-col gap-3">
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all disabled:opacity-50"
+                  >
+                    {isLoading ? 'Creating Account...' : 'Register Workspace'}
+                  </button>
+
+                  <div className="text-center mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsRegistering(false)}
+                      className="text-xs text-brand-primary hover:underline"
+                    >
+                      Already have an account? Sign In
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
           </div>
         </section>
       ) : (
@@ -169,7 +438,7 @@ export default function ClientPortal() {
             </div>
 
             <button
-              onClick={() => setIsLoggedIn(false)}
+              onClick={handleLogout}
               className="flex items-center space-x-1 px-4 py-2 border border-red-500/20 text-red-400 hover:bg-red-500/5 text-xs font-semibold rounded-md transition-colors"
             >
               <LogOut size={12} />
@@ -208,43 +477,52 @@ export default function ClientPortal() {
               {/* --- ACTIVE PROJECTS TAB --- */}
               {activeTab === 'projects' && (
                 <div className="space-y-8">
-                  {portalState.projects.map((proj) => (
-                    <div key={proj.id} className="space-y-6">
-                      <div className="flex justify-between items-start border-b border-brand-slateAccent/40 pb-4">
-                        <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-brand-primary bg-brand-primary/5 px-2 py-0.5 rounded border border-brand-primary/10">
-                            {proj.status}
-                          </span>
-                          <h3 className="text-lg font-bold text-white font-display mt-2">{proj.name}</h3>
-                          <p className="text-xs text-slate-400 leading-relaxed mt-1">{proj.description}</p>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-2xl font-bold text-white tracking-tight">{proj.completeness}%</span>
-                          <span className="text-[10px] text-slate-500 block">Milestone Completion</span>
-                        </div>
-                      </div>
-
-                      {/* Milestones stepper board */}
-                      <div className="space-y-4">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">Milestone Roadmap Checklist</h4>
-                        <div className="relative border-l border-brand-slateAccent pl-5 space-y-6">
-                          {proj.milestones.map((m, i) => (
-                            <div key={i} className="relative">
-                              <span className={`absolute -left-[27px] top-0.5 w-3.5 h-3.5 rounded-full border-2 bg-brand-darker flex items-center justify-center ${
-                                m.status === 'completed' ? 'border-brand-primary bg-brand-primary/20' : 
-                                m.status === 'current' ? 'border-brand-accent animate-pulse' : 'border-slate-700'
-                              }`} />
-                              <div>
-                                <h5 className={`text-xs font-bold ${m.status === 'completed' ? 'text-slate-400' : 'text-white'}`}>{m.title}</h5>
-                                <p className="text-[10px] text-slate-500 mt-0.5">{m.date}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
+                  {portalState.projects.length === 0 ? (
+                    <div className="text-center py-16 text-slate-500 text-xs">
+                      No active projects bound to your account.
                     </div>
-                  ))}
+                  ) : (
+                    portalState.projects.map((proj) => (
+                      <div key={proj.id} className="space-y-6">
+                        <div className="flex justify-between items-start border-b border-brand-slateAccent/40 pb-4">
+                          <div>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-primary bg-brand-primary/5 px-2 py-0.5 rounded border border-brand-primary/10">
+                              {proj.status}
+                            </span>
+                            <h3 className="text-lg font-bold text-white font-display mt-2">{proj.name}</h3>
+                            <p className="text-xs text-slate-400 leading-relaxed mt-1">{proj.description}</p>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-2xl font-bold text-white tracking-tight">{proj.completeness}%</span>
+                            <span className="text-[10px] text-slate-500 block">Milestone Completion</span>
+                          </div>
+                        </div>
+
+                        {/* Milestones stepper board */}
+                        <div className="space-y-4">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">Milestone Roadmap Checklist</h4>
+                          {proj.milestones.length === 0 ? (
+                            <p className="text-xs text-slate-500">No milestones registered.</p>
+                          ) : (
+                            <div className="relative border-l border-brand-slateAccent pl-5 space-y-6">
+                              {proj.milestones.map((m, i) => (
+                                <div key={i} className="relative">
+                                  <span className={`absolute -left-[27px] top-0.5 w-3.5 h-3.5 rounded-full border-2 bg-brand-darker flex items-center justify-center ${
+                                    m.status === 'completed' ? 'border-brand-primary bg-brand-primary/20' : 
+                                    m.status === 'current' ? 'border-brand-accent animate-pulse' : 'border-slate-700'
+                                  }`} />
+                                  <div>
+                                    <h5 className={`text-xs font-bold ${m.status === 'completed' ? 'text-slate-400' : 'text-white'}`}>{m.title}</h5>
+                                    <p className="text-[10px] text-slate-500 mt-0.5">{m.date}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               )}
 
@@ -253,46 +531,52 @@ export default function ClientPortal() {
                 <div className="space-y-6">
                   <h3 className="text-base font-bold text-white font-display">Invoices & Financial Records</h3>
                   
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-brand-slateAccent/40 text-[10px] text-slate-500 uppercase tracking-widest">
-                          <th className="pb-3">Invoice ID</th>
-                          <th className="pb-3">Project / Sprint</th>
-                          <th className="pb-3">Amount</th>
-                          <th className="pb-3">Due Date</th>
-                          <th className="pb-3">Status</th>
-                          <th className="pb-3 text-right">Receipt</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-brand-slateAccent/20 text-xs">
-                        {portalState.invoices.map((inv) => (
-                          <tr key={inv.id} className="hover:bg-white/5 transition-colors">
-                            <td className="py-4 font-semibold text-white">{inv.id}</td>
-                            <td className="py-4 text-slate-400">{inv.project}</td>
-                            <td className="py-4 text-white font-medium">{inv.amount}</td>
-                            <td className="py-4 text-slate-400">{inv.date}</td>
-                            <td className="py-4">
-                              <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
-                                inv.status === 'Paid' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
-                              }`}>
-                                {inv.status}
-                              </span>
-                            </td>
-                            <td className="py-4 text-right">
-                              <button
-                                onClick={() => setInvoicePreview(inv)}
-                                className="inline-flex items-center space-x-1 text-brand-primary hover:text-white transition-colors"
-                              >
-                                <Download size={12} />
-                                <span>Preview</span>
-                              </button>
-                            </td>
+                  {portalState.invoices.length === 0 ? (
+                    <div className="text-center py-16 text-slate-500 text-xs">
+                      No invoices found for your account.
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-brand-slateAccent/40 text-[10px] text-slate-500 uppercase tracking-widest">
+                            <th className="pb-3">Invoice ID</th>
+                            <th className="pb-3">Project / Sprint</th>
+                            <th className="pb-3">Amount</th>
+                            <th className="pb-3">Due Date</th>
+                            <th className="pb-3">Status</th>
+                            <th className="pb-3 text-right">Receipt</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody className="divide-y divide-brand-slateAccent/20 text-xs">
+                          {portalState.invoices.map((inv) => (
+                            <tr key={inv.id} className="hover:bg-white/5 transition-colors">
+                              <td className="py-4 font-semibold text-white">{inv.id}</td>
+                              <td className="py-4 text-slate-400">{inv.project}</td>
+                              <td className="py-4 text-white font-medium">{inv.amount}</td>
+                              <td className="py-4 text-slate-400">{inv.date}</td>
+                              <td className="py-4">
+                                <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
+                                  inv.status === 'Paid' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
+                                }`}>
+                                  {inv.status}
+                                </span>
+                              </td>
+                              <td className="py-4 text-right">
+                                <button
+                                  onClick={() => setInvoicePreview(inv)}
+                                  className="inline-flex items-center space-x-1 text-brand-primary hover:text-white transition-colors"
+                                >
+                                  <Download size={12} />
+                                  <span>Preview</span>
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -310,43 +594,49 @@ export default function ClientPortal() {
                     </button>
                   </div>
 
-                  <div className="space-y-4">
-                    {portalState.supportTickets.map((tck) => (
-                      <div key={tck.id} className="p-4 bg-brand-slateAccent/20 border border-brand-slateAccent/40 rounded-lg">
-                        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-xs font-bold text-white font-display">{tck.subject}</span>
-                            <span className="text-[10px] text-slate-500">({tck.id})</span>
-                          </div>
-                          <div className="flex gap-2">
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
-                              tck.urgency === 'High' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-slate-700/50 text-slate-400'
-                            }`}>
-                              {tck.urgency} Urgency
-                            </span>
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
-                              tck.status === 'Resolved' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-brand-primary/10 text-brand-primary border border-brand-primary/20'
-                            }`}>
-                              {tck.status}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Message log feed */}
-                        <div className="space-y-3 bg-brand-darker/60 rounded border border-brand-slateAccent/30 p-3 mt-3">
-                          {tck.messages.map((msg, mIdx) => (
-                            <div key={mIdx} className="space-y-1">
-                              <div className="flex justify-between text-[9px] text-slate-500">
-                                <span className="font-semibold text-slate-300">{msg.sender === 'client' ? 'Alex Rivera (Client)' : 'Nextora Support'}</span>
-                                <span>{msg.time}</span>
-                              </div>
-                              <p className="text-xs text-slate-400 leading-relaxed">{msg.text}</p>
+                  {portalState.supportTickets.length === 0 ? (
+                    <div className="text-center py-16 text-slate-500 text-xs">
+                      No support tickets logged. Click 'New Ticket' to request support.
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {portalState.supportTickets.map((tck) => (
+                        <div key={tck.id} className="p-4 bg-brand-slateAccent/20 border border-brand-slateAccent/40 rounded-lg">
+                          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs font-bold text-white font-display">{tck.subject}</span>
+                              <span className="text-[10px] text-slate-500">({tck.ticketId})</span>
                             </div>
-                          ))}
+                            <div className="flex gap-2">
+                              <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
+                                tck.urgency === 'High' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-slate-700/50 text-slate-400'
+                              }`}>
+                                {tck.urgency} Urgency
+                              </span>
+                              <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
+                                tck.status === 'Resolved' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-brand-primary/10 text-brand-primary border border-brand-primary/20'
+                              }`}>
+                                {tck.status}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Message log feed */}
+                          <div className="space-y-3 bg-brand-darker/60 rounded border border-brand-slateAccent/30 p-3 mt-3">
+                            {tck.messages.map((msg, mIdx) => (
+                              <div key={mIdx} className="space-y-1">
+                                <div className="flex justify-between text-[9px] text-slate-500">
+                                  <span className="font-semibold text-slate-300">{msg.sender === 'client' ? `${portalState.user.name} (Client)` : 'Nextora Support'}</span>
+                                  <span>{msg.time}</span>
+                                </div>
+                                <p className="text-xs text-slate-400 leading-relaxed">{msg.text}</p>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -356,24 +646,30 @@ export default function ClientPortal() {
                   <h3 className="text-base font-bold text-white font-display">Shared File Vault</h3>
                   <p className="text-xs text-slate-500">Repository for wireframes, legal agreements, and scope lists.</p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {portalState.files.map((file, i) => (
-                      <div key={i} className="p-4 bg-brand-slateAccent/20 hover:bg-brand-slateAccent/30 border border-brand-slateAccent/40 rounded-lg flex items-center justify-between gap-4 transition-colors">
-                        <div>
-                          <span className="text-[10px] font-bold text-brand-primary uppercase tracking-wider block">{file.category}</span>
-                          <span className="text-xs font-semibold text-white mt-1 block leading-tight">{file.name}</span>
-                          <span className="text-[10px] text-slate-500 mt-1 block">{file.size} &bull; Uploaded {file.date}</span>
+                  {portalState.files.length === 0 ? (
+                    <div className="text-center py-16 text-slate-500 text-xs">
+                      No files found in shared vault.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {portalState.files.map((file, i) => (
+                        <div key={i} className="p-4 bg-brand-slateAccent/20 hover:bg-brand-slateAccent/30 border border-brand-slateAccent/40 rounded-lg flex items-center justify-between gap-4 transition-colors">
+                          <div>
+                            <span className="text-[10px] font-bold text-brand-primary uppercase tracking-wider block">{file.category}</span>
+                            <span className="text-xs font-semibold text-white mt-1 block leading-tight">{file.name}</span>
+                            <span className="text-[10px] text-slate-500 mt-1 block">{file.size} &bull; Uploaded {file.date}</span>
+                          </div>
+                          <button
+                            onClick={() => window.open(file.url, '_blank')}
+                            className="p-2 bg-brand-darker hover:bg-white/5 border border-brand-slateAccent text-slate-400 hover:text-white rounded-full transition-colors flex-shrink-0"
+                            title="Download File"
+                          >
+                            <Download size={14} />
+                          </button>
                         </div>
-                        <button
-                          onClick={() => alert(`Simulating file download: ${file.name}`)}
-                          className="p-2 bg-brand-darker hover:bg-white/5 border border-brand-slateAccent text-slate-400 hover:text-white rounded-full transition-colors flex-shrink-0"
-                          title="Download File"
-                        >
-                          <Download size={14} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -421,7 +717,7 @@ export default function ClientPortal() {
                 </div>
                 <div className="flex justify-between">
                   <span>BILL TO:</span>
-                  <span className="text-white">APEX RETAIL INT.</span>
+                  <span className="text-white">{portalState.user.company.toUpperCase()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>INVOICE NO:</span>
@@ -457,7 +753,7 @@ export default function ClientPortal() {
                   Close Receipt
                 </button>
                 <button
-                  onClick={() => alert('Receipt PDF downloaded successfully.')}
+                  onClick={() => invoicePreview.pdfUrl ? window.open(invoicePreview.pdfUrl, '_blank') : alert('Receipt PDF downloaded successfully.')}
                   className="w-1/2 py-2.5 bg-brand-primary text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all"
                 >
                   Download PDF
