@@ -360,14 +360,16 @@ export default function ClientPortal() {
               <h2 className="text-lg font-bold text-white font-display">
                 {authMode === 'login' && 'Nextora Client Portal'}
                 {authMode === 'register' && 'Create Client Workspace'}
+                {authMode === 'verify' && 'Verify Email OTP'}
                 {authMode === 'forgot' && 'Reset Secure Workspace'}
                 {authMode === 'reset' && 'Create New Password'}
               </h2>
               <p className="text-xs text-slate-500 mt-1">
                 {authMode === 'login' && 'Access your secure corporate sandbox environments'}
                 {authMode === 'register' && 'Sign up for secure project & billing dashboards'}
-                {authMode === 'forgot' && 'Provide your email to receive a secure authorization link'}
-                {authMode === 'reset' && 'Provide your reset token and define a new secure password'}
+                {authMode === 'verify' && 'Check your email for the 6-digit verification code'}
+                {authMode === 'forgot' && 'Provide your email to receive a secure authorization code'}
+                {authMode === 'reset' && 'Provide the code from your email and define a new secure password'}
               </p>
             </div>
 
@@ -533,6 +535,64 @@ export default function ClientPortal() {
               </form>
             )}
 
+            {authMode === 'verify' && (
+              /* --- OTP VERIFICATION FORM --- */
+              <form onSubmit={handleVerifyOtpSubmit} className="space-y-4">
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Verification Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={verifyEmail}
+                    onChange={(e) => setVerifyEmail(e.target.value)}
+                    placeholder="name@company.com"
+                    className="glass-input"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">6-Digit Verification Code</label>
+                  <input
+                    type="text"
+                    required
+                    maxLength={6}
+                    value={verifyOtpVal}
+                    onChange={(e) => setVerifyOtpVal(e.target.value)}
+                    placeholder="123456"
+                    className="glass-input text-center font-bold tracking-[0.5em] text-lg font-mono"
+                  />
+                </div>
+
+                <div className="pt-2 flex flex-col gap-3">
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all disabled:opacity-50"
+                  >
+                    {isLoading ? 'Verifying...' : 'Verify & Activate'}
+                  </button>
+
+                  <div className="flex justify-between items-center text-xs mt-2">
+                    <button
+                      type="button"
+                      onClick={handleResendOtp}
+                      disabled={isLoading}
+                      className="text-brand-primary hover:underline font-semibold"
+                    >
+                      Resend Code
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('login')}
+                      className="text-slate-400 hover:text-white"
+                    >
+                      Back to Sign In
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+
             {authMode === 'forgot' && (
               /* --- FORGOT PASSWORD FORM --- */
               <form onSubmit={handleForgotPasswordSubmit} className="space-y-4">
@@ -554,7 +614,7 @@ export default function ClientPortal() {
                     disabled={isLoading}
                     className="w-full py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all disabled:opacity-50"
                   >
-                    {isLoading ? 'Sending Request...' : 'Send Reset Link'}
+                    {isLoading ? 'Sending Request...' : 'Send Verification Code'}
                   </button>
 
                   <button
@@ -562,7 +622,7 @@ export default function ClientPortal() {
                     onClick={() => setAuthMode('reset')}
                     className="w-full py-2 bg-white/5 border border-brand-slateAccent text-white text-xs font-semibold rounded-md hover:bg-white/10"
                   >
-                    Already have a Reset Token?
+                    Already have a Reset Code?
                   </button>
 
                   <div className="text-center mt-2">
@@ -582,14 +642,27 @@ export default function ClientPortal() {
               /* --- RESET PASSWORD FORM --- */
               <form onSubmit={handleResetPasswordSubmit} className="space-y-4">
                 <div>
-                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Reset Authorization Token</label>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Workspace Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    placeholder="name@company.com"
+                    className="glass-input text-left"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">6-Digit Verification Code</label>
                   <input
                     type="text"
                     required
-                    value={resetToken}
-                    onChange={(e) => setResetToken(e.target.value)}
-                    placeholder="Paste security token from email"
-                    className="glass-input text-center font-mono"
+                    maxLength={6}
+                    value={resetOtpVal}
+                    onChange={(e) => setResetOtpVal(e.target.value)}
+                    placeholder="123456"
+                    className="glass-input text-center font-bold tracking-[0.5em] text-lg font-mono"
                   />
                 </div>
 
