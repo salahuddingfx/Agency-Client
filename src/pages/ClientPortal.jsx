@@ -7,7 +7,7 @@ import { api } from '../api/api';
 export default function ClientPortal() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register' | 'forgot' | 'reset'
+  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register' | 'verify' | 'forgot' | 'reset'
   const [isLoading, setIsLoading] = useState(false);
 
   // Login Form States
@@ -22,9 +22,13 @@ export default function ClientPortal() {
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [registerCompany, setRegisterCompany] = useState('');
 
+  // OTP Verification Form States
+  const [verifyOtpVal, setVerifyOtpVal] = useState('');
+  const [verifyEmail, setVerifyEmail] = useState('');
+
   // Forgot Password & Reset Form States
   const [forgotEmail, setForgotEmail] = useState('');
-  const [resetToken, setResetToken] = useState('');
+  const [resetOtpVal, setResetOtpVal] = useState('');
   const [resetPasswordVal, setResetPasswordVal] = useState('');
   const [showResetPassword, setShowResetPassword] = useState(false);
 
