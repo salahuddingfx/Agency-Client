@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Logo from './Logo';
 
 export default function Loader({ finishLoading }) {
   const [isMounted, setIsMounted] = useState(true);
@@ -30,14 +31,14 @@ export default function Loader({ finishLoading }) {
             <div className="absolute -inset-10 bg-brand-primary/10 rounded-full blur-3xl opacity-50" />
 
             {/* Custom logo fade-in & scale animation */}
-            <motion.img
-              src="/NEXTORA-LOGO.png"
-              alt="Nextora Logo"
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.5, ease: "easeOut" }}
-              className="w-20 h-20 mb-6 relative z-10 object-contain"
-            />
+              className="mb-6 relative z-10"
+            >
+              <Logo size={80} />
+            </motion.div>
 
             {/* Nextora brand and tagline */}
             <motion.h1
