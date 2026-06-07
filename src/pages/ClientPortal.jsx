@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, User, FileText, CheckCircle2, AlertTriangle, FileUp, Send, MessageSquare, Download, LogOut, Plus, Clock, HelpCircle, X, Eye, EyeOff } from 'lucide-react';
 import SEO from '../components/SEO';
 import { api } from '../api/api';
+import Logo from '../components/Logo';
 
 export default function ClientPortal() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -347,7 +348,7 @@ export default function ClientPortal() {
         <section className="max-w-md mx-auto px-4 py-16 relative z-10">
           <div className="glass-card p-8 rounded-xl border border-brand-slateAccent">
             <div className="text-center mb-6">
-              <img src="/NEXTORA-LOGO.png" alt="Nextora Logo" className="w-12 h-12 mx-auto mb-3 object-contain" />
+              <Logo size={48} className="mx-auto mb-3" />
               <h2 className="text-lg font-bold text-white font-display">
                 {authMode === 'login' && 'Nextora Client Portal'}
                 {authMode === 'register' && 'Create Client Workspace'}
