@@ -49,6 +49,12 @@ export const api = {
       body: { email, otpCode }
     }),
 
+  resendOtp: (email) => 
+    request('/auth/resend-otp', {
+      method: 'POST',
+      body: { email }
+    }),
+
   forgotPassword: (email) => 
     request('/auth/forgot-password', {
       method: 'POST',
