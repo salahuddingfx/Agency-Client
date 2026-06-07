@@ -32,12 +32,12 @@ export default function Loader({ finishLoading }) {
 
             {/* Custom logo fade-in & scale animation */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
               className="mb-6 relative z-10"
             >
-              <Logo size={80} />
+              <Logo size={80} animated={true} />
             </motion.div>
 
             {/* Nextora brand and tagline */}
