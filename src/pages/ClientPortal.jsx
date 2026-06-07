@@ -347,16 +347,7 @@ export default function ClientPortal() {
         <section className="max-w-md mx-auto px-4 py-16 relative z-10">
           <div className="glass-card p-8 rounded-xl border border-brand-slateAccent">
             <div className="text-center mb-6">
-              <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="mx-auto mb-3">
-                <polygon points="50,15 85,35 85,75 50,95 15,75 15,35" stroke="rgba(255,255,255,0.15)" strokeWidth="3" />
-                <path d="M32 68 L32 32 L50 56 L68 32 L68 68" stroke="url(#portal-logo-grad)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-                <defs>
-                  <linearGradient id="portal-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#18B7F5" />
-                    <stop offset="100%" stopColor="#2563EB" />
-                  </linearGradient>
-                </defs>
-              </svg>
+              <img src="/NEXTORA-LOGO.png" alt="Nextora Logo" className="w-12 h-12 mx-auto mb-3 object-contain" />
               <h2 className="text-lg font-bold text-white font-display">
                 {authMode === 'login' && 'Nextora Client Portal'}
                 {authMode === 'register' && 'Create Client Workspace'}
