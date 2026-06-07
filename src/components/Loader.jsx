@@ -29,45 +29,15 @@ export default function Loader({ finishLoading }) {
             {/* Ambient Background Glow behind loader */}
             <div className="absolute -inset-10 bg-brand-primary/10 rounded-full blur-3xl opacity-50" />
 
-            {/* Custom SVG logo draw path animation */}
-            <svg
-              width="80"
-              height="80"
-              viewBox="0 0 100 100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="mb-6 relative z-10"
-            >
-              {/* Outer hexagonal border outline */}
-              <motion.polygon
-                points="50,15 85,35 85,75 50,95 15,75 15,35"
-                stroke="rgba(255,255,255,0.08)"
-                strokeWidth="2"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
-              />
-
-              {/* The intersecting stylized 'N' */}
-              <motion.path
-                d="M32 68 L32 32 L50 56 L68 32 L68 68"
-                stroke="url(#loader-grad)"
-                strokeWidth="7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ delay: 0.3, duration: 1.5, ease: "easeInOut" }}
-              />
-
-              <defs>
-                <linearGradient id="loader-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#18B7F5" />
-                  <stop offset="50%" stopColor="#1F8EF1" />
-                  <stop offset="100%" stopColor="#2563EB" />
-                </linearGradient>
-              </defs>
-            </svg>
+            {/* Custom logo fade-in & scale animation */}
+            <motion.img
+              src="/NEXTORA-LOGO.png"
+              alt="Nextora Logo"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="w-20 h-20 mb-6 relative z-10 object-contain"
+            />
 
             {/* Nextora brand and tagline */}
             <motion.h1
