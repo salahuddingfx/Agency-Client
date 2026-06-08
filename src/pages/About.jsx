@@ -124,7 +124,7 @@ export default function About() {
             <p className="text-2xl sm:text-3xl font-bold text-white font-display mt-2">Our Evolution Over the Years</p>
           </div>
 
-          <div ref={containerRef} className="relative max-w-3xl mx-auto pl-16 sm:pl-20 space-y-12">
+          <div ref={containerRef} className="relative max-w-3xl mx-auto space-y-12">
             {/* The vertical tracking line */}
             <div className="absolute left-6 sm:left-8 top-2 bottom-2 w-[3px] bg-brand-slateAccent rounded-full overflow-hidden">
               <motion.div 
@@ -136,7 +136,7 @@ export default function About() {
             {milestones.map((item, index) => (
               <motion.div 
                 key={index} 
-                className="relative group"
+                className="relative group pl-16 sm:pl-20"
                 initial={{ opacity: 0, x: -25 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: false, margin: "-80px" }}
