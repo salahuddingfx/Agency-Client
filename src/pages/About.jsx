@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Award, Shield, Users, Target, ChevronRight } from 'lucide-react';
+import { Award, Shield, Users, Target, ChevronRight, Sparkles, Rocket, Cpu, Globe } from 'lucide-react';
 import SEO from '../components/SEO';
 
 export default function About() {
@@ -41,10 +41,30 @@ export default function About() {
   ];
 
   const milestones = [
-    { year: 'Aug 2025', title: 'Nextora Studio Founded', desc: 'Established with a focus on custom engineering, full-stack systems, and premium design standards.' },
-    { year: 'Nov 2025', title: 'MVP Platform Launch', desc: 'Shipped our initial framework to strategic startup client cohorts, validating core backend integrations.' },
-    { year: 'Feb 2026', title: 'ERP, CRM, & CMS Expansion', desc: 'Broadened capabilities into custom dashboard development, POS configurations, and robust enterprise admin structures.' },
-    { year: 'Jun 2026', title: 'Nextora Hub 2.0 & Global Staging', desc: 'Released our unified customer dashboard featuring transparent project pipelines, tickets, and automated invoice tools.' }
+    { 
+      year: 'Aug 2025', 
+      title: 'Nextora Studio Founded', 
+      desc: 'Established with a focus on custom engineering, full-stack systems, and premium design standards.',
+      icon: <Sparkles className="text-brand-primary" size={16} />
+    },
+    { 
+      year: 'Nov 2025', 
+      title: 'MVP Platform Launch', 
+      desc: 'Shipped our initial framework to strategic startup client cohorts, validating core backend integrations.',
+      icon: <Rocket className="text-brand-primary" size={16} />
+    },
+    { 
+      year: 'Feb 2026', 
+      title: 'ERP, CRM, & CMS Expansion', 
+      desc: 'Broadened capabilities into custom dashboard development, POS configurations, and robust enterprise admin structures.',
+      icon: <Cpu className="text-brand-primary" size={16} />
+    },
+    { 
+      year: 'Jun 2026', 
+      title: 'Nextora Hub 2.0 & Global Staging', 
+      desc: 'Released our unified customer dashboard featuring transparent project pipelines, tickets, and automated invoice tools.',
+      icon: <Globe className="text-brand-primary" size={16} />
+    }
   ];
 
   return (
@@ -104,9 +124,9 @@ export default function About() {
             <p className="text-2xl sm:text-3xl font-bold text-white font-display mt-2">Our Evolution Over the Years</p>
           </div>
 
-          <div ref={containerRef} className="relative max-w-3xl mx-auto pl-12 sm:pl-16 space-y-12">
+          <div ref={containerRef} className="relative max-w-3xl mx-auto pl-16 sm:pl-20 space-y-12">
             {/* The vertical tracking line */}
-            <div className="absolute left-6 sm:left-8 top-2 bottom-2 w-[3px] bg-brand-slateAccent/30 rounded-full overflow-hidden">
+            <div className="absolute left-6 sm:left-8 top-2 bottom-2 w-[3px] bg-brand-slateAccent rounded-full overflow-hidden">
               <motion.div 
                 className="w-full bg-gradient-to-b from-brand-primary via-brand-secondary to-brand-accent origin-top h-full"
                 style={{ scaleY }}
@@ -122,9 +142,11 @@ export default function About() {
                 viewport={{ once: false, margin: "-80px" }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
               >
-                {/* Timeline Circle Bullet */}
-                <div className="absolute left-[15px] sm:left-[23px] top-1.5 w-[21px] h-[21px] rounded-full bg-brand-darker border-3 border-brand-slateAccent flex items-center justify-center group-hover:border-brand-primary transition-all duration-300 z-10">
-                  <div className="w-2.5 h-2.5 rounded-full bg-brand-primary/40 group-hover:bg-brand-primary group-hover:scale-110 transition-all duration-300" />
+                {/* Timeline Circle Bullet with Icon */}
+                <div className="absolute left-[5px] sm:left-[13px] top-1 w-10 h-10 rounded-full bg-brand-darker border-2 border-brand-slateAccent flex items-center justify-center group-hover:border-brand-primary transition-all duration-300 z-10 shadow-premium">
+                  <div className="group-hover:scale-110 transition-transform duration-300">
+                    {item.icon}
+                  </div>
                 </div>
                 
                 <span className="inline-block text-xs font-semibold text-brand-primary bg-brand-primary/5 px-2 py-0.5 border border-brand-primary/10 rounded mb-2">
