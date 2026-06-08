@@ -5,7 +5,7 @@ async function request(endpoint, options = {}) {
   const token = localStorage.getItem('token');
   
   const headers = {
-    'Content-Type': 'application/json',
+    ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
     ...(token && { 'Authorization': `Bearer ${token}` }),
     ...options.headers,
   };
@@ -15,7 +15,7 @@ async function request(endpoint, options = {}) {
     headers,
   };
 
-  if (config.body && typeof config.body === 'object') {
+  if (config.body && !(config.body instanceof FormData) && typeof config.body === 'object') {
     config.body = JSON.stringify(config.body);
   }
 
@@ -81,5 +81,11 @@ export const api = {
     request('/tickets', {
       method: 'POST',
       body: { subject, category, urgency, message }
+    }),
+
+  updateProfile: (formData) => 
+    request('/users/me', {
+      method: 'PUT',
+      body: formData
     })
 };
