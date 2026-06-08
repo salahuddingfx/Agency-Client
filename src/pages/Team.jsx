@@ -105,6 +105,8 @@ export default function Team() {
             </div>
           ))}
         </div>
+      </section>
+
       {/* --- TEAM MEMBER DETAIL MODAL --- */}
       <AnimatePresence>
         {selectedMember && (
