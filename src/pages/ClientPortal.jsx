@@ -33,7 +33,7 @@ export default function ClientPortal() {
   const [resetPasswordVal, setResetPasswordVal] = useState('');
   const [showResetPassword, setShowResetPassword] = useState(false);
 
-  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'invoices' | 'tickets' | 'files'
+  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'invoices' | 'tickets' | 'files' | 'profile'
   const [portalState, setPortalState] = useState({
     user: { name: '', company: '', joinedDate: 'Joined recently', avatar: 'U' },
     projects: [],
@@ -44,6 +44,79 @@ export default function ClientPortal() {
   const [invoicePreview, setInvoicePreview] = useState(null);
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   const [newTicket, setNewTicket] = useState({ subject: '', category: 'UI Bug', urgency: 'Low', message: '' });
+
+  // Profile Form States
+  const [profileName, setProfileName] = useState(user?.name || '');
+  const [profileCompany, setProfileCompany] = useState(user?.company || '');
+  const [profileFile, setProfileFile] = useState(null);
+  const [profilePreview, setProfilePreview] = useState(null);
+  const [profileError, setProfileError] = useState('');
+  const [profileSuccess, setProfileSuccess] = useState('');
+
+  const getAvatarUrl = (avatarPath) => {
+    if (!avatarPath) return null;
+    if (avatarPath.startsWith('http') || avatarPath.startsWith('data:')) return avatarPath;
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+    const hostUrl = baseUrl.replace('/api/v1', '');
+    return `${hostUrl}${avatarPath}`;
+  };
+
+  useEffect(() => {
+    if (user) {
+      setProfileName(user.name || '');
+      setProfileCompany(user.company || '');
+      setProfilePreview(user.avatar ? getAvatarUrl(user.avatar) : null);
+    }
+  }, [user]);
+
+  const handleProfileSubmit = async (e) => {
+    e.preventDefault();
+    setProfileError('');
+    setProfileSuccess('');
+
+    if (!profileName.trim() || !profileCompany.trim()) {
+      setProfileError('Name and company are required.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('name', profileName);
+      formData.append('company', profileCompany);
+      if (profileFile) {
+        formData.append('avatar', profileFile);
+      }
+
+      const res = await api.updateProfile(formData);
+
+      if (res.success) {
+        localStorage.setItem('user', JSON.stringify(res.data));
+        setUser(res.data);
+        setProfileFile(null);
+        setProfileSuccess('Profile updated successfully!');
+        
+        // Re-sync parent dashboard portal state name/company
+        const nameParts = (res.data.name || 'Client').split(' ');
+        const avatarInitials = nameParts.map(part => part[0]).join('').substring(0, 2).toUpperCase();
+        setPortalState(prev => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            name: res.data.name || 'Client Partner',
+            company: res.data.company || 'Partner',
+            avatar: avatarInitials || 'CP'
+          }
+        }));
+      } else {
+        setProfileError(res.message || 'Failed to update profile.');
+      }
+    } catch (err) {
+      setProfileError(err.message || 'Error occurred while updating profile.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const isLoggedIn = !!token;
   const isRegistering = authMode === 'register';
@@ -709,8 +782,17 @@ export default function ClientPortal() {
           {/* Dashboard Header Bar */}
           <div className="glass-card p-6 rounded-xl border border-brand-slateAccent mb-8 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 rounded-full bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-lg">
-                {portalState.user.avatar}
+              <div className="w-12 h-12 rounded-full bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-lg overflow-hidden shrink-0">
+                {user?.avatar ? (
+                  <img 
+                    src={getAvatarUrl(user.avatar)} 
+                    alt={user.name} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                ) : (
+                  <span>{portalState.user.avatar}</span>
+                )}
               </div>
               <div>
                 <h2 className="text-base font-bold text-white font-display">{portalState.user.name}</h2>
@@ -735,7 +817,8 @@ export default function ClientPortal() {
                 { id: 'projects', label: 'Active Projects', icon: <FileText size={14} /> },
                 { id: 'invoices', label: 'Invoices & Receipts', icon: <FileText size={14} /> },
                 { id: 'tickets', label: 'Support Tickets', icon: <MessageSquare size={14} /> },
-                { id: 'files', label: 'Shared Vault Files', icon: <FileUp size={14} /> }
+                { id: 'files', label: 'Shared Vault Files', icon: <FileUp size={14} /> },
+                { id: 'profile', label: 'Edit Profile', icon: <User size={14} /> }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -951,6 +1034,113 @@ export default function ClientPortal() {
                       ))}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* --- EDIT PROFILE TAB --- */}
+              {activeTab === 'profile' && (
+                <div className="space-y-6">
+                  <div className="border-b border-brand-slateAccent/40 pb-4">
+                    <h3 className="text-base font-bold text-white font-display">Edit Workspace Profile</h3>
+                    <p className="text-xs text-slate-500 mt-1">Configure your corporate account credentials and workspace logo</p>
+                  </div>
+
+                  {profileSuccess && (
+                    <div className="p-3 bg-green-500/10 border border-green-500/20 text-green-400 text-xs rounded-md">
+                      {profileSuccess}
+                    </div>
+                  )}
+
+                  {profileError && (
+                    <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-md">
+                      {profileError}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleProfileSubmit} className="space-y-6 max-w-xl">
+                    <div className="flex flex-col sm:flex-row items-center gap-6 pb-2">
+                      {/* Avatar preview and file upload input */}
+                      <div className="relative group w-20 h-20 rounded-full bg-brand-slateAccent border border-brand-slateAccent overflow-hidden flex items-center justify-center shrink-0">
+                        {profilePreview ? (
+                          <img 
+                            src={profilePreview} 
+                            alt="Avatar Preview" 
+                            className="w-full h-full object-cover" 
+                          />
+                        ) : (
+                          <User className="text-slate-500" size={32} />
+                        )}
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+                          <FileUp className="text-white" size={18} />
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              setProfileFile(file);
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setProfilePreview(reader.result);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
+                      </div>
+                      <div className="text-center sm:text-left">
+                        <span className="text-xs font-bold text-white block">Profile Picture</span>
+                        <span className="text-[10px] text-slate-500 mt-1 block">Supports JPG, PNG, or WEBP up to 5MB. Click preview circle to upload.</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Corporate Profile Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={profileName}
+                          onChange={(e) => setProfileName(e.target.value)}
+                          className="glass-input"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Company / Organization</label>
+                        <input
+                          type="text"
+                          required
+                          value={profileCompany}
+                          onChange={(e) => setProfileCompany(e.target.value)}
+                          className="glass-input"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">Registered Workspace Email</label>
+                        <input
+                          type="email"
+                          disabled
+                          value={user?.email || ''}
+                          className="glass-input opacity-50 cursor-not-allowed"
+                        />
+                        <span className="text-[9px] text-slate-500 mt-1 block">Corporate email address cannot be edited once verified.</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2">
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="px-6 py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all disabled:opacity-50"
+                      >
+                        {isLoading ? 'Saving Changes...' : 'Save Profile Changes'}
+                      </button>
+                    </div>
+                  </form>
                 </div>
               )}
 
