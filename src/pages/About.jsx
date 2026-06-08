@@ -1,9 +1,22 @@
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Award, Shield, Users, Target, Calendar, ChevronRight } from 'lucide-react';
+import { Award, Shield, Users, Target, ChevronRight } from 'lucide-react';
 import SEO from '../components/SEO';
 
 export default function About() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end end"]
+  });
+
+  const scaleY = useSpring(scrollYProgress, {
+    damping: 30,
+    stiffness: 100,
+    restDelta: 0.001
+  });
+
   const values = [
     {
       icon: <Award className="text-brand-primary" size={24} />,
@@ -28,11 +41,10 @@ export default function About() {
   ];
 
   const milestones = [
-    { year: '2018', title: 'Nextora Founded', desc: 'Started with three developers building custom Web applications in San Francisco.' },
-    { year: '2020', title: 'Global Remote Transition', desc: 'Restructured into a remote organization, bringing in top product talent across timezones.' },
-    { year: '2022', title: 'ERP & POS Systems Launch', desc: 'Expanded services to design heavy enterprise inventory and payment checkout softwares.' },
-    { year: '2024', title: '100+ Completed Projects', desc: 'Delivered robust React Native apps and headless frontends to venture-backed SaaS startups.' },
-    { year: '2026', title: 'Nextora Client Portal 2.0', desc: 'Launched our self-service customer transparency portal for real-time tracking.' }
+    { year: 'Aug 2025', title: 'Nextora Studio Founded', desc: 'Established with a focus on custom engineering, full-stack systems, and premium design standards.' },
+    { year: 'Nov 2025', title: 'MVP Platform Launch', desc: 'Shipped our initial framework to strategic startup client cohorts, validating core backend integrations.' },
+    { year: 'Feb 2026', title: 'ERP, CRM, & CMS Expansion', desc: 'Broadened capabilities into custom dashboard development, POS configurations, and robust enterprise admin structures.' },
+    { year: 'Jun 2026', title: 'Nextora Hub 2.0 & Global Staging', desc: 'Released our unified customer dashboard featuring transparent project pipelines, tickets, and automated invoice tools.' }
   ];
 
   return (
@@ -92,18 +104,35 @@ export default function About() {
             <p className="text-2xl sm:text-3xl font-bold text-white font-display mt-2">Our Evolution Over the Years</p>
           </div>
 
-          <div className="relative border-l border-brand-slateAccent/60 max-w-3xl mx-auto pl-6 sm:pl-8 space-y-12">
+          <div ref={containerRef} className="relative max-w-3xl mx-auto pl-12 sm:pl-16 space-y-12">
+            {/* The vertical tracking line */}
+            <div className="absolute left-6 sm:left-8 top-2 bottom-2 w-[3px] bg-brand-slateAccent/30 rounded-full overflow-hidden">
+              <motion.div 
+                className="w-full bg-gradient-to-b from-brand-primary via-brand-secondary to-brand-accent origin-top h-full"
+                style={{ scaleY }}
+              />
+            </div>
+
             {milestones.map((item, index) => (
-              <div key={index} className="relative group">
+              <motion.div 
+                key={index} 
+                className="relative group"
+                initial={{ opacity: 0, x: -25 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, margin: "-80px" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
+              >
                 {/* Timeline Circle Bullet */}
-                <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-brand-darker border-2 border-brand-primary group-hover:bg-brand-primary transition-colors duration-300" />
+                <div className="absolute left-[15px] sm:left-[23px] top-1.5 w-[21px] h-[21px] rounded-full bg-brand-darker border-3 border-brand-slateAccent flex items-center justify-center group-hover:border-brand-primary transition-all duration-300 z-10">
+                  <div className="w-2.5 h-2.5 rounded-full bg-brand-primary/40 group-hover:bg-brand-primary group-hover:scale-110 transition-all duration-300" />
+                </div>
                 
                 <span className="inline-block text-xs font-semibold text-brand-primary bg-brand-primary/5 px-2 py-0.5 border border-brand-primary/10 rounded mb-2">
                   {item.year}
                 </span>
-                <h4 className="text-lg font-semibold text-white mb-1 font-display">{item.title}</h4>
+                <h4 className="text-lg font-semibold text-white mb-1 font-display group-hover:text-brand-primary transition-colors duration-300">{item.title}</h4>
                 <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{item.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
