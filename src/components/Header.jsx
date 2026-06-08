@@ -26,11 +26,6 @@ export default function Header() {
     { name: 'About', path: '/about' },
     { name: 'Services', path: '/services' },
     { name: 'Portfolio', path: '/portfolio' },
-    { name: 'Case Studies', path: '/case-studies' },
-    { name: 'Technologies', path: '/technologies' },
-    { name: 'Team', path: '/team' },
-    { name: 'Pricing', path: '/pricing' },
-    { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
 
