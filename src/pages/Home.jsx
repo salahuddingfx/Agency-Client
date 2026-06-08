@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Globe, Smartphone, Code, Layers, Sparkles, ChevronRight, MessageSquare, CheckCircle } from 'lucide-react';
 import SEO from '../components/SEO';
+import TypingAnimation from '../components/TypingAnimation';
 import { servicesData, statistics, projectsData, caseStudies } from '../data/mockData';
 
 export default function Home() {
@@ -73,9 +74,17 @@ export default function Home() {
             className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white font-display leading-[1.15]"
           >
             Transforming Ideas Into <br />
-            <span className="bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent">
-              Powerful Digital Solutions
-            </span>
+            <TypingAnimation 
+              words={[
+                "Powerful Digital Solutions",
+                "Bespoke Web Applications",
+                "Scalable Cloud Systems",
+                "Custom CRM & ERP Dashboards",
+                "Premium Mobile Apps"
+              ]}
+              className="bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent"
+              cursorColor="bg-brand-primary"
+            />
           </motion.h1>
 
           {/* Subheadline */}
