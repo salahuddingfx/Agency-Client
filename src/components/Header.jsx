@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowRight, User } from 'lucide-react';
+import { Menu, X, ArrowRight, User, Sun, Moon } from 'lucide-react';
 import Logo from './Logo';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Header() {
+  const { theme, toggleTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -44,12 +46,11 @@ export default function Header() {
           <Link to="/" className="flex items-center space-x-3 group">
             <Logo size={36} className="transform group-hover:scale-105 transition-transform duration-300" />
             <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-[0.2em] font-display text-white">NEXTORA</span>
+              <span className="text-lg font-bold tracking-[0.2em] font-display text-slate-900 dark:text-white transition-colors duration-300">NEXTORA</span>
               <span className="text-[8px] uppercase tracking-[0.25em] text-brand-primary font-medium">STUDIO</span>
             </div>
           </Link>
 
-          {/* Navigation Center */}
           <nav className="hidden lg:flex items-center space-x-1">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
@@ -57,10 +58,10 @@ export default function Header() {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`px-3 py-2 text-xs font-medium tracking-wide rounded-md transition-colors ${
+                  className={`px-3 py-2 text-xs font-medium tracking-wide rounded-md transition-all duration-300 ${
                     isActive
-                      ? 'text-brand-primary bg-brand-primary/5'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      ? 'text-brand-primary bg-brand-primary/10'
+                      : 'text-slate-400 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-900/5 dark:hover:bg-white/5'
                   }`}
                 >
                   {link.name}
@@ -70,10 +71,17 @@ export default function Header() {
           </nav>
 
           {/* CTA Right */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-3">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-brand-primary dark:hover:text-brand-primary hover:border-brand-primary/30 transition-all duration-300"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             <Link
               to="/portal"
-              className={`p-2 rounded-full border border-brand-slateAccent text-slate-300 hover:text-brand-primary hover:border-brand-primary/30 transition-all ${
+              className={`p-2 rounded-full border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-brand-primary hover:border-brand-primary/30 transition-all duration-300 ${
                 location.pathname.startsWith('/portal') ? 'text-brand-primary border-brand-primary/30 bg-brand-primary/5' : ''
               }`}
               title="Client Portal"
@@ -90,10 +98,17 @@ export default function Header() {
           </div>
 
           {/* Mobile hamburger icon */}
-          <div className="flex items-center space-x-3 lg:hidden">
+          <div className="flex items-center space-x-2 lg:hidden">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-brand-primary transition-all duration-300"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             <Link
               to="/portal"
-              className={`p-2 rounded-full border border-brand-slateAccent text-slate-300 hover:text-brand-primary transition-all ${
+              className={`p-2 rounded-full border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-brand-primary transition-all duration-300 ${
                 location.pathname.startsWith('/portal') ? 'text-brand-primary border-brand-primary/30 bg-brand-primary/5' : ''
               }`}
             >
@@ -101,7 +116,7 @@ export default function Header() {
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md border border-brand-slateAccent text-slate-300 hover:text-white transition-colors"
+              className="p-2 rounded-md border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -127,10 +142,10 @@ export default function Header() {
                   <Link
                     key={link.name}
                     to={link.path}
-                    className={`block px-4 py-3 rounded-md text-sm font-medium tracking-wide ${
+                    className={`block px-4 py-3 rounded-md text-sm font-medium tracking-wide transition-all duration-300 ${
                       isActive
                         ? 'text-brand-primary bg-brand-primary/10'
-                        : 'text-slate-300 hover:text-white hover:bg-white/5'
+                        : 'text-slate-400 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-900/5 dark:hover:bg-white/5'
                     }`}
                   >
                     {link.name}
