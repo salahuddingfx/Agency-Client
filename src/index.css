@@ -4,9 +4,37 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Light Mode values (default) */
+  --brand-darker: 248 250 252; /* slate-50: #F8FAFC */
+  --brand-dark: 255 255 255;   /* white: #FFFFFF */
+  --brand-slate-accent: 226 232 240; /* slate-200: #E2E8F0 */
+  
+  --text-slate-50: 15 23 42;    /* slate-900 */
+  --text-slate-100: 30 41 59;   /* slate-800 */
+  --text-slate-200: 51 65 85;   /* slate-700 */
+  --text-slate-300: 71 85 105;  /* slate-600 */
+  --text-slate-400: 100 116 139; /* slate-500 */
+  --text-slate-500: 148 163 184; /* slate-400 */
+}
+
+.dark {
+  /* Dark Mode values */
+  --brand-darker: 2 6 23;      /* Slate dark-deep: #020617 */
+  --brand-dark: 15 23 42;      /* Slate dark-medium: #0F172A */
+  --brand-slate-accent: 30 41 59; /* Slate border/card bg: #1e293b */
+  
+  --text-slate-50: 248 250 252; /* slate-50 */
+  --text-slate-100: 241 245 249; /* slate-100 */
+  --text-slate-200: 226 232 240; /* slate-200 */
+  --text-slate-300: 203 213 225; /* slate-300 */
+  --text-slate-400: 148 163 184; /* slate-400 */
+  --text-slate-500: 100 116 139; /* slate-500 */
+}
+
 @layer base {
   body {
-    @apply bg-brand-darker text-slate-100 font-sans overflow-x-hidden antialiased;
+    @apply bg-brand-darker text-slate-100 font-sans overflow-x-hidden antialiased transition-colors duration-300;
     scroll-behavior: smooth;
   }
 
@@ -16,36 +44,58 @@
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-brand-darker;
+    @apply bg-brand-darker transition-colors duration-300;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-brand-slateAccent rounded-full border-2 border-brand-darker hover:bg-slate-700 transition-colors;
+    @apply bg-brand-slateAccent rounded-full border-2 border-brand-darker hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors duration-300;
   }
 }
 
 /* Glassmorphism Styles */
 .glass-card {
-  background: rgba(30, 41, 59, 0.35);
+  background: rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.dark .glass-card {
+  background: rgba(30, 41, 59, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .glass-nav {
-  background: rgba(2, 6, 23, 0.75);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.dark .glass-nav {
+  background: rgba(2, 6, 23, 0.75);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .glass-panel {
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(248, 250, 252, 0.65);
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 /* Input Fields styling */
 .glass-input {
+  @apply w-full bg-slate-100/50 border border-slate-200 text-slate-900 rounded-md px-4 py-2.5 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-brand-primary/50 focus:bg-white focus:ring-1 focus:ring-brand-primary/30;
+}
+
+.dark .glass-input {
   @apply w-full bg-brand-slateAccent/40 border border-brand-slateAccent text-white rounded-md px-4 py-2.5 text-sm outline-none transition-all placeholder:text-slate-500 focus:border-brand-primary/50 focus:bg-brand-slateAccent/60 focus:ring-1 focus:ring-brand-primary/30;
 }
 
@@ -57,9 +107,15 @@
 /* Custom interactive grid backgrounds */
 .bg-grid-glow {
   background-image: 
+    linear-gradient(rgba(15, 23, 42, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.dark .bg-grid-glow {
+  background-image: 
     linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 40px 40px;
 }
 
 /* Typing blinking cursor animation */
@@ -71,4 +127,11 @@
 .cursor-blink {
   animation: blink 0.8s step-end infinite;
 }
+
+/* Ensure hardcoded headings/texts with text-white adapt to dark slate in light mode,
+   except when they are inside buttons, links, or solid colored containers */
+html:not(.dark) .text-white:not(button):not(a):not(.bg-brand-primary):not(.bg-brand-secondary):not(.bg-brand-accent):not(.bg-gradient-to-r):not(.bg-gradient-to-tr):not(.bg-green-500):not(.bg-red-500):not(button *):not(a *):not(.bg-brand-primary *):not(.bg-brand-secondary *):not(.bg-brand-accent *):not(.bg-gradient-to-r *):not(.bg-gradient-to-tr *):not(.bg-green-500 *):not(.bg-red-500 *) {
+  color: #0f172a !important;
+}
+
 
