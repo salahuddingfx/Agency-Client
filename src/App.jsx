@@ -62,7 +62,7 @@ export default function App() {
       {loading ? (
         <Loader finishLoading={() => setLoading(false)} />
       ) : (
-        <div className="flex flex-col min-h-screen bg-brand-darker text-slate-100 relative">
+        <div className="flex flex-col min-h-screen bg-brand-darker text-slate-100 relative transition-colors duration-300">
           {/* Accent lighting behind pages */}
           <div className="absolute top-0 left-1/4 w-[600px] h-[400px] bg-brand-primary/5 rounded-full blur-[140px] pointer-events-none" />
           
