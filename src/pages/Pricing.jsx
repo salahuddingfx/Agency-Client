@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Check, Info, Sparkles, MessageSquare } from 'lucide-react';
 import SEO from '../components/SEO';
 import { pricingPlans } from '../data/mockData';
+import GsapFadeIn from '../components/GsapAnimate';
+import TiltCard from '../components/TiltCard';
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'annual'
@@ -72,85 +74,90 @@ export default function Pricing() {
 
       {/* --- CARDS DISPLAY --- */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+        <GsapFadeIn className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
           {pricingPlans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`glass-card rounded-xl p-8 flex flex-col justify-between relative hover:border-brand-primary/20 transition-all ${
-                plan.popular ? 'border-brand-primary/30 ring-1 ring-brand-primary/20 shadow-glow' : ''
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full flex items-center space-x-1 shadow-md">
-                  <Sparkles size={10} />
-                  <span>Most Selected</span>
-                </div>
-              )}
+            <TiltCard key={plan.id} className="h-full">
+              <div
+                className={`glass-card rounded-xl p-8 flex flex-col justify-between relative hover:border-brand-primary/20 transition-all h-full ${
+                  plan.popular ? 'border-brand-primary/30 ring-1 ring-brand-primary/20 shadow-glow' : ''
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full flex items-center space-x-1 shadow-md z-10">
+                    <Sparkles size={10} />
+                    <span>Most Selected</span>
+                  </div>
+                )}
 
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">{plan.tag}</span>
-                <h3 className="text-xl font-bold text-white mt-2 font-display">{plan.name}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mt-2 min-h-[48px]">{plan.description}</p>
-                
-                <div className="mt-6 flex items-baseline">
-                  <span className="text-4xl font-extrabold text-white tracking-tight">{calculatePrice(plan.price)}</span>
-                  <span className="text-slate-500 text-xs ml-2">
-                    {billingCycle === 'annual' ? '/ month' : ' project starting price'}
-                  </span>
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">{plan.tag}</span>
+                  <h3 className="text-xl font-bold text-white mt-2 font-display">{plan.name}</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed mt-2 min-h-[48px]">{plan.description}</p>
+                  
+                  <div className="mt-6 flex items-baseline">
+                    <span className="text-4xl font-extrabold text-white tracking-tight">{calculatePrice(plan.price)}</span>
+                    <span className="text-slate-500 text-xs ml-2">
+                      {billingCycle === 'annual' ? '/ month' : ' project starting price'}
+                    </span>
+                  </div>
+
+                  <div className="mt-8 space-y-4 pt-6 border-t border-brand-slateAccent/40">
+                    <h4 className="text-[10px] font-semibold text-slate-300 uppercase tracking-widest flex items-center space-x-1.5">
+                      <Info size={12} className="text-brand-primary" />
+                      <span>Deliverables</span>
+                    </h4>
+                    <ul className="space-y-3">
+                      {plan.features.map((feat, idx) => (
+                        <li key={idx} className="flex items-start space-x-2.5 text-xs text-slate-400">
+                          <Check size={14} className="text-brand-primary mt-0.5 flex-shrink-0" />
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
 
-                <div className="mt-8 space-y-4 pt-6 border-t border-brand-slateAccent/40">
-                  <h4 className="text-[10px] font-semibold text-slate-300 uppercase tracking-widest flex items-center space-x-1.5">
-                    <Info size={12} className="text-brand-primary" />
-                    <span>Deliverables</span>
-                  </h4>
-                  <ul className="space-y-3">
-                    {plan.features.map((feat, idx) => (
-                      <li key={idx} className="flex items-start space-x-2.5 text-xs text-slate-400">
-                        <Check size={14} className="text-brand-primary mt-0.5 flex-shrink-0" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="mt-8 pt-6 border-t border-brand-slateAccent/40">
+                  <Link
+                    to="/contact"
+                    className={`w-full py-3 rounded-md text-xs font-bold text-center block transition-all ${
+                      plan.popular
+                        ? 'bg-gradient-to-r from-brand-primary to-brand-accent text-white shadow-premium hover:shadow-glow'
+                        : 'bg-brand-slateAccent/30 hover:bg-brand-slateAccent border border-brand-slateAccent text-white'
+                    }`}
+                  >
+                    Request Detailed Scope
+                  </Link>
+                  <p className="text-[10px] text-slate-500 mt-3 text-center italic">{plan.bestFor}</p>
                 </div>
+
               </div>
-
-              <div className="mt-8 pt-6 border-t border-brand-slateAccent/40">
-                <Link
-                  to="/contact"
-                  className={`w-full py-3 rounded-md text-xs font-bold text-center block transition-all ${
-                    plan.popular
-                      ? 'bg-gradient-to-r from-brand-primary to-brand-accent text-white shadow-premium hover:shadow-glow'
-                      : 'bg-brand-slateAccent/30 hover:bg-brand-slateAccent border border-brand-slateAccent text-white'
-                  }`}
-                >
-                  Request Detailed Scope
-                </Link>
-                <p className="text-[10px] text-slate-500 mt-3 text-center italic">{plan.bestFor}</p>
-              </div>
-
-            </div>
+            </TiltCard>
           ))}
-        </div>
+        </GsapFadeIn>
       </section>
 
       {/* --- CUSTOM PLAN SECTION --- */}
       <section className="py-20 max-w-4xl mx-auto px-4 relative z-10">
-        <div className="glass-card p-8 sm:p-10 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 border-brand-slateAccent">
-          <div className="max-w-md">
-            <h3 className="text-lg font-bold text-white font-display">Need a custom contract or support retainers?</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mt-2">
-              We construct custom service agreements for continuous monthly engineering, security auditing, and design support.
-            </p>
-          </div>
-          <Link
-            to="/contact"
-            className="inline-flex items-center space-x-2 px-6 py-3 bg-brand-slateAccent/40 hover:bg-brand-slateAccent border border-brand-slateAccent text-white text-xs font-semibold rounded-md transition-all flex-shrink-0"
-          >
-            <MessageSquare size={14} />
-            <span>Consult Retainers</span>
-          </Link>
-        </div>
+        <GsapFadeIn direction="up">
+          <TiltCard>
+            <div className="glass-card p-8 sm:p-10 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 border-brand-slateAccent">
+              <div className="max-w-md">
+                <h3 className="text-lg font-bold text-white font-display">Need a custom contract or support retainers?</h3>
+                <p className="text-xs text-slate-400 leading-relaxed mt-2">
+                  We construct custom service agreements for continuous monthly engineering, security auditing, and design support.
+                </p>
+              </div>
+              <Link
+                to="/contact"
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-brand-slateAccent/40 hover:bg-brand-slateAccent border border-brand-slateAccent text-white text-xs font-semibold rounded-md transition-all flex-shrink-0"
+              >
+                <MessageSquare size={14} />
+                <span>Consult Retainers</span>
+              </Link>
+            </div>
+          </TiltCard>
+        </GsapFadeIn>
       </section>
 
     </motion.div>
