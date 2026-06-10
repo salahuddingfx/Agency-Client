@@ -134,4 +134,10 @@ html:not(.dark) .text-white:not(button):not(a):not(.bg-brand-primary):not(.bg-br
   color: #0f172a !important;
 }
 
+/* Enable 3D rendering context and smooth transitions for tilt elements */
+.tilt-container {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
 
