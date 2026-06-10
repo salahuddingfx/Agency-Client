@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Globe, Smartphone, Code, CreditCard, Layers, TrendingUp, Sparkles, Check, ChevronRight } from 'lucide-react';
 import SEO from '../components/SEO';
 import { servicesData } from '../data/mockData';
+import GsapFadeIn from '../components/GsapAnimate';
+import TiltCard from '../components/TiltCard';
 
 const FigmaIcon = (props) => (
   <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -61,83 +63,82 @@ export default function Services() {
 
       {/* --- DETAILED SERVICES GRID --- */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <GsapFadeIn className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {servicesData.map((service, index) => (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05, duration: 0.6 }}
-              className="glass-card p-8 sm:p-10 rounded-xl hover:border-brand-primary/20 transition-all flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-lg bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center">
-                    {getIcon(service.iconName)}
+            <TiltCard key={service.id} className="h-full">
+              <div className="glass-card p-8 sm:p-10 rounded-xl hover:border-brand-primary/20 transition-all flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-14 h-14 rounded-lg bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center">
+                      {getIcon(service.iconName)}
+                    </div>
+                    <span className="text-xs font-semibold text-brand-primary bg-brand-primary/5 border border-brand-primary/10 rounded px-2.5 py-1">
+                      {service.metric}
+                    </span>
                   </div>
-                  <span className="text-xs font-semibold text-brand-primary bg-brand-primary/5 border border-brand-primary/10 rounded px-2.5 py-1">
-                    {service.metric}
-                  </span>
+
+                  <h3 className="text-xl font-bold text-white mb-3 font-display">{service.title}</h3>
+                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">{service.longDesc}</p>
+                  
+                  <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Included Capabilities:</h4>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                    {service.features.map((feat, idx) => (
+                      <li key={idx} className="flex items-start space-x-2 text-xs text-slate-500">
+                        <Check size={14} className="text-brand-primary mt-0.5 flex-shrink-0" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-3 font-display">{service.title}</h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">{service.longDesc}</p>
-                
-                <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Included Capabilities:</h4>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                  {service.features.map((feat, idx) => (
-                    <li key={idx} className="flex items-start space-x-2 text-xs text-slate-500">
-                      <Check size={14} className="text-brand-primary mt-0.5 flex-shrink-0" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="pt-6 border-t border-brand-slateAccent/40 flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-wider text-slate-600">Enterprise Standard</span>
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center space-x-1 text-xs font-semibold text-brand-primary hover:text-white transition-colors group"
+                  >
+                    <span>Request Scope</span>
+                    <ChevronRight size={14} className="transform group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
               </div>
-
-              <div className="pt-6 border-t border-brand-slateAccent/40 flex items-center justify-between">
-                <span className="text-[10px] uppercase tracking-wider text-slate-600">Enterprise Standard</span>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center space-x-1 text-xs font-semibold text-brand-primary hover:text-white transition-colors group"
-                >
-                  <span>Request Scope</span>
-                  <ChevronRight size={14} className="transform group-hover:translate-x-0.5 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
+            </TiltCard>
           ))}
-        </div>
+        </GsapFadeIn>
       </section>
 
       {/* --- DYNAMIC CUSTOM DIAGRAM ACCENT --- */}
       <section className="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="glass-card p-8 sm:p-12 rounded-xl text-center max-w-4xl mx-auto relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-brand-primary/5 rounded-full blur-3xl pointer-events-none" />
-          
-          <h2 className="text-2xl font-bold text-white font-display mb-4">Our Collaborative Workflow</h2>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed">
-            We follow a structured sprint delivery plan spanning strategy alignment, interactive interface layouts, and modular software staging.
-          </p>
+        <GsapFadeIn direction="up">
+          <TiltCard>
+            <div className="glass-card p-8 sm:p-12 rounded-xl text-center max-w-4xl mx-auto relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-brand-primary/5 rounded-full blur-3xl pointer-events-none" />
+              
+              <h2 className="text-2xl font-bold text-white font-display mb-4">Our Collaborative Workflow</h2>
+              <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed">
+                We follow a structured sprint delivery plan spanning strategy alignment, interactive interface layouts, and modular software staging.
+              </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 relative">
-            <div className="flex flex-col items-center">
-              <span className="w-10 h-10 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-bold flex items-center justify-center mb-4">1</span>
-              <h4 className="text-sm font-semibold text-white mb-2">Discovery & Specs</h4>
-              <p className="text-xs text-slate-500 max-w-[200px]">Define the core technical integrations, roadmap, and pricing scope.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 relative">
+                <div className="flex flex-col items-center">
+                  <span className="w-10 h-10 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-bold flex items-center justify-center mb-4">1</span>
+                  <h4 className="text-sm font-semibold text-white mb-2">Discovery & Specs</h4>
+                  <p className="text-xs text-slate-500 max-w-[200px]">Define the core technical integrations, roadmap, and pricing scope.</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="w-10 h-10 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-bold flex items-center justify-center mb-4">2</span>
+                  <h4 className="text-sm font-semibold text-white mb-2">Sprint Staging</h4>
+                  <p className="text-xs text-slate-500 max-w-[200px]">Interactive designs matching your brand, followed by frontend code.</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="w-10 h-10 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-bold flex items-center justify-center mb-4">3</span>
+                  <h4 className="text-sm font-semibold text-white mb-2">Deployment SLA</h4>
+                  <p className="text-xs text-slate-500 max-w-[200px]">Complete hosting setups, SEO configurations, and launch sign-off.</p>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col items-center">
-              <span className="w-10 h-10 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-bold flex items-center justify-center mb-4">2</span>
-              <h4 className="text-sm font-semibold text-white mb-2">Sprint Staging</h4>
-              <p className="text-xs text-slate-500 max-w-[200px]">Interactive designs matching your brand, followed by frontend code.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="w-10 h-10 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-bold flex items-center justify-center mb-4">3</span>
-              <h4 className="text-sm font-semibold text-white mb-2">Deployment SLA</h4>
-              <p className="text-xs text-slate-500 max-w-[200px]">Complete hosting setups, SEO configurations, and launch sign-off.</p>
-            </div>
-          </div>
-        </div>
+          </TiltCard>
+        </GsapFadeIn>
       </section>
 
     </motion.div>
