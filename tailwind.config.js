@@ -12,11 +12,19 @@ export default {
           primary: '#18B7F5', // Sky Blue
           secondary: '#1F8EF1', // Royal Blue
           accent: '#2563EB', // Cobalt Blue
-          dark: '#0F172A', // Slate Dark
-          darker: '#020617', // Slate Darker
+          dark: 'rgb(var(--brand-dark) / <alpha-value>)',
+          darker: 'rgb(var(--brand-darker) / <alpha-value>)',
           light: '#F8FAFC', // Slate Light
-          slateAccent: '#1e293b', // Slate Border/Card background
+          slateAccent: 'rgb(var(--brand-slate-accent) / <alpha-value>)',
         }
+      },
+      textColor: {
+        'slate-50': 'rgb(var(--text-slate-50) / <alpha-value>)',
+        'slate-100': 'rgb(var(--text-slate-100) / <alpha-value>)',
+        'slate-200': 'rgb(var(--text-slate-200) / <alpha-value>)',
+        'slate-300': 'rgb(var(--text-slate-300) / <alpha-value>)',
+        'slate-400': 'rgb(var(--text-slate-400) / <alpha-value>)',
+        'slate-500': 'rgb(var(--text-slate-500) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
