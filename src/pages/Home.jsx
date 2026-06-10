@@ -4,6 +4,8 @@ import { ArrowRight, Globe, Smartphone, Code, Layers, Sparkles, ChevronRight, Me
 import SEO from '../components/SEO';
 import TypingAnimation from '../components/TypingAnimation';
 import { servicesData, statistics, projectsData, caseStudies } from '../data/mockData';
+import GsapFadeIn from '../components/GsapAnimate';
+import TiltCard from '../components/TiltCard';
 
 export default function Home() {
   const containerVariants = {
@@ -127,12 +129,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {statistics.map((stat, idx) => (
-              <motion.div
+              <GsapFadeIn
                 key={stat.label}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.5 }}
+                delay={idx * 0.1}
+                duration={0.6}
+                direction="up"
                 className="text-center px-4"
               >
                 <span className="block text-4xl sm:text-5xl font-bold tracking-tight text-white font-display bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
@@ -144,7 +145,7 @@ export default function Home() {
                 <span className="block text-xs text-slate-500 mt-1 max-w-[200px] mx-auto leading-relaxed">
                   {stat.description}
                 </span>
-              </motion.div>
+              </GsapFadeIn>
             ))}
           </div>
         </div>
@@ -162,44 +163,36 @@ export default function Home() {
           </p>
         </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+        <GsapFadeIn className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {servicesData.slice(0, 3).map((service) => (
-            <motion.div
-              key={service.id}
-              variants={itemVariants}
-              className="glass-card p-8 rounded-lg hover:border-brand-primary/20 transition-all group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-md bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  {getServiceIcon(service.iconName)}
+            <TiltCard key={service.id} className="h-full">
+              <div className="glass-card p-8 rounded-lg hover:border-brand-primary/20 transition-all group flex flex-col justify-between h-full">
+                <div>
+                  <div className="w-12 h-12 rounded-md bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    {getServiceIcon(service.iconName)}
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-3 font-display">{service.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6">{service.shortDesc}</p>
+                  <ul className="space-y-2 mb-6">
+                    {service.features.slice(0, 3).map((feat, i) => (
+                      <li key={i} className="text-xs text-slate-500 flex items-center space-x-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-primary/60" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="text-lg font-bold text-white mb-3 font-display">{service.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed mb-6">{service.shortDesc}</p>
-                <ul className="space-y-2 mb-6">
-                  {service.features.slice(0, 3).map((feat, i) => (
-                    <li key={i} className="text-xs text-slate-500 flex items-center space-x-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand-primary/60" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
+                <Link 
+                  to="/services" 
+                  className="text-xs font-semibold text-brand-primary flex items-center space-x-1 group-hover:text-white transition-colors"
+                >
+                  <span>Learn more</span>
+                  <ChevronRight size={14} />
+                </Link>
               </div>
-              <Link 
-                to="/services" 
-                className="text-xs font-semibold text-brand-primary flex items-center space-x-1 group-hover:text-white transition-colors"
-              >
-                <span>Learn more</span>
-                <ChevronRight size={14} />
-              </Link>
-            </motion.div>
+            </TiltCard>
           ))}
-        </motion.div>
+        </GsapFadeIn>
 
         <div className="text-center mt-12">
           <Link
@@ -221,11 +214,11 @@ export default function Home() {
           </div>
 
           {caseStudies.slice(0, 1).map((study) => (
-            <div key={study.id} className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <GsapFadeIn key={study.id} className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
               
               {/* Visual Card Left */}
-              <div className="lg:col-span-5 relative">
-                <div className={`aspect-square rounded-xl bg-gradient-to-tr ${study.coverColor} p-8 flex flex-col justify-between text-white shadow-premium relative overflow-hidden`}>
+              <TiltCard className="lg:col-span-5 relative">
+                <div className={`aspect-square rounded-xl bg-gradient-to-tr ${study.coverColor} p-8 flex flex-col justify-between text-white shadow-premium relative overflow-hidden h-full w-full`}>
                   <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl pointer-events-none" />
                   <div>
                     <span className="text-xs font-semibold uppercase tracking-wider bg-white/10 px-2.5 py-1 rounded">Featured Client</span>
@@ -240,7 +233,7 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-              </div>
+              </TiltCard>
 
               {/* Text Context Right */}
               <div className="lg:col-span-7 space-y-6">
@@ -270,38 +263,42 @@ export default function Home() {
                 </div>
               </div>
 
-            </div>
+            </GsapFadeIn>
           ))}
         </div>
       </section>
 
       {/* --- CALL TO ACTION --- */}
       <section className="py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center relative z-10">
-        <div className="glass-card p-10 sm:p-16 rounded-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[350px] h-[150px] bg-brand-primary/10 rounded-full blur-[80px] pointer-events-none" />
-          
-          <h2 className="text-3xl sm:text-4xl font-bold text-white font-display mb-6 tracking-tight">
-            Ready to Accelerate Your Digital Product Roadmap?
-          </h2>
-          <p className="text-slate-400 max-w-xl mx-auto mb-8 text-sm sm:text-base leading-relaxed">
-            Let\'s partner. Connect with our engineering and interface design leads today to schedule a technical discovery call.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <Link
-              to="/contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-md shadow-premium hover:shadow-glow transition-all"
-            >
-              <span>Consult an Expert</span>
-              <MessageSquare size={14} />
-            </Link>
-            <Link
-              to="/pricing"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 border border-brand-slateAccent text-white text-sm font-semibold rounded-md hover:bg-brand-slateAccent/30 transition-all"
-            >
-              <span>View Packages</span>
-            </Link>
-          </div>
-        </div>
+        <GsapFadeIn direction="up">
+          <TiltCard>
+            <div className="glass-card p-10 sm:p-16 rounded-2xl relative overflow-hidden">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[350px] h-[150px] bg-brand-primary/10 rounded-full blur-[80px] pointer-events-none" />
+              
+              <h2 className="text-3xl sm:text-4xl font-bold text-white font-display mb-6 tracking-tight">
+                Ready to Accelerate Your Digital Product Roadmap?
+              </h2>
+              <p className="text-slate-400 max-w-xl mx-auto mb-8 text-sm sm:text-base leading-relaxed">
+                Let's partner. Connect with our engineering and interface design leads today to schedule a technical discovery call.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <Link
+                  to="/contact"
+                  className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-md shadow-premium hover:shadow-glow transition-all"
+                >
+                  <span>Consult an Expert</span>
+                  <MessageSquare size={14} />
+                </Link>
+                <Link
+                  to="/pricing"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 border border-brand-slateAccent text-white text-sm font-semibold rounded-md hover:bg-brand-slateAccent/30 transition-all"
+                >
+                  <span>View Packages</span>
+                </Link>
+              </div>
+            </div>
+          </TiltCard>
+        </GsapFadeIn>
       </section>
 
     </motion.div>
