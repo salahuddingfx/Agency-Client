@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Analytics } from '@vercel/analytics/react';
 import { ToastProvider } from './components/Toast.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 import './index.css';
 import App from './App.jsx';
 
@@ -19,14 +20,16 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </ToastProvider>
-    </QueryClientProvider>
-    <Analytics />
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
+        </ToastProvider>
+      </QueryClientProvider>
+      <Analytics />
+    </ErrorBoundary>
   </StrictMode>
 );
 
