@@ -356,10 +356,10 @@ export default function ClientPortal() {
         setResetOtpVal('');
         setResetPasswordVal('');
       } else {
-        alert(data.message || 'Reset failed.');
+        toast.error(data.message || 'Reset failed.');
       }
     } catch (err) {
-      alert(err.message || 'Verification code expired or invalid.');
+      toast.error(err.message || 'Verification code expired or invalid.');
     } finally {
       setIsLoading(false);
     }
@@ -375,7 +375,7 @@ export default function ClientPortal() {
   const handleCreateTicket = async (e) => {
     e.preventDefault();
     if (!newTicket.subject.trim() || !newTicket.message.trim()) {
-      alert('Please fill ticket subject and message.');
+      toast.warning('Please fill ticket subject and message.');
       return;
     }
 
