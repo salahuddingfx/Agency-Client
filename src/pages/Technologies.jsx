@@ -6,7 +6,7 @@ import { technologies } from '../data/mockData';
 import { normalizeTechnologies } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
-import TechGlobe from '../components/TechGlobe';
+import TechGlobe, { TechIcon } from '../components/TechGlobe';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 const CATEGORY_META = {
@@ -103,12 +103,15 @@ export default function Technologies() {
 
         {/* Category legend */}
         <div className="flex flex-wrap justify-center gap-3 mt-8">
-          {Object.entries(CATEGORY_META).map(([cat, meta]) => (
-            <div key={cat} className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/5 bg-white/[0.02]">
-              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: meta.color }} />
-              <span className="text-[10px] text-slate-400 font-medium">{cat}</span>
-            </div>
-          ))}
+          {Object.entries(CATEGORY_META).map(([cat, meta]) => {
+            const Icon = meta.icon;
+            return (
+              <div key={cat} className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/5 bg-white/[0.02]">
+                <Icon size={12} style={{ color: meta.color }} />
+                <span className="text-[10px] text-slate-400 font-medium">{cat}</span>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -117,17 +120,20 @@ export default function Technologies() {
         <div className="flex flex-wrap items-center justify-center gap-2">
           {categories.map((cat) => {
             const isActive = activeFilter === cat;
+            const meta = CATEGORY_META[cat];
+            const Icon = meta ? meta.icon : null;
             return (
               <button
                 key={cat}
                 onClick={() => setActiveFilter(cat)}
-                className={`px-4 py-2 text-xs font-medium rounded-full border transition-all duration-300 ${
+                className={`flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-full border transition-all duration-300 ${
                   isActive
                     ? 'bg-brand-primary text-white border-brand-primary shadow-premium'
                     : 'bg-white/[0.03] text-slate-400 border-white/10 hover:text-white hover:border-white/20 hover:bg-white/[0.06]'
                 }`}
               >
-                {cat === 'All' ? 'All Technologies' : cat}
+                {Icon && <Icon size={12} style={{ color: isActive ? '#ffffff' : meta.color }} />}
+                <span className="capitalize">{cat === 'All' ? 'All Technologies' : cat}</span>
               </button>
             );
           })}
@@ -150,10 +156,10 @@ export default function Technologies() {
               >
                 <div className="flex items-start gap-4">
                   <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
-                    style={{ backgroundColor: `${meta.color}15`, border: `1px solid ${meta.color}25` }}
+                    className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 bg-slate-950/50"
+                    style={{ border: `1px solid ${meta.color}35`, boxShadow: `0 0 10px ${meta.color}15` }}
                   >
-                    <Icon size={18} style={{ color: meta.color }} />
+                    <TechIcon name={tech.name} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
