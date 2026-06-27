@@ -8,6 +8,7 @@ import {
 import SEO from '../components/SEO';
 import TypingAnimation from '../components/TypingAnimation';
 import { servicesData, statistics, caseStudies } from '../data/mockData';
+import useFetch from '../hooks/useFetch';
 import GsapFadeIn from '../components/GsapAnimate';
 import GlowCard from '../components/GlowCard';
 import { api } from '../api/api';
@@ -127,6 +128,9 @@ export default function Home() {
   const [statsInView, setStatsInView] = useState(false);
   const [liveTestimonials, setLiveTestimonials] = useState([]);
   const [testimonialsLoading, setTestimonialsLoading] = useState(true);
+
+  const { data: homeServices } = useFetch(() => api.getServices(), servicesData);
+  const { data: homeCaseStudies } = useFetch(() => api.getCaseStudies(), caseStudies);
 
   // Fetch live testimonials from backend
   useEffect(() => {
@@ -293,7 +297,7 @@ export default function Home() {
         </div>
 
         <GsapFadeIn className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {servicesData.slice(0, 3).map((service) => (
+          {homeServices.slice(0, 3).map((service) => (
             <GlowCard key={service.id} className="h-full">
               <div className="glass-card p-6 sm:p-8 rounded-lg hover:border-brand-primary/20 transition-all group flex flex-col justify-between h-full">
                 <div>
@@ -415,7 +419,7 @@ export default function Home() {
             <p className="text-2xl sm:text-3xl font-bold text-white font-display mt-2">Delivering Real Business Value</p>
           </div>
 
-          {caseStudies.slice(0, 1).map((study) => (
+          {homeCaseStudies.slice(0, 1).map((study) => (
             <GsapFadeIn key={study.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
 
               <GlowCard className="lg:col-span-5">
