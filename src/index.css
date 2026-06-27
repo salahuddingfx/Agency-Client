@@ -128,13 +128,21 @@
   animation: blink 0.8s step-end infinite;
 }
 
-/* Ensure hardcoded headings/texts with text-white adapt to dark slate in light mode,
-   except when they are inside buttons, links, or solid colored containers */
-html:not(.dark) .text-white:not(button):not(a):not(.bg-brand-primary):not(.bg-brand-secondary):not(.bg-brand-accent):not(.bg-gradient-to-r):not(.bg-gradient-to-tr):not(.bg-green-500):not(.bg-red-500):not(button *):not(a *):not(.bg-brand-primary *):not(.bg-brand-secondary *):not(.bg-brand-accent *):not(.bg-gradient-to-r *):not(.bg-gradient-to-tr *):not(.bg-green-500 *):not(.bg-red-500 *) {
-  color: #0f172a !important;
-}
+/* ═══════════════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES — catches all hardcoded dark-mode utilities
+   ═══════════════════════════════════════════════════════════════════ */
 
-/* Light mode: headings (h1-h6) always dark */
+/* Text colors: force dark in light mode */
+html:not(.dark) .text-white { color: #0f172a !important; }
+html:not(.dark) .text-slate-100 { color: #334155 !important; }
+html:not(.dark) .text-slate-200 { color: #475569 !important; }
+html:not(.dark) .text-slate-300 { color: #64748b !important; }
+
+/* Hover text: force dark on hover in light mode */
+html:not(.dark) .hover\:text-white:hover { color: #0f172a !important; }
+html:not(.dark) .group:hover .group-hover\:text-white { color: #0f172a !important; }
+
+/* Headings always dark */
 html:not(.dark) h1,
 html:not(.dark) h2,
 html:not(.dark) h3,
@@ -144,29 +152,107 @@ html:not(.dark) h6 {
   color: #0f172a !important;
 }
 
-/* Light mode: strong/bold text always dark */
+/* Bold/strong always dark */
 html:not(.dark) strong,
 html:not(.dark) b {
   color: #0f172a !important;
 }
 
-/* Light mode: links use brand-primary color, never white */
-html:not(.dark) a {
-  color: #0f172a;
-}
-
-html:not(.dark) a:hover {
-  color: #18B7F5 !important;
-}
-
-/* Light mode: summary/accordion headings dark */
+/* Summary/accordion always dark */
 html:not(.dark) summary {
   color: #0f172a !important;
 }
 
-/* Light mode: span text inside links keeps brand color */
+/* Links — dark by default, but preserve white inside gradient/solid buttons */
+html:not(.dark) a:not(.bg-gradient-to-r):not(.bg-brand-primary):not(.bg-brand-accent) {
+  color: #0f172a;
+}
+html:not(.dark) a:not(.bg-gradient-to-r):not(.bg-brand-primary):not(.bg-brand-accent):hover {
+  color: #18B7F5 !important;
+}
+
+/* Links inside gradient buttons keep their white text */
+html:not(.dark) a.bg-gradient-to-r,
+html:not(.dark) a.bg-brand-primary,
+html:not(.dark) a.bg-brand-accent {
+  color: #ffffff !important;
+}
+html:not(.dark) a.bg-gradient-to-r:hover,
+html:not(.dark) a.bg-brand-primary:hover,
+html:not(.dark) a.bg-brand-accent:hover {
+  color: #ffffff !important;
+}
+
+/* Links span inherits parent */
 html:not(.dark) a span {
   color: inherit;
+}
+
+/* Backgrounds: white opacity invisible in light → use slate equivalents */
+html:not(.dark) .bg-white\/5 { background-color: rgba(226, 232, 240, 0.45) !important; }
+html:not(.dark) .bg-white\/\[0\.02\] { background-color: rgba(226, 232, 240, 0.3) !important; }
+html:not(.dark) .bg-white\/\[0\.03\] { background-color: rgba(226, 232, 240, 0.35) !important; }
+html:not(.dark) .bg-white\/10 { background-color: rgba(226, 232, 240, 0.5) !important; }
+
+/* Borders: white opacity invisible in light → use slate equivalents */
+html:not(.dark) .border-white\/5 { border-color: rgba(15, 23, 42, 0.08) !important; }
+html:not(.dark) .border-white\/10 { border-color: rgba(15, 23, 42, 0.1) !important; }
+html:not(.dark) .border-white\/20 { border-color: rgba(15, 23, 42, 0.12) !important; }
+html:not(.dark) .border-brand-slateAccent\/40 { border-color: rgba(15, 23, 42, 0.1) !important; }
+
+/* Glass cards: already handled above in .glass-card rules */
+
+/* Prose: remove prose-invert in light mode */
+html:not(.dark) .prose-invert {
+  color: #0f172a !important;
+}
+html:not(.dark) .prose-invert h1,
+html:not(.dark) .prose-invert h2,
+html:not(.dark) .prose-invert h3,
+html:not(.dark) .prose-invert h4 {
+  color: #0f172a !important;
+}
+html:not(.dark) .prose-invert p,
+html:not(.dark) .prose-invert li {
+  color: #334155 !important;
+}
+html:not(.dark) .prose-invert a {
+  color: #18B7F5 !important;
+}
+html:not(.dark) .prose-invert code {
+  color: #0f172a !important;
+  background-color: rgba(226, 232, 240, 0.5) !important;
+}
+html:not(.dark) .prose-invert pre {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Input fields: fix hardcoded text-white in search/newsletter inputs */
+html:not(.dark) .bg-brand-slateAccent\/40 {
+  background-color: rgba(226, 232, 240, 0.5) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: #0f172a !important;
+}
+html:not(.dark) input.bg-brand-slateAccent\/40,
+html:not(.dark) input[type="text"].bg-brand-slateAccent\/40,
+html:not(.dark) input[type="email"].bg-brand-slateAccent\/40 {
+  color: #0f172a !important;
+}
+
+/* Dark backgrounds stay dark in light mode (modals, drawers, overlays) */
+html:not(.dark) .bg-brand-darker {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+html:not(.dark) .bg-brand-dark {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Override body text-slate-100 in light mode */
+body {
+  @apply text-slate-800 dark:text-slate-100;
 }
 
 /* TV / Keyboard focus-visible ring */

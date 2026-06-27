@@ -232,8 +232,50 @@ function Scene({ technologies }) {
   );
 }
 
+/* ─── WebGL detection ──────────────────────────────────────────────── */
+function hasWebGL() {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+  } catch {
+    return false;
+  }
+}
+
+/* ─── Fallback when WebGL unavailable ──────────────────────────────── */
+function GlobeFallback({ technologies }) {
+  const CATEGORY_COLORS = {
+    Frontend: '#18B7F5', Backend: '#34d399', Database: '#f59e0b',
+    Design: '#e879f9', Infrastructure: '#fb923c', Tools: '#94a3b8',
+  };
+  return (
+    <div className="w-full h-[500px] sm:h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border border-slate-800/50 bg-[#020617] flex items-center justify-center">
+      <div className="grid grid-cols-4 sm:grid-cols-6 gap-3 p-6 max-w-2xl">
+        {(technologies || []).map((t) => (
+          <div key={t.name} className="flex flex-col items-center gap-1.5 p-2">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: CATEGORY_COLORS[t.category] || '#94a3b8' }}>
+              {t.name.slice(0, 2)}
+            </div>
+            <span className="text-[9px] text-slate-400 text-center leading-tight">{t.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Exported wrapper ────────────────────────────────────────────── */
+import { useState, useEffect } from 'react';
+
 export default function TechGlobe({ technologies }) {
+  const [webgl, setWebgl] = useState(true);
+
+  useEffect(() => {
+    setWebgl(hasWebGL());
+  }, []);
+
+  if (!webgl) return <GlobeFallback technologies={technologies} />;
+
   return (
     <div className="w-full h-[500px] sm:h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border border-slate-800/50 bg-[#020617]">
       <Canvas

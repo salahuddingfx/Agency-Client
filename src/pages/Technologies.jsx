@@ -7,6 +7,7 @@ import { normalizeTechnologies } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 import TechGlobe from '../components/TechGlobe';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const CATEGORY_META = {
   Frontend:      { icon: Monitor,      color: '#18B7F5', gradient: 'from-sky-500/10 to-sky-600/5' },
