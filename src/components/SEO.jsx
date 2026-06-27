@@ -1,69 +1,80 @@
 import { useEffect } from 'react';
 
+const SITE_NAME = 'Nextora Studio';
+const SITE_URL  = 'https://nextorastudio.tech';
+const OG_IMAGE  = `${SITE_URL}/og-image.png`; // place a 1200×630 image in /public/
+
 export default function SEO({ title, description, schema }) {
+  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | Where Ideas Take Shape`;
+  const metaDesc  = description || `${SITE_NAME} builds premium websites, mobile apps, POS systems, and CRM/ERP solutions that help businesses grow.`;
+
   const defaultSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Nextora Studio",
-    "alternateName": "Nextora",
-    "url": "https://nextorastudio.com",
-    "logo": "https://nextorastudio.com/logo.png",
-    "sameAs": [
-      "https://github.com/nextorastudio",
-      "https://linkedin.com/company/nextorastudio",
-      "https://twitter.com/nextorastudio"
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    alternateName: 'Nextora',
+    url: SITE_URL,
+    logo: `${SITE_URL}/logo.png`,
+    sameAs: [
+      'https://github.com/nextorastudio',
+      'https://linkedin.com/company/nextorastudio',
+      'https://x.com/nextorastudio',
     ],
-    "description": "Where Ideas Take Shape. A premium digital software agency specializing in Web Dev, App Dev, POS, CRM, ERP, and UI/UX.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Global Remote",
-      "addressCountry": "US"
-    }
+    description: 'Where Ideas Take Shape. A premium digital software agency specializing in Web Dev, App Dev, POS, CRM, ERP, and UI/UX.',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Global Remote',
+      addressCountry: 'US',
+    },
   };
 
   useEffect(() => {
-    // Tab title
-    document.title = title ? `${title} | Nextora Studio` : 'Nextora Studio | Where Ideas Take Shape';
+    // ── Title ──────────────────────────────────────────────────────────
+    document.title = fullTitle;
 
-    // Meta description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.name = 'description';
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.content = description || 'Nextora Studio builds premium websites, mobile applications, software, POS systems, and CRM/ERP solutions that help businesses grow.';
+    // Helper: upsert a <meta> tag
+    const upsertMeta = (selector, attr, value) => {
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        const [attrKey, attrVal] = attr.split('=');
+        el.setAttribute(attrKey, attrVal);
+        document.head.appendChild(el);
+      }
+      el.content = value;
+    };
 
-    // Open Graph Title
-    let ogTitle = document.querySelector('meta[property="og:title"]');
-    if (!ogTitle) {
-      ogTitle = document.createElement('meta');
-      ogTitle.setAttribute('property', 'og:title');
-      document.head.appendChild(ogTitle);
-    }
-    ogTitle.content = title ? `${title} | Nextora Studio` : 'Nextora Studio | Where Ideas Take Shape';
+    // ── Standard meta ──────────────────────────────────────────────────
+    upsertMeta('meta[name="description"]',   'name=description',   metaDesc);
+    upsertMeta('meta[name="robots"]',        'name=robots',        'index, follow');
 
-    // Open Graph Description
-    let ogDesc = document.querySelector('meta[property="og:description"]');
-    if (!ogDesc) {
-      ogDesc = document.createElement('meta');
-      ogDesc.setAttribute('property', 'og:description');
-      document.head.appendChild(ogDesc);
-    }
-    ogDesc.content = description || 'Nextora Studio is an enterprise-grade digital software agency transforming ideas into powerful digital solutions.';
+    // ── Open Graph ─────────────────────────────────────────────────────
+    upsertMeta('meta[property="og:title"]',       'property=og:title',       fullTitle);
+    upsertMeta('meta[property="og:description"]', 'property=og:description', metaDesc);
+    upsertMeta('meta[property="og:type"]',        'property=og:type',        'website');
+    upsertMeta('meta[property="og:url"]',         'property=og:url',         SITE_URL);
+    upsertMeta('meta[property="og:image"]',       'property=og:image',       OG_IMAGE);
+    upsertMeta('meta[property="og:image:width"]', 'property=og:image:width', '1200');
+    upsertMeta('meta[property="og:image:height"]','property=og:image:height','630');
+    upsertMeta('meta[property="og:site_name"]',   'property=og:site_name',   SITE_NAME);
 
-    // Schema JSON-LD
+    // ── Twitter Card ───────────────────────────────────────────────────
+    upsertMeta('meta[name="twitter:card"]',        'name=twitter:card',        'summary_large_image');
+    upsertMeta('meta[name="twitter:site"]',        'name=twitter:site',        '@nextorastudio');
+    upsertMeta('meta[name="twitter:title"]',       'name=twitter:title',       fullTitle);
+    upsertMeta('meta[name="twitter:description"]', 'name=twitter:description', metaDesc);
+    upsertMeta('meta[name="twitter:image"]',       'name=twitter:image',       OG_IMAGE);
+
+    // ── JSON-LD Schema ─────────────────────────────────────────────────
     let schemaScript = document.getElementById('seo-schema-script');
-    if (schemaScript) {
-      schemaScript.textContent = JSON.stringify(schema || defaultSchema);
-    } else {
+    if (!schemaScript) {
       schemaScript = document.createElement('script');
-      schemaScript.id = 'seo-schema-script';
+      schemaScript.id   = 'seo-schema-script';
       schemaScript.type = 'application/ld+json';
-      schemaScript.textContent = JSON.stringify(schema || defaultSchema);
       document.head.appendChild(schemaScript);
     }
-  }, [title, description, schema]);
+    schemaScript.textContent = JSON.stringify(schema || defaultSchema);
+  }, [fullTitle, metaDesc, schema]);
 
   return null;
 }
