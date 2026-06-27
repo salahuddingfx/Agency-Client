@@ -7,7 +7,7 @@ import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 
 export default function Team() {
-  const { data: members } = useFetch(() => api.getTeam(), teamMembers);
+  const { data: members = teamMembers } = useFetch(() => api.getTeam(), teamMembers);
   const [selectedMember, setSelectedMember] = useState(null);
   return (
     <motion.div

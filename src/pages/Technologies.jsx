@@ -27,7 +27,7 @@ function GlobeLoader() {
 }
 
 export default function Technologies() {
-  const { data: techList } = useFetch(() => api.getTechnologies(), technologies);
+  const { data: techList = technologies } = useFetch(() => api.getTechnologies(), technologies);
   const [activeFilter, setActiveFilter] = useState('All');
 
   const categories = ['All', ...Object.keys(CATEGORY_META)];

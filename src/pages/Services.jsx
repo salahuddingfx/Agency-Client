@@ -19,7 +19,7 @@ const FigmaIcon = (props) => (
 );
 
 export default function Services() {
-  const { data: services } = useFetch(() => api.getServices(), servicesData);
+  const { data: services = servicesData } = useFetch(() => api.getServices(), servicesData);
 
   const getIcon = (name) => {
     const props = { className: "text-brand-primary", size: 28 };

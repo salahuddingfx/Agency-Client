@@ -6,7 +6,7 @@ import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 
 export default function CaseStudies() {
-  const { data: studies } = useFetch(() => api.getCaseStudies(), caseStudies);
+  const { data: studies = caseStudies } = useFetch(() => api.getCaseStudies(), caseStudies);
   return (
     <motion.div
       initial={{ opacity: 0 }}

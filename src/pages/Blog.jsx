@@ -43,7 +43,7 @@ function useLikes(initialCounts) {
 }
 
 export default function Blog() {
-  const { data: posts } = useFetch(() => api.getBlogs(), blogPosts);
+  const { data: posts = blogPosts } = useFetch(() => api.getBlogs(), blogPosts);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [readingPost, setReadingPost] = useState(null);

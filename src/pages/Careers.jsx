@@ -8,7 +8,7 @@ import { api } from '../api/api';
 import { useToast } from '../components/Toast';
 
 export default function Careers() {
-  const { data: jobs } = useFetch(() => api.getCareers(), careersData);
+  const { data: jobs = careersData } = useFetch(() => api.getCareers(), careersData);
   const { toast } = useToast();
   const [selectedJob, setSelectedJob] = useState(null);
   const [applyForm, setApplyForm] = useState({ name: '', email: '', resume: '', coverLetter: '' });

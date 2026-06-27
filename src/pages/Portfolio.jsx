@@ -7,7 +7,7 @@ import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 
 export default function Portfolio() {
-  const { data: allProjects } = useFetch(() => api.getPortfolios(), projectsData);
+  const { data: allProjects = projectsData } = useFetch(() => api.getPortfolios(), projectsData);
   const [activeFilter, setActiveFilter] = useState('All');
 
   const categories = ['All', 'Web Development', 'Mobile App Development', 'POS Solutions', 'ERP & CRM Systems', 'UI/UX Design', 'Graphics Design', 'AI & Machine Learning', 'SEO & Digital Marketing'];
