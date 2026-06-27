@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 const SITE_NAME = 'Nextora Studio';
 const SITE_URL  = 'https://nextorastudio.tech';
-const OG_IMAGE  = `${SITE_URL}/og-image.png`; // place a 1200×630 image in /public/
+const OG_IMAGE  = `${SITE_URL}/og-image.svg`;
 
 export default function SEO({ title, description, schema }) {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | Where Ideas Take Shape`;
