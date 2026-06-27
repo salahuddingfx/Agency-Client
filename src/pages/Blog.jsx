@@ -120,7 +120,7 @@ export default function Blog() {
             placeholder="Search articles, tags..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-brand-slateAccent/40 border border-brand-slateAccent text-white pl-11 pr-4 py-3 rounded-full text-sm outline-none placeholder:text-slate-500 focus:border-brand-primary/50 focus:bg-brand-slateAccent/60 transition-all"
+            className="w-full bg-brand-slateAccent/40 border border-brand-slateAccent text-slate-800 dark:text-white pl-11 pr-4 py-3 rounded-full text-sm outline-none placeholder:text-slate-500 focus:border-brand-primary/50 focus:bg-brand-slateAccent/60 transition-all"
           />
         </div>
       </section>
