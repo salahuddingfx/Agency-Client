@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" fetchpriority="high" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Google Tag Manager -->
@@ -44,8 +44,11 @@
     <meta property="twitter:image" content="https://nextorastudio.tech/og-image.jpg" />
 
     <!-- Performance Optimization: Preconnect Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" fetchpriority="high" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin fetchpriority="high" />
+
+    <!-- Preload OG Image for fast social sharing -->
+    <link rel="preload" as="image" href="https://nextorastudio.tech/og-image.jpg" fetchpriority="high" />
   </head>
   <body class="bg-brand-darker selection:bg-brand-primary/20 selection:text-white">
     <!-- Google Tag Manager (noscript) -->
@@ -53,6 +56,6 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx" fetchpriority="high"></script>
   </body>
 </html>
