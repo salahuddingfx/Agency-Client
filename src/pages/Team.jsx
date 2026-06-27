@@ -57,10 +57,14 @@ export default function Team() {
               className="glass-card rounded-xl p-6 sm:p-8 flex flex-col justify-between hover:border-brand-primary/40 hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
             >
               <div>
-                {/* Avatar Placeholder */}
+                {/* Avatar */}
                 <div className="flex items-center space-x-4 mb-6">
-                  <div className={`w-14 h-14 rounded-full bg-gradient-to-tr ${member.avatarGradient} flex items-center justify-center text-white font-bold text-lg shadow-md`}>
-                    {member.name.split(' ').map(n => n[0]).join('')}
+                  <div className={`w-14 h-14 rounded-full overflow-hidden ${!member.avatarUrl ? `bg-gradient-to-tr ${member.avatarGradient}` : ''} flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0`}>
+                    {member.avatarUrl ? (
+                      <img src={member.avatarUrl} alt={member.name} className="w-full h-full object-cover" />
+                    ) : (
+                      member.name.split(' ').map(n => n[0]).join('')
+                    )}
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white font-display leading-tight">{member.name}</h3>
@@ -147,8 +151,12 @@ export default function Team() {
 
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
                 {/* Big Avatar */}
-                <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-tr ${selectedMember.avatarGradient} flex items-center justify-center text-white font-bold text-3xl sm:text-4xl shadow-xl shrink-0`}>
-                  {selectedMember.name.split(' ').map(n => n[0]).join('')}
+                <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden ${!selectedMember.avatarUrl ? `bg-gradient-to-tr ${selectedMember.avatarGradient}` : ''} flex items-center justify-center text-white font-bold text-3xl sm:text-4xl shadow-xl shrink-0`}>
+                  {selectedMember.avatarUrl ? (
+                    <img src={selectedMember.avatarUrl} alt={selectedMember.name} className="w-full h-full object-cover" />
+                  ) : (
+                    selectedMember.name.split(' ').map(n => n[0]).join('')
+                  )}
                 </div>
 
                 <div className="flex-1 text-center sm:text-left space-y-4">
