@@ -25,6 +25,7 @@ const Contact      = lazy(() => import('./pages/Contact'));
 const Careers      = lazy(() => import('./pages/Careers'));
 const ClientPortal = lazy(() => import('./pages/ClientPortal'));
 const Legal        = lazy(() => import('./pages/Legal'));
+const Agreements   = lazy(() => import('./pages/Agreements'));
 const NotFound     = lazy(() => import('./pages/NotFound'));
 
 // Minimal suspense fallback — avoids blank flash
@@ -57,6 +58,7 @@ function AnimatedRoutes() {
           <Route path="/careers"            element={<Careers />} />
           <Route path="/portal"             element={<ClientPortal />} />
           <Route path="/legal/:policyId"    element={<Legal />} />
+          <Route path="/agreements"          element={<Agreements />} />
           {/* Proper 404 — no silent redirect */}
           <Route path="*"                   element={<NotFound />} />
         </Routes>
