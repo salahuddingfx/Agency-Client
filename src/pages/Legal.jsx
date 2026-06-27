@@ -17,7 +17,7 @@ const POLICIES = {
       { title: '6. International Data Transfers', content: 'Your data may be processed in countries outside your jurisdiction. We ensure adequate protection through Standard Contractual Clauses (SCCs), data processing agreements, and compliance with GDPR Chapter V requirements. By using our services, you consent to such transfers subject to appropriate safeguards.' },
       { title: '7. Data Retention', content: 'We retain personal data for the duration of our business relationship plus 36 months. Project files, source code, and documentation are retained for 24 months after project completion. Financial records are kept for 7 years as required by tax law. Anonymized analytics data may be retained indefinitely.' },
       { title: '8. Data Security Measures', content: 'We implement AES-256 encryption at rest, TLS 1.3 encryption in transit, multi-factor authentication for all accounts, role-based access controls, regular security audits, automated vulnerability scanning, and SOC 2 compliant infrastructure. Our incident response plan ensures breach notification within 72 hours.' },
-      { title: '9. Your Rights (GDPR)', content: 'If you are in the EU, you have the right to: access your personal data, rectify inaccurate data, erase your data ("right to be forgotten"), restrict processing, data portability, object to processing, and not be subject to automated decision-making. Submit requests to privacy@nextorastudio.com.' },
+      { title: '9. Your Rights (GDPR)', content: 'If you are in the EU, you have the right to: access your personal data, rectify inaccurate data, erase your data ("right to be forgotten"), restrict processing, data portability, object to processing, and not be subject to automated decision-making. Submit requests to nextorastudio@gmail.com.' },
       { title: '10. Your Rights (CCPA)', content: 'If you are a California resident, you have the right to: know what personal information is collected, know if your data is sold, delete your personal information, opt-out of the sale of personal information, and not be discriminated against for exercising your rights. We do not sell personal information.' },
       { title: '11. Cookies & Tracking', content: 'We use essential cookies for session management and security, analytics cookies (Google Analytics) to understand usage patterns, and preference cookies to remember your settings. We do not use advertising or cross-site tracking cookies. You can manage cookie preferences through your browser settings.' },
       { title: '12. Client Portal Security', content: 'The client portal uses encrypted sessions, automatic timeout after 30 minutes of inactivity, IP-based access logging, and role-based permissions. Credentials are hashed with bcrypt. Portal access can be revoked at any time by contacting support.' },
@@ -28,7 +28,7 @@ const POLICIES = {
       { title: '17. Automated Decision Making', content: 'We do not use automated decision-making or profiling that produces legal or similarly significant effects. Analytics tools help us understand aggregate usage patterns but do not make decisions about individual users.' },
       { title: '18. Do Not Track Signals', content: 'Some browsers transmit "Do Not Track" (DNT) signals. We honor DNT signals by disabling non-essential tracking. Essential cookies required for site functionality remain active regardless of DNT settings.' },
       { title: '19. Policy Updates', content: 'We may update this Privacy Policy periodically. Material changes will be communicated via email to active clients and a prominent notice on our website at least 30 days before taking effect. The "Last Updated" date at the top reflects the most recent revision.' },
-      { title: '20. Contact Information', content: 'For privacy-related inquiries, data requests, or complaints, contact our Data Protection Officer at privacy@nextorastudio.com or write to: Nextora Studio, Privacy Department, Global Remote Operations. We aim to respond to all requests within 30 days.' },
+      { title: '20. Contact Information', content: 'For privacy-related inquiries, data requests, or complaints, contact our Data Protection Officer at nextorastudio@gmail.com or write to: Nextora Studio, Privacy Department, Global Remote Operations. We aim to respond to all requests within 30 days.' },
     ],
   },
 
@@ -88,7 +88,7 @@ const POLICIES = {
       { title: '17. Cookie Security', content: 'All cookies are transmitted over HTTPS (encrypted connections). Essential session cookies use the Secure flag (HTTPS only) and HttpOnly flag (not accessible via JavaScript). We implement SameSite cookie attributes to prevent cross-site request forgery.' },
       { title: '18. International Cookie Regulations', content: 'Our cookie practices comply with: EU ePrivacy Directive, GDPR requirements, California Consumer Privacy Act (CCPA), and other applicable data protection regulations. We maintain records of consent for audit purposes.' },
       { title: '19. Changes to This Policy', content: 'We may update this Cookie Policy to reflect changes in our practices or legal requirements. Material changes will be communicated through the cookie consent banner and a notice on our website. The "Last Updated" date indicates the most recent revision.' },
-      { title: '20. Contact Us', content: 'For questions about our cookie practices, contact privacy@nextorastudio.com or visit our Privacy Policy page for general data protection inquiries. We respond to all cookie-related requests within 10 business days.' },
+      { title: '20. Contact Us', content: 'For questions about our cookie practices, contact nextorastudio@gmail.com or visit our Privacy Policy page for general data protection inquiries. We respond to all cookie-related requests within 10 business days.' },
     ],
   },
 
@@ -97,7 +97,7 @@ const POLICIES = {
     icon: <Shield className="text-brand-primary" size={24} />,
     lastUpdated: 'June 27, 2026',
     sections: [
-      { title: '1. Refund Eligibility Overview', content: 'Nextora Studio offers refunds under specific circumstances outlined in this policy. Refund eligibility depends on the project stage, milestone status, and the nature of the request. All refund requests must be submitted in writing to billing@nextorastudio.com.' },
+      { title: '1. Refund Eligibility Overview', content: 'Nextora Studio offers refunds under specific circumstances outlined in this policy. Refund eligibility depends on the project stage, milestone status, and the nature of the request. All refund requests must be submitted in writing to nextorastudio@gmail.com.' },
       { title: '2. Initial Deposit (30%)', content: 'The initial project deposit (30% of total contract value) is non-refundable once engineering sprints have commenced. The deposit covers: initial discovery and research, project planning and architecture, environment setup, and team resource allocation. Pre-commencement deposits are fully refundable within 7 days of payment.' },
       { title: '3. Completed Milestones', content: 'Milestones that have been delivered, reviewed, and approved by the client are considered finalized. Approved milestone payments are non-refundable. The client has a 5-business-day review period per milestone to request changes before approval.' },
       { title: '4. In-Progress Milestones', content: 'For milestones currently in development, a partial refund may be issued for the unused portion of work not yet commenced. The refund amount is calculated based on documented engineering hours completed versus total estimated hours for that milestone.' },
@@ -110,7 +110,7 @@ const POLICIES = {
       { title: '11. Subscription & Retainer Refunds', content: 'Monthly retainer and subscription services may be cancelled with 30 days written notice. Unused prepaid days within the current billing cycle are refunded on a pro-rata basis. Future billing cycles are stopped upon cancellation confirmation.' },
       { title: '12. Hosting & Infrastructure Costs', content: 'Third-party hosting fees, domain registrations, SSL certificates, and cloud infrastructure costs are non-refundable. These costs are passed through at actual cost and are payable regardless of project status.' },
       { title: '13. Refund Processing', content: 'Approved refunds are processed within 10 business days via the original payment method. Bank transfer refunds may take an additional 5 business days to appear. International wire transfers may incur additional processing fees.' },
-      { title: '14. Chargeback Prevention', content: 'Before initiating a chargeback with your bank or credit card company, please contact us directly at billing@nextorastudio.com. We are committed to resolving billing disputes promptly. Unauthorized chargebacks may result in service suspension and additional fees.' },
+      { title: '14. Chargeback Prevention', content: 'Before initiating a chargeback with your bank or credit card company, please contact us directly at nextorastudio@gmail.com. We are committed to resolving billing disputes promptly. Unauthorized chargebacks may result in service suspension and additional fees.' },
       { title: '15. Dispute Resolution', content: 'Refund disputes that cannot be resolved through direct communication will be submitted to binding arbitration under AAA rules. The arbitration decision is final and binding. Each party bears its own legal costs unless the arbitrator rules otherwise.' },
       { title: '16. Force Majeure Refunds', content: 'If project cancellation is caused by force majeure events (natural disasters, pandemics, government actions), both parties negotiate a fair allocation of costs for work completed. Prepaid amounts for uncommenced work are refunded.' },
       { title: '17. Termination by Nextora', content: 'If Nextora Studio terminates the agreement for cause (client breach, non-payment), no refunds are issued for payments made. The client remains liable for any outstanding balances. Termination for convenience by Nextora entitles the client to a pro-rata refund.' },
@@ -158,7 +158,7 @@ const DEFAULT_POLICY = {
   icon: <FileText className="text-brand-primary" size={24} />,
   lastUpdated: 'June 27, 2026',
   sections: [
-    { title: 'Notice', content: 'Please select a valid legal policy document from the footer links. If you believe this is an error, contact our legal team at legal@nextorastudio.com.' },
+    { title: 'Notice', content: 'Please select a valid legal policy document from the footer links. If you believe this is an error, contact our legal team at nextorastudio@gmail.com.' },
   ],
 };
 

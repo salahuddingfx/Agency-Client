@@ -73,13 +73,13 @@ export default function Footer() {
               We design and engineer premium digital solutions that empower startups, scaling companies, and global enterprises.
             </p>
             <div className="space-y-2.5 mb-6">
-              <a href="mailto:hello@nextorastudio.com" className="flex items-center gap-3 text-sm hover:text-white transition-colors group">
+              <a href="mailto:nextorastudio@gmail.com" className="flex items-center gap-3 text-sm hover:text-white transition-colors group">
                 <Mail size={15} className="text-brand-primary shrink-0" />
-                <span>hello@nextorastudio.com</span>
+                <span>nextorastudio@gmail.com</span>
               </a>
-              <a href="tel:+12028007640" className="flex items-center gap-3 text-sm hover:text-white transition-colors group">
+              <a href="tel:+8801851075537" className="flex items-center gap-3 text-sm hover:text-white transition-colors group">
                 <Phone size={15} className="text-brand-primary shrink-0" />
-                <span>+1 (202) 800-7640</span>
+                <span>+880 185-107-5537</span>
               </a>
               <div className="flex items-center gap-3 text-sm">
                 <MapPin size={15} className="text-brand-primary shrink-0" />

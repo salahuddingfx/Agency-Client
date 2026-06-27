@@ -5,8 +5,8 @@ import SEO from '../components/SEO';
 import { api } from '../api/api';
 
 // ── Config ─────────────────────────────────────────────────────
-const WHATSAPP_NUMBER = '8801XXXXXXXXX'; // ← Replace with your real WhatsApp Business number
-const CONTACT_EMAIL   = 'hello@nextorastudio.com';
+const WHATSAPP_NUMBER = '8801851075537';
+const CONTACT_EMAIL   = 'nextorastudio@gmail.com';
 
 const BUDGET_OPTIONS = [
   '$5k - $10k (Starter)',

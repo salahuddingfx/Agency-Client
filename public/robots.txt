@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /portal/*
 
-Sitemap: https://nextorastudio.com/sitemap.xml
+Sitemap: https://nextorastudio.tech/sitemap.xml
