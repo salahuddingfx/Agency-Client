@@ -80,9 +80,11 @@ export default function Technologies() {
           <div className="absolute -bottom-3 -left-3 w-8 h-8 border-b-2 border-l-2 border-brand-primary/30 rounded-bl-lg pointer-events-none" />
           <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-2 border-r-2 border-brand-primary/30 rounded-br-lg pointer-events-none" />
 
-          <Suspense fallback={<GlobeLoader />}>
-            <TechGlobe technologies={techList} />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<GlobeLoader />}>
+              <TechGlobe technologies={techList} />
+            </Suspense>
+          </ErrorBoundary>
 
           {/* Instructions overlay */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-md rounded-full border border-white/10 pointer-events-none">
