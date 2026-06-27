@@ -38,7 +38,7 @@ export default function Services() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="pt-24 pb-16 min-h-screen relative"
+      className="pt-16 sm:pt-20 pb-16 min-h-screen relative"
     >
       <SEO 
         title="Our Services" 
@@ -50,10 +50,11 @@ export default function Services() {
       <div className="absolute bottom-[20%] left-[10%] w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* --- HERO SECTION --- */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-brand-primary mb-3">Our Offerings</h2>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-display mb-6">
-          Architecting High-End <br />
+      <section className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
+        <h2 className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-brand-primary mb-3">Our Offerings</h2>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-display mb-5 sm:mb-6">
+          Architecting High-End{' '}
+          <br className="hidden sm:block" />
           <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">Digital Infrastructures</span>
         </h1>
         <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl mx-auto font-sans">
@@ -63,7 +64,7 @@ export default function Services() {
 
       {/* --- DETAILED SERVICES GRID --- */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <GsapFadeIn className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <GsapFadeIn className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
           {servicesData.map((service, index) => (
             <TiltCard key={service.id} className="h-full">
               <div className="glass-card p-8 sm:p-10 rounded-xl hover:border-brand-primary/20 transition-all flex flex-col justify-between h-full">
