@@ -43,9 +43,9 @@ export default function Header() {
         <div className="flex items-center justify-between">
           
           {/* Logo Left */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <Logo size={36} className="transform group-hover:scale-105 transition-transform duration-300" />
-            <div className="flex flex-col">
+          <Link to="/" className="flex items-center sm:space-x-3 group shrink-0 min-w-0">
+            <Logo size={32} className="transform group-hover:scale-105 transition-transform duration-300 shrink-0" />
+            <div className="hidden sm:flex flex-col min-w-0">
               <span className="text-lg font-bold tracking-[0.2em] font-display text-slate-900 dark:text-white transition-colors duration-300">NEXTORA</span>
               <span className="text-[8px] uppercase tracking-[0.25em] text-brand-primary font-medium">STUDIO</span>
             </div>
@@ -98,13 +98,13 @@ export default function Header() {
           </div>
 
           {/* Mobile hamburger icon */}
-          <div className="flex items-center gap-1.5 lg:hidden">
+          <div className="flex items-center gap-1 sm:gap-1.5 lg:hidden shrink-0">
             <button
               onClick={toggleTheme}
               className="p-1.5 sm:p-2 rounded-full border border-slate-300 dark:border-brand-slateAccent text-slate-600 dark:text-slate-300 hover:text-brand-primary transition-all duration-300"
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
             </button>
             <Link
               to="/portal"
@@ -112,13 +112,13 @@ export default function Header() {
                 location.pathname.startsWith('/portal') ? 'text-brand-primary border-brand-primary/30 bg-brand-primary/5' : ''
               }`}
             >
-              <User size={16} />
+              <User size={14} />
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-1.5 sm:p-2 rounded-md border border-slate-300 dark:border-brand-slateAccent text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
             >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
+              {isOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
 
