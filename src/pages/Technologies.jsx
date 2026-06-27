@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Layers, Monitor, HardDrive, Terminal, Sliders, Smartphone, Brain, Sparkles, RotateCw } from 'lucide-react';
 import SEO from '../components/SEO';
 import { technologies } from '../data/mockData';
+import { normalizeTechnologies } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 import TechGlobe from '../components/TechGlobe';
@@ -27,7 +28,8 @@ function GlobeLoader() {
 }
 
 export default function Technologies() {
-  const { data: techList = technologies } = useFetch(() => api.getTechnologies(), technologies);
+  const { data: rawTechs = technologies } = useFetch(() => api.getTechnologies(), technologies);
+  const techList = normalizeTechnologies(rawTechs);
   const [activeFilter, setActiveFilter] = useState('All');
 
   const categories = ['All', ...Object.keys(CATEGORY_META)];

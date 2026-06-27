@@ -8,6 +8,7 @@ import {
 import SEO from '../components/SEO';
 import TypingAnimation from '../components/TypingAnimation';
 import { servicesData, statistics, caseStudies } from '../data/mockData';
+import { normalizeServices, normalizeCaseStudies, normalizeTestimonials } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import GsapFadeIn from '../components/GsapAnimate';
 import GlowCard from '../components/GlowCard';
@@ -129,15 +130,17 @@ export default function Home() {
   const [liveTestimonials, setLiveTestimonials] = useState([]);
   const [testimonialsLoading, setTestimonialsLoading] = useState(true);
 
-  const { data: homeServices = servicesData } = useFetch(() => api.getServices(), servicesData);
-  const { data: homeCaseStudies = caseStudies } = useFetch(() => api.getCaseStudies(), caseStudies);
+  const { data: rawHomeServices = servicesData } = useFetch(() => api.getServices(), servicesData);
+  const { data: rawHomeCaseStudies = caseStudies } = useFetch(() => api.getCaseStudies(), caseStudies);
+  const homeServices = normalizeServices(rawHomeServices);
+  const homeCaseStudies = normalizeCaseStudies(rawHomeCaseStudies);
 
   // Fetch live testimonials from backend
   useEffect(() => {
     api.getTestimonials()
       .then((res) => {
         const data = res.data || res.testimonials || res || [];
-        const arr = Array.isArray(data) ? data : [];
+        const arr = Array.isArray(data) ? normalizeTestimonials(data) : [];
         setLiveTestimonials(arr.length > 0 ? arr : FALLBACK_TESTIMONIALS);
       })
       .catch(() => setLiveTestimonials(FALLBACK_TESTIMONIALS))
@@ -297,7 +300,7 @@ export default function Home() {
         </div>
 
         <GsapFadeIn className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {(homeServices || servicesData).slice(0, 3).map((service) => (
+          {homeServices.slice(0, 3).map((service) => (
             <GlowCard key={service.id} className="h-full">
               <div className="glass-card p-6 sm:p-8 rounded-lg hover:border-brand-primary/20 transition-all group flex flex-col justify-between h-full">
                 <div>
@@ -307,7 +310,7 @@ export default function Home() {
                   <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3 font-display">{service.title}</h3>
                   <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4 sm:mb-6">{service.shortDesc}</p>
                   <ul className="space-y-2 mb-4 sm:mb-6">
-                    {(service.features || []).slice(0, 3).map((feat, i) => (
+                    {service.features.slice(0, 3).map((feat, i) => (
                       <li key={i} className="text-xs text-slate-500 flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-brand-primary/60 shrink-0" />
                         <span>{feat}</span>
@@ -419,7 +422,7 @@ export default function Home() {
             <p className="text-2xl sm:text-3xl font-bold text-white font-display mt-2">Delivering Real Business Value</p>
           </div>
 
-          {(homeCaseStudies || caseStudies).slice(0, 1).map((study) => (
+          {homeCaseStudies.slice(0, 1).map((study) => (
             <GsapFadeIn key={study.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
 
               <GlowCard className="lg:col-span-5">
@@ -430,7 +433,7 @@ export default function Home() {
                     <h4 className="text-xl sm:text-2xl font-bold tracking-tight mt-4">{study.client}</h4>
                   </div>
                   <div className="space-y-3">
-                    {(study.stats || []).map((stat, i) => (
+                    {study.stats.map((stat, i) => (
                       <div key={i} className="flex justify-between items-end border-b border-white/10 pb-2">
                         <span className="text-xs text-white/70">{stat.label}</span>
                         <span className="text-lg sm:text-xl font-bold">{stat.value}</span>

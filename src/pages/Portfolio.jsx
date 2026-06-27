@@ -3,11 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Filter } from 'lucide-react';
 import SEO from '../components/SEO';
 import { projectsData } from '../data/mockData';
+import { normalizePortfolios } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 
 export default function Portfolio() {
-  const { data: allProjects = projectsData } = useFetch(() => api.getPortfolios(), projectsData);
+  const { data: rawProjects = projectsData } = useFetch(() => api.getPortfolios(), projectsData);
+  const allProjects = normalizePortfolios(rawProjects);
   const [activeFilter, setActiveFilter] = useState('All');
 
   const categories = ['All', 'Web Development', 'Mobile App Development', 'POS Solutions', 'ERP & CRM Systems', 'UI/UX Design', 'Graphics Design', 'AI & Machine Learning', 'SEO & Digital Marketing'];

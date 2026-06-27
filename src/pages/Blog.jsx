@@ -4,6 +4,7 @@ import { Search, Clock, ThumbsUp, Eye, X, Calendar, User } from 'lucide-react';
 import DOMPurify from 'dompurify';
 import SEO from '../components/SEO';
 import { blogPosts } from '../data/mockData';
+import { normalizeBlogs } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 
@@ -43,7 +44,8 @@ function useLikes(initialCounts) {
 }
 
 export default function Blog() {
-  const { data: posts = blogPosts } = useFetch(() => api.getBlogs(), blogPosts);
+  const { data: rawPosts = blogPosts } = useFetch(() => api.getBlogs(), blogPosts);
+  const posts = normalizeBlogs(rawPosts);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [readingPost, setReadingPost] = useState(null);

@@ -3,11 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, X } from 'lucide-react';
 import SEO from '../components/SEO';
 import { teamMembers } from '../data/mockData';
+import { normalizeTeamMembers } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 
 export default function Team() {
-  const { data: members = teamMembers } = useFetch(() => api.getTeam(), teamMembers);
+  const { data: rawMembers = teamMembers } = useFetch(() => api.getTeam(), teamMembers);
+  const members = normalizeTeamMembers(rawMembers);
   const [selectedMember, setSelectedMember] = useState(null);
   return (
     <motion.div

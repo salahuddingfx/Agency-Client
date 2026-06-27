@@ -2,11 +2,13 @@ import { motion } from 'framer-motion';
 import { Trophy, Code2, Users2 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { caseStudies } from '../data/mockData';
+import { normalizeCaseStudies } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 
 export default function CaseStudies() {
-  const { data: studies = caseStudies } = useFetch(() => api.getCaseStudies(), caseStudies);
+  const { data: rawStudies = caseStudies } = useFetch(() => api.getCaseStudies(), caseStudies);
+  const studies = normalizeCaseStudies(rawStudies);
   return (
     <motion.div
       initial={{ opacity: 0 }}

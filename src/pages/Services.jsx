@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Globe, Smartphone, Code, CreditCard, Layers, TrendingUp, Sparkles, Check, ChevronRight, Palette, Brain } from 'lucide-react';
 import SEO from '../components/SEO';
 import { servicesData } from '../data/mockData';
+import { normalizeServices } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 import GsapFadeIn from '../components/GsapAnimate';
@@ -19,7 +20,8 @@ const FigmaIcon = (props) => (
 );
 
 export default function Services() {
-  const { data: services = servicesData } = useFetch(() => api.getServices(), servicesData);
+  const { data: rawServices = servicesData } = useFetch(() => api.getServices(), servicesData);
+  const services = normalizeServices(rawServices);
 
   const getIcon = (name) => {
     const props = { className: "text-brand-primary", size: 28 };

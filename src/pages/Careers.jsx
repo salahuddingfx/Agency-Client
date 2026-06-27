@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, Briefcase, FileText, CheckCircle2, X } from 'lucide-react';
 import SEO from '../components/SEO';
 import { careersData } from '../data/mockData';
+import { normalizeCareers } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 import { useToast } from '../components/Toast';
 
 export default function Careers() {
-  const { data: jobs = careersData } = useFetch(() => api.getCareers(), careersData);
+  const { data: rawJobs = careersData } = useFetch(() => api.getCareers(), careersData);
+  const jobs = normalizeCareers(rawJobs);
   const { toast } = useToast();
   const [selectedJob, setSelectedJob] = useState(null);
   const [applyForm, setApplyForm] = useState({ name: '', email: '', resume: '', coverLetter: '' });
