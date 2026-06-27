@@ -74,14 +74,14 @@ export default function Header() {
           <div className="hidden lg:flex items-center space-x-3">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-brand-primary dark:hover:text-brand-primary hover:border-brand-primary/30 transition-all duration-300"
+              className="p-2 rounded-full border border-slate-300 dark:border-brand-slateAccent text-slate-600 dark:text-slate-300 hover:text-brand-primary dark:hover:text-brand-primary hover:border-brand-primary/30 transition-all duration-300"
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
             <Link
               to="/portal"
-              className={`p-2 rounded-full border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-brand-primary hover:border-brand-primary/30 transition-all duration-300 ${
+              className={`p-2 rounded-full border border-slate-300 dark:border-brand-slateAccent text-slate-600 dark:text-slate-300 hover:text-brand-primary hover:border-brand-primary/30 transition-all duration-300 ${
                 location.pathname.startsWith('/portal') ? 'text-brand-primary border-brand-primary/30 bg-brand-primary/5' : ''
               }`}
               title="Client Portal"
@@ -98,17 +98,17 @@ export default function Header() {
           </div>
 
           {/* Mobile hamburger icon */}
-          <div className="flex items-center space-x-2 lg:hidden">
+          <div className="flex items-center gap-1.5 lg:hidden">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-brand-primary transition-all duration-300"
+              className="p-1.5 sm:p-2 rounded-full border border-slate-300 dark:border-brand-slateAccent text-slate-600 dark:text-slate-300 hover:text-brand-primary transition-all duration-300"
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
             <Link
               to="/portal"
-              className={`p-2 rounded-full border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-brand-primary transition-all duration-300 ${
+              className={`p-1.5 sm:p-2 rounded-full border border-slate-300 dark:border-brand-slateAccent text-slate-600 dark:text-slate-300 hover:text-brand-primary transition-all duration-300 ${
                 location.pathname.startsWith('/portal') ? 'text-brand-primary border-brand-primary/30 bg-brand-primary/5' : ''
               }`}
             >
@@ -116,7 +116,7 @@ export default function Header() {
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md border border-brand-slateAccent text-slate-400 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
+              className="p-1.5 sm:p-2 rounded-md border border-slate-300 dark:border-brand-slateAccent text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -145,7 +145,7 @@ export default function Header() {
                     className={`block px-4 py-3 rounded-md text-sm font-medium tracking-wide transition-all duration-300 ${
                       isActive
                         ? 'text-brand-primary bg-brand-primary/10'
-                        : 'text-slate-400 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-900/5 dark:hover:bg-white/5'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-900/5 dark:hover:bg-white/5'
                     }`}
                   >
                     {link.name}
