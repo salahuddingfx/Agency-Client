@@ -147,4 +147,10 @@ html:not(.dark) .text-white:not(button):not(a):not(.bg-brand-primary):not(.bg-br
   border-radius: 4px;
 }
 
+/* Light mode: links never white on hover */
+html:not(.dark) a:hover,
+html:not(.dark) a:focus {
+  color: #0f172a;
+}
+
 
