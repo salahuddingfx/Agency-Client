@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Globe, Smartphone, Code, CreditCard, Layers, TrendingUp, Sparkles, Check, ChevronRight, Palette, Brain } from 'lucide-react';
 import SEO from '../components/SEO';
 import { servicesData } from '../data/mockData';
+import useFetch from '../hooks/useFetch';
+import { api } from '../api/api';
 import GsapFadeIn from '../components/GsapAnimate';
 import GlowCard from '../components/GlowCard';
 
@@ -17,6 +19,8 @@ const FigmaIcon = (props) => (
 );
 
 export default function Services() {
+  const { data: services } = useFetch(() => api.getServices(), servicesData);
+
   const getIcon = (name) => {
     const props = { className: "text-brand-primary", size: 28 };
     switch (name) {
@@ -67,7 +71,7 @@ export default function Services() {
       {/* --- DETAILED SERVICES GRID --- */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <GsapFadeIn className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-          {servicesData.map((service, index) => (
+          {services.map((service, index) => (
             <GlowCard key={service.id} className="h-full">
               <div className="glass-card p-8 sm:p-10 rounded-xl hover:border-brand-primary/20 transition-all flex flex-col justify-between h-full">
                 <div>
