@@ -3,8 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, Briefcase, FileText, CheckCircle2, X } from 'lucide-react';
 import SEO from '../components/SEO';
 import { careersData } from '../data/mockData';
+import useFetch from '../hooks/useFetch';
+import { api } from '../api/api';
 
 export default function Careers() {
+  const { data: jobs } = useFetch(() => api.getCareers(), careersData);
   const [selectedJob, setSelectedJob] = useState(null);
   const [applyForm, setApplyForm] = useState({ name: '', email: '', resume: '', coverLetter: '' });
   const [isApplied, setIsApplied] = useState(false);
@@ -55,7 +58,7 @@ export default function Careers() {
       {/* --- JOBS LISTING SECTION --- */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="space-y-6">
-          {careersData.map((job) => (
+          {jobs.map((job) => (
             <div 
               key={job.id} 
               className="glass-card p-6 sm:p-8 rounded-xl hover:border-brand-primary/25 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6"
