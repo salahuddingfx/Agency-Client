@@ -2,8 +2,11 @@ import { motion } from 'framer-motion';
 import { Layers, Monitor, HardDrive, Terminal, Sliders, Smartphone, Brain } from 'lucide-react';
 import SEO from '../components/SEO';
 import { technologies } from '../data/mockData';
+import useFetch from '../hooks/useFetch';
+import { api } from '../api/api';
 
 export default function Technologies() {
+  const { data: techList } = useFetch(() => api.getTechnologies(), technologies);
   const categories = ['All', 'Frontend', 'Mobile', 'Backend', 'Database', 'AI/ML', 'Infrastructure', 'Tools'];
 
   const getCategoryIcon = (category) => {
@@ -51,7 +54,7 @@ export default function Technologies() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="space-y-16">
           {categories.filter(c => c !== 'All').map((category) => {
-            const list = technologies.filter(t => t.category === category);
+            const list = techList.filter(t => t.category === category);
             if (list.length === 0) return null;
 
             return (
