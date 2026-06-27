@@ -1,39 +1,129 @@
+import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Globe, Smartphone, Code, Layers, Sparkles, ChevronRight, MessageSquare, CheckCircle } from 'lucide-react';
+import {
+  ArrowRight, Globe, Smartphone, Code, Layers, Sparkles,
+  ChevronRight, MessageSquare, Star, Quote
+} from 'lucide-react';
 import SEO from '../components/SEO';
 import TypingAnimation from '../components/TypingAnimation';
-import { servicesData, statistics, projectsData, caseStudies } from '../data/mockData';
+import { servicesData, statistics, caseStudies } from '../data/mockData';
 import GsapFadeIn from '../components/GsapAnimate';
 import TiltCard from '../components/TiltCard';
 
+/* ─── CountUp Hook ─────────────────────────────────────────────── */
+function useCountUp(target, duration = 1800, start = false) {
+  const [count, setCount] = useState('0');
+
+  useEffect(() => {
+    if (!start) return;
+    // Parse numeric value from string like "120+", "98%", "8+", "15m+"
+    const raw = target.replace(/[^0-9.]/g, '');
+    const suffix = target.replace(/[0-9.]/g, '');
+    const end = parseFloat(raw);
+    if (isNaN(end)) { setCount(target); return; }
+
+    let startTime = null;
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const current = Math.floor(eased * end);
+      setCount(`${current}${suffix}`);
+      if (progress < 1) requestAnimationFrame(step);
+      else setCount(target);
+    };
+    requestAnimationFrame(step);
+  }, [start, target, duration]);
+
+  return count;
+}
+
+/* ─── Animated Stat ─────────────────────────────────────────────── */
+function AnimatedStat({ stat, delay, inView }) {
+  const [triggered, setTriggered] = useState(false);
+  useEffect(() => {
+    if (inView && !triggered) {
+      const t = setTimeout(() => setTriggered(true), delay);
+      return () => clearTimeout(t);
+    }
+  }, [inView, triggered, delay]);
+  const count = useCountUp(stat.value, 1800, triggered);
+
+  return (
+    <div className="text-center px-4">
+      <span className="block text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white font-display bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+        {count}
+      </span>
+      <span className="block text-[10px] sm:text-xs font-semibold text-brand-primary uppercase tracking-widest mt-2">
+        {stat.label}
+      </span>
+      <span className="block text-[10px] sm:text-xs text-slate-500 mt-1 max-w-[180px] mx-auto leading-relaxed">
+        {stat.description}
+      </span>
+    </div>
+  );
+}
+
+/* ─── Testimonials data ────────────────────────────────────────── */
+const testimonials = [
+  {
+    name: 'James Whitfield',
+    role: 'CTO, Apex Retail International',
+    rating: 5,
+    quote: 'Nextora took our bloated Shopify setup and turned it into a blazing-fast headless platform. Page load dropped from 5.6s to under a second. Incredible work.',
+    avatar: 'JW',
+    gradient: 'from-blue-500 to-indigo-600',
+  },
+  {
+    name: 'Priya Menon',
+    role: 'Founder, Velo Delivery Inc.',
+    rating: 5,
+    quote: 'The offline-first React Native app they built works flawlessly in dead zones. Our drivers have zero complaints and the app store rating sits at 4.9. Highly recommended.',
+    avatar: 'PM',
+    gradient: 'from-purple-500 to-pink-500',
+  },
+  {
+    name: 'Omar Hassan',
+    role: 'COO, DineSync Hospitality Group',
+    rating: 5,
+    quote: 'Our POS system now runs on tablets at all 12 locations simultaneously. Real-time order sync, offline support, and a clean UI that staff actually love.',
+    avatar: 'OH',
+    gradient: 'from-cyan-500 to-blue-600',
+  },
+];
+
+/* ─── Client logo trust strip ──────────────────────────────────── */
+const clientLogos = [
+  'Apex Retail', 'Velo Delivery', 'DineSync', 'Omni Mfg.', 'Aura Capital', 'Launchpad Tools',
+];
+
+/* ─── Icon helper ──────────────────────────────────────────────── */
+function getServiceIcon(name) {
+  switch (name) {
+    case 'Globe': return <Globe className="text-brand-primary" size={22} />;
+    case 'Smartphone': return <Smartphone className="text-brand-primary" size={22} />;
+    case 'Code': return <Code className="text-brand-primary" size={22} />;
+    case 'Layers': return <Layers className="text-brand-primary" size={22} />;
+    default: return <Sparkles className="text-brand-primary" size={22} />;
+  }
+}
+
+/* ─── Home Page ─────────────────────────────────────────────────── */
 export default function Home() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-    }
-  };
+  const statsRef = useRef(null);
+  const [statsInView, setStatsInView] = useState(false);
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
-    }
-  };
-
-  const getServiceIcon = (name) => {
-    switch (name) {
-      case 'Globe': return <Globe className="text-brand-primary" size={24} />;
-      case 'Smartphone': return <Smartphone className="text-brand-primary" size={24} />;
-      case 'Code': return <Code className="text-brand-primary" size={24} />;
-      case 'Layers': return <Layers className="text-brand-primary" size={24} />;
-      default: return <Sparkles className="text-brand-primary" size={24} />;
-    }
-  };
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setStatsInView(true); },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <motion.div
@@ -41,62 +131,63 @@ export default function Home() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative min-h-screen pt-24 pb-16 overflow-hidden"
+      className="relative min-h-screen pt-16 sm:pt-20 pb-16 overflow-hidden"
     >
-      <SEO 
-        title="Premium Software & Digital Agency" 
-        description="Nextora Studio turns ideas into custom websites, mobile applications, software architectures, POS, and ERP dashboards for enterprises and startups globally." 
+      <SEO
+        title="Premium Software & Digital Agency"
+        description="Nextora Studio turns ideas into custom websites, mobile applications, software architectures, POS, and ERP dashboards for enterprises and startups globally."
       />
 
-      {/* --- HERO SECTION --- */}
-      <section className="relative flex flex-col items-center justify-center py-20 lg:py-32 px-4 sm:px-6 lg:px-8 text-center bg-mesh-pattern">
-        
-        {/* Floating Background Glows (Stripe/Vercel Aesthetic) */}
-        <div className="absolute top-[20%] left-[10%] w-[350px] h-[350px] bg-brand-primary/10 rounded-full blur-[100px] animate-float pointer-events-none" />
-        <div className="absolute bottom-[10%] right-[10%] w-[400px] h-[400px] bg-brand-accent/10 rounded-full blur-[120px] animate-pulse-subtle pointer-events-none" />
+      {/* ─── HERO ──────────────────────────────────────────────── */}
+      <section className="relative flex flex-col items-center justify-center py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 text-center bg-mesh-pattern">
 
-        <div className="max-w-4xl mx-auto relative z-10">
-          
-          {/* Accent Tagline Badge */}
-          <motion.div 
+        {/* Floating glows */}
+        <div className="absolute top-[15%] left-[5%] sm:left-[10%] w-[200px] sm:w-[350px] h-[200px] sm:h-[350px] bg-brand-primary/10 rounded-full blur-[80px] sm:blur-[100px] animate-float pointer-events-none" />
+        <div className="absolute bottom-[5%] right-[5%] sm:right-[10%] w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-brand-accent/10 rounded-full blur-[100px] sm:blur-[120px] animate-pulse-subtle pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto relative z-10 w-full">
+
+          {/* Badge */}
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 mb-6 text-xs text-brand-primary font-medium tracking-wider uppercase"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 mb-5 sm:mb-6 text-[10px] sm:text-xs text-brand-primary font-medium tracking-wider uppercase"
           >
-            <Sparkles size={12} className="animate-spin-slow" />
+            <Sparkles size={11} className="animate-spin-slow" />
             <span>Introducing Nextora Studio</span>
           </motion.div>
 
-          {/* Main Headline */}
+          {/* Headline */}
           <motion.h1
             initial={{ y: 25, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white font-display leading-[1.15]"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-display leading-[1.15] px-2"
           >
-            Transforming Ideas Into <br />
-            <TypingAnimation 
+            Transforming Ideas Into{' '}
+            <br className="hidden sm:block" />
+            <TypingAnimation
               words={[
-                "Powerful Digital Solutions",
-                "Bespoke Web Applications",
-                "Scalable Cloud Systems",
-                "Custom CRM & ERP Dashboards",
-                "Premium Mobile Apps"
+                'Powerful Digital Solutions',
+                'Bespoke Web Applications',
+                'Scalable Cloud Systems',
+                'Custom CRM & ERP Dashboards',
+                'Premium Mobile Apps',
               ]}
               className="bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent"
               cursorColor="bg-brand-primary"
             />
           </motion.h1>
 
-          {/* Subheadline */}
+          {/* Sub-headline */}
           <motion.p
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.15, duration: 0.7 }}
-            className="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-sans leading-relaxed"
+            className="mt-5 sm:mt-6 text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto font-sans leading-relaxed px-2"
           >
-            We design, develop, and deploy websites, mobile applications, software architectures, POS platforms, and customized CRM/ERP tools that scale your operations.
+            We design, develop, and deploy websites, mobile apps, POS platforms, and custom CRM/ERP tools that scale your operations globally.
           </motion.p>
 
           {/* Hero Buttons */}
@@ -104,144 +195,195 @@ export default function Home() {
             initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4"
+            className="mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 px-4 sm:px-0"
           >
             <Link
               to="/contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-md shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
             >
               <span>Start Your Project</span>
-              <ArrowRight size={16} />
+              <ArrowRight size={15} />
             </Link>
             <Link
               to="/portfolio"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 border border-brand-slateAccent bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 hover:border-slate-700 text-white text-sm font-semibold rounded-md transition-all duration-300"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-brand-slateAccent bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 hover:border-slate-700 text-white text-sm font-semibold rounded-lg transition-all duration-300"
             >
               <span>View Portfolio</span>
             </Link>
           </motion.div>
 
+          {/* Client trust strip */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="mt-10 sm:mt-12"
+          >
+            <p className="text-[10px] sm:text-xs text-slate-600 uppercase tracking-widest mb-4">
+              Trusted by teams at
+            </p>
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+              {clientLogos.map((logo) => (
+                <span
+                  key={logo}
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-brand-slateAccent/20 border border-brand-slateAccent/40 rounded-full text-[10px] sm:text-xs text-slate-500 font-medium hover:text-slate-300 hover:border-slate-600 transition-colors duration-200"
+                >
+                  {logo}
+                </span>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* --- STATISTICS SECTION --- */}
-      <section className="py-16 border-y border-brand-slateAccent/30 bg-brand-darker relative z-10">
+      {/* ─── STATISTICS ─────────────────────────────────────────── */}
+      <section
+        ref={statsRef}
+        className="py-12 sm:py-16 border-y border-brand-slateAccent/30 bg-brand-darker relative z-10"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {statistics.map((stat, idx) => (
-              <GsapFadeIn
-                key={stat.label}
-                delay={idx * 0.1}
-                duration={0.6}
-                direction="up"
-                className="text-center px-4"
-              >
-                <span className="block text-4xl sm:text-5xl font-bold tracking-tight text-white font-display bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                  {stat.value}
-                </span>
-                <span className="block text-xs font-semibold text-brand-primary uppercase tracking-widest mt-2">
-                  {stat.label}
-                </span>
-                <span className="block text-xs text-slate-500 mt-1 max-w-[200px] mx-auto leading-relaxed">
-                  {stat.description}
-                </span>
-              </GsapFadeIn>
+              <AnimatedStat key={stat.label} stat={stat} delay={idx * 150} inView={statsInView} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* --- SERVICES TEASER SECTION --- */}
-      <section className="py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-brand-primary">Capabilities</h2>
-          <p className="text-3xl sm:text-4xl font-bold text-white tracking-tight mt-2 font-display">
+      {/* ─── SERVICES TEASER ────────────────────────────────────── */}
+      <section className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+          <h2 className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-brand-primary">Capabilities</h2>
+          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight mt-2 font-display">
             High-Performance Digital Engineering
           </p>
-          <p className="text-slate-400 mt-4">
+          <p className="text-sm sm:text-base text-slate-400 mt-3 sm:mt-4">
             We provide comprehensive design and engineering resources to bring complex business goals to fruition.
           </p>
         </div>
 
-        <GsapFadeIn className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <GsapFadeIn className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {servicesData.slice(0, 3).map((service) => (
             <TiltCard key={service.id} className="h-full">
-              <div className="glass-card p-8 rounded-lg hover:border-brand-primary/20 transition-all group flex flex-col justify-between h-full">
+              <div className="glass-card p-6 sm:p-8 rounded-lg hover:border-brand-primary/20 transition-all group flex flex-col justify-between h-full">
                 <div>
-                  <div className="w-12 h-12 rounded-md bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center mb-5 sm:mb-6 group-hover:scale-110 transition-transform">
                     {getServiceIcon(service.iconName)}
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-3 font-display">{service.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-6">{service.shortDesc}</p>
-                  <ul className="space-y-2 mb-6">
+                  <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3 font-display">{service.title}</h3>
+                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4 sm:mb-6">{service.shortDesc}</p>
+                  <ul className="space-y-2 mb-4 sm:mb-6">
                     {service.features.slice(0, 3).map((feat, i) => (
-                      <li key={i} className="text-xs text-slate-500 flex items-center space-x-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-primary/60" />
+                      <li key={i} className="text-xs text-slate-500 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-primary/60 shrink-0" />
                         <span>{feat}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-                <Link 
-                  to="/services" 
-                  className="text-xs font-semibold text-brand-primary flex items-center space-x-1 group-hover:text-white transition-colors"
+                <Link
+                  to="/services"
+                  className="text-xs font-semibold text-brand-primary flex items-center gap-1 group-hover:text-white transition-colors"
                 >
                   <span>Learn more</span>
-                  <ChevronRight size={14} />
+                  <ChevronRight size={13} />
                 </Link>
               </div>
             </TiltCard>
           ))}
         </GsapFadeIn>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-10 sm:mt-12">
           <Link
             to="/services"
-            className="inline-flex items-center space-x-2 text-xs font-semibold text-slate-300 hover:text-brand-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-brand-primary transition-colors"
           >
             <span>Explore all services</span>
-            <ChevronRight size={14} />
+            <ChevronRight size={13} />
           </Link>
         </div>
       </section>
 
-      {/* --- FEATURED CASE STUDY PREVIEW --- */}
-      <section className="py-20 bg-brand-slateAccent/10 border-y border-brand-slateAccent/30 relative z-10">
+      {/* ─── TESTIMONIALS ───────────────────────────────────────── */}
+      <section className="py-16 sm:py-20 bg-brand-slateAccent/10 border-y border-brand-slateAccent/30 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-brand-primary">Case Study</h2>
-            <p className="text-3xl font-bold text-white font-display mt-2">Delivering Real Business Value</p>
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+            <h2 className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-brand-primary">Client Reviews</h2>
+            <p className="text-2xl sm:text-3xl font-bold text-white font-display mt-2">What Our Clients Say</p>
+            <div className="flex justify-center items-center gap-1 mt-3">
+              {Array(5).fill(0).map((_, i) => (
+                <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
+              ))}
+              <span className="text-xs text-slate-400 ml-2">5.0 average across all projects</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {testimonials.map((t, idx) => (
+              <GsapFadeIn key={idx} delay={idx * 0.1} direction="up">
+                <div className="glass-card p-6 sm:p-7 rounded-xl hover:border-brand-primary/20 transition-all h-full flex flex-col">
+                  <Quote size={20} className="text-brand-primary/40 mb-4 shrink-0" />
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex-1 mb-5">
+                    "{t.quote}"
+                  </p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-brand-slateAccent/40">
+                    <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${t.gradient} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                      {t.avatar}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-white">{t.name}</p>
+                      <p className="text-[10px] text-slate-500">{t.role}</p>
+                    </div>
+                    <div className="ml-auto flex gap-0.5">
+                      {Array(t.rating).fill(0).map((_, i) => (
+                        <Star key={i} size={10} className="text-yellow-400 fill-yellow-400" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </GsapFadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FEATURED CASE STUDY ────────────────────────────────── */}
+      <section className="py-16 sm:py-20 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
+            <h2 className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-brand-primary">Case Study</h2>
+            <p className="text-2xl sm:text-3xl font-bold text-white font-display mt-2">Delivering Real Business Value</p>
           </div>
 
           {caseStudies.slice(0, 1).map((study) => (
-            <GsapFadeIn key={study.id} className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              
-              {/* Visual Card Left */}
-              <TiltCard className="lg:col-span-5 relative">
-                <div className={`aspect-square rounded-xl bg-gradient-to-tr ${study.coverColor} p-8 flex flex-col justify-between text-white shadow-premium relative overflow-hidden h-full w-full`}>
+            <GsapFadeIn key={study.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
+
+              <TiltCard className="lg:col-span-5">
+                <div className={`rounded-xl bg-gradient-to-tr ${study.coverColor} p-7 sm:p-8 flex flex-col justify-between text-white shadow-premium relative overflow-hidden min-h-[260px]`}>
                   <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl pointer-events-none" />
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider bg-white/10 px-2.5 py-1 rounded">Featured Client</span>
-                    <h4 className="text-2xl font-bold tracking-tight mt-4">{study.client}</h4>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider bg-white/10 px-2.5 py-1 rounded">Featured Client</span>
+                    <h4 className="text-xl sm:text-2xl font-bold tracking-tight mt-4">{study.client}</h4>
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {study.stats.map((stat, i) => (
                       <div key={i} className="flex justify-between items-end border-b border-white/10 pb-2">
                         <span className="text-xs text-white/70">{stat.label}</span>
-                        <span className="text-xl font-bold">{stat.value}</span>
+                        <span className="text-lg sm:text-xl font-bold">{stat.value}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </TiltCard>
 
-              {/* Text Context Right */}
-              <div className="lg:col-span-7 space-y-6">
-                <span className="text-xs font-semibold uppercase tracking-widest text-brand-primary bg-brand-primary/5 px-2.5 py-1 rounded border border-brand-primary/15">{study.category}</span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white font-display">{study.title}</h3>
+              <div className="lg:col-span-7 space-y-5 sm:space-y-6">
+                <span className="text-xs font-semibold uppercase tracking-widest text-brand-primary bg-brand-primary/5 px-2.5 py-1 rounded border border-brand-primary/15">
+                  {study.category}
+                </span>
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white font-display">{study.title}</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">{study.summary}</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-brand-slateAccent/40">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-4 border-t border-brand-slateAccent/40">
                   <div>
                     <h5 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">The Problem</h5>
                     <p className="text-xs text-slate-500 leading-relaxed">{study.problem}</p>
@@ -252,46 +394,45 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="pt-6">
+                <div className="pt-4 sm:pt-6">
                   <Link
-                    to={`/case-studies`}
-                    className="inline-flex items-center space-x-2 px-5 py-2.5 bg-brand-slateAccent/40 hover:bg-brand-slateAccent border border-brand-slateAccent text-white text-xs font-semibold rounded-md transition-colors"
+                    to="/case-studies"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-slateAccent/40 hover:bg-brand-slateAccent border border-brand-slateAccent text-white text-xs font-semibold rounded-lg transition-colors"
                   >
                     <span>Read Full Study</span>
                     <ArrowRight size={12} />
                   </Link>
                 </div>
               </div>
-
             </GsapFadeIn>
           ))}
         </div>
       </section>
 
-      {/* --- CALL TO ACTION --- */}
-      <section className="py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center relative z-10">
+      {/* ─── CALL TO ACTION ─────────────────────────────────────── */}
+      <section className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center relative z-10">
         <GsapFadeIn direction="up">
           <TiltCard>
-            <div className="glass-card p-10 sm:p-16 rounded-2xl relative overflow-hidden">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[350px] h-[150px] bg-brand-primary/10 rounded-full blur-[80px] pointer-events-none" />
-              
-              <h2 className="text-3xl sm:text-4xl font-bold text-white font-display mb-6 tracking-tight">
+            <div className="glass-card p-8 sm:p-12 lg:p-16 rounded-2xl relative overflow-hidden">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] sm:w-[350px] h-[120px] sm:h-[150px] bg-brand-primary/10 rounded-full blur-[80px] pointer-events-none" />
+
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white font-display mb-4 sm:mb-6 tracking-tight">
                 Ready to Accelerate Your Digital Product Roadmap?
               </h2>
-              <p className="text-slate-400 max-w-xl mx-auto mb-8 text-sm sm:text-base leading-relaxed">
-                Let's partner. Connect with our engineering and interface design leads today to schedule a technical discovery call.
+              <p className="text-slate-400 max-w-xl mx-auto mb-7 sm:mb-8 text-sm leading-relaxed">
+                Let's partner. Connect with our engineering leads today to schedule a technical discovery call.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4">
                 <Link
                   to="/contact"
-                  className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-md shadow-premium hover:shadow-glow transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-lg shadow-premium hover:shadow-glow transition-all"
                 >
                   <span>Consult an Expert</span>
                   <MessageSquare size={14} />
                 </Link>
                 <Link
                   to="/pricing"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 border border-brand-slateAccent text-white text-sm font-semibold rounded-md hover:bg-brand-slateAccent/30 transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 border border-brand-slateAccent text-white text-sm font-semibold rounded-lg hover:bg-brand-slateAccent/30 transition-all"
                 >
                   <span>View Packages</span>
                 </Link>
@@ -300,7 +441,6 @@ export default function Home() {
           </TiltCard>
         </GsapFadeIn>
       </section>
-
     </motion.div>
   );
 }
