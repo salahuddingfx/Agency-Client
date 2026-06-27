@@ -1,6 +1,6 @@
 import { useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Layers, Monitor, HardDrive, Terminal, Sliders, Palette, Sparkles } from 'lucide-react';
+import { Layers, Monitor, HardDrive, Terminal, Sliders, Palette, Sparkles, RotateCw } from 'lucide-react';
 import SEO from '../components/SEO';
 import { technologies } from '../data/mockData';
 import { normalizeTechnologies } from '../data/normalize';
