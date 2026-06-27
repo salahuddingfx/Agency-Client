@@ -75,7 +75,7 @@ export default function Portfolio() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8"
         >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (

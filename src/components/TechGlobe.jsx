@@ -265,14 +265,8 @@ function GlobeFallback({ technologies }) {
 }
 
 /* ─── Exported wrapper ────────────────────────────────────────────── */
-import { useState, useEffect } from 'react';
-
 export default function TechGlobe({ technologies }) {
-  const [webgl, setWebgl] = useState(true);
-
-  useEffect(() => {
-    setWebgl(hasWebGL());
-  }, []);
+  const [webgl] = useState(() => hasWebGL());
 
   if (!webgl) return <GlobeFallback technologies={technologies} />;
 
