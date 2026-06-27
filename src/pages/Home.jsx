@@ -129,8 +129,10 @@ export default function Home() {
   const [liveTestimonials, setLiveTestimonials] = useState([]);
   const [testimonialsLoading, setTestimonialsLoading] = useState(true);
 
-  const { data: homeServices } = useFetch(() => api.getServices(), servicesData);
-  const { data: homeCaseStudies } = useFetch(() => api.getCaseStudies(), caseStudies);
+  const { data: homeServicesRaw } = useFetch(() => api.getServices(), servicesData);
+  const { data: homeCaseStudiesRaw } = useFetch(() => api.getCaseStudies(), caseStudies);
+  const homeServices = Array.isArray(homeServicesRaw) ? homeServicesRaw : servicesData;
+  const homeCaseStudies = Array.isArray(homeCaseStudiesRaw) ? homeCaseStudiesRaw : caseStudies;
 
   // Fetch live testimonials from backend
   useEffect(() => {
