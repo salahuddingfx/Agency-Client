@@ -30,8 +30,26 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(57);
   const location = useLocation();
   const moreRef = useRef(null);
+  const headerRef = useRef(null);
+
+  // Track real header height (changes when scrolled)
+  useEffect(() => {
+    const measure = () => {
+      if (headerRef.current) {
+        setHeaderHeight(headerRef.current.getBoundingClientRect().height);
+      }
+    };
+    measure();
+    window.addEventListener('scroll', measure, { passive: true });
+    window.addEventListener('resize', measure, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', measure);
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
@@ -68,6 +86,7 @@ export default function Header() {
 
   return (
     <header
+      ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
           ? 'bg-brand-darker/90 backdrop-blur-md border-b border-brand-slateAccent/50 py-2 shadow-lg'
@@ -234,23 +253,29 @@ export default function Header() {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
+            {/* Full-screen backdrop — sits behind the drawer */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden"
+              className="fixed inset-0 z-[45] lg:hidden"
+              style={{ background: 'rgba(0,0,0,0.55)' }}
               onClick={close}
             />
 
-            {/* Drawer panel */}
+            {/* Drawer panel — fixed, fully opaque, sits directly below header */}
             <motion.div
-              initial={{ opacity: 0, y: -12 }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.22, ease: 'easeOut' }}
-              className="lg:hidden absolute top-full left-0 right-0 bg-white/98 dark:bg-[#020617]/98 backdrop-blur-xl border-b border-slate-200 dark:border-brand-slateAccent shadow-2xl z-40 max-h-[85vh] overflow-y-auto"
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="lg:hidden fixed left-0 right-0 z-[50] overflow-y-auto border-b border-slate-800 shadow-2xl"
+              style={{
+                background: '#020617',
+                top: `${headerHeight}px`,
+                maxHeight: `calc(100vh - ${headerHeight}px)`,
+              }}
             >
               <div className="px-4 py-4 space-y-1">
                 {/* All nav links in mobile */}
