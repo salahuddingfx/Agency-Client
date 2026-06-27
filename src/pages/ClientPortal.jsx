@@ -393,10 +393,10 @@ export default function ClientPortal() {
         setShowNewTicketModal(false);
         await fetchPortalData(token);
       } else {
-        alert(data.message || 'Failed to submit ticket.');
+        toast.error(data.message || 'Failed to submit ticket.');
       }
     } catch (err) {
-      alert(err.message || 'Network error submitting ticket.');
+      toast.error(err.message || 'Network error submitting ticket.');
     } finally {
       setIsLoading(false);
     }
@@ -1226,7 +1226,7 @@ export default function ClientPortal() {
                   Close Receipt
                 </button>
                 <button
-                  onClick={() => invoicePreview.pdfUrl ? window.open(invoicePreview.pdfUrl, '_blank') : alert('Receipt PDF downloaded successfully.')}
+                  onClick={() => invoicePreview.pdfUrl ? window.open(invoicePreview.pdfUrl, '_blank') : toast.success('Receipt PDF downloaded successfully.')}
                   className="w-1/2 py-2.5 bg-brand-primary text-white text-xs font-bold rounded-md shadow-premium hover:shadow-glow transition-all"
                 >
                   Download PDF
