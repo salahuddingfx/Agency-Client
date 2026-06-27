@@ -5,9 +5,11 @@ import SEO from '../components/SEO';
 import { careersData } from '../data/mockData';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
+import { useToast } from '../components/Toast';
 
 export default function Careers() {
   const { data: jobs } = useFetch(() => api.getCareers(), careersData);
+  const { toast } = useToast();
   const [selectedJob, setSelectedJob] = useState(null);
   const [applyForm, setApplyForm] = useState({ name: '', email: '', resume: '', coverLetter: '' });
   const [isApplied, setIsApplied] = useState(false);
@@ -15,7 +17,7 @@ export default function Careers() {
   const handleApply = (e) => {
     e.preventDefault();
     if (!applyForm.name || !applyForm.email || !applyForm.resume) {
-      alert('Please fill all required inputs.');
+      toast.warning('Please fill all required inputs.');
       return;
     }
     setIsApplied(true);
