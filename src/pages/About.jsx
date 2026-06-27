@@ -169,7 +169,7 @@ export default function About() {
         </p>
         <Link
           to="/team"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-semibold rounded-lg shadow-premium hover:shadow-glow transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-semibold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
         >
           <span>Meet the Team</span>
           <ChevronRight size={14} />
