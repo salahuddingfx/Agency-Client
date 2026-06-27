@@ -2,8 +2,11 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Trophy, Code2, Users2 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { caseStudies } from '../data/mockData';
+import useFetch from '../hooks/useFetch';
+import { api } from '../api/api';
 
 export default function CaseStudies() {
+  const { data: studies } = useFetch(() => api.getCaseStudies(), caseStudies);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -35,7 +38,7 @@ export default function CaseStudies() {
 
       {/* --- CASE STUDIES LIST --- */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20 relative z-10">
-        {caseStudies.map((study, idx) => {
+        {studies.map((study, idx) => {
           const isEven = idx % 2 === 0;
           return (
             <motion.div
