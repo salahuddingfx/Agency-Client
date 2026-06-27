@@ -76,8 +76,27 @@ export default function About() {
       className="pt-16 sm:pt-20 pb-16 min-h-screen relative"
     >
       <SEO 
-        title="About Us" 
-        description="Learn about Nextora Studio's history, founding values, and mission to deliver premium software and digital design services." 
+        title="About Our Digital Agency" 
+        description="Learn about Nextora Studio's history, founding values, and mission to deliver premium software, robust web applications, and state-of-the-art UI/UX design." 
+        keywords={[
+          'nextora studio team',
+          'software engineering history',
+          'remote software developers',
+          'agile consulting',
+          'digital design team',
+          'nextora company culture'
+        ]}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'AboutPage',
+          'name': 'About Nextora Studio',
+          'description': "Learn about Nextora Studio's history, founding values, and mission to deliver premium software and digital design services.",
+          'mainEntity': {
+            '@type': 'Organization',
+            'name': 'Nextora Studio',
+            'url': 'https://nextorastudio.tech'
+          }
+        }}
       />
 
       {/* Decorative Glows */}

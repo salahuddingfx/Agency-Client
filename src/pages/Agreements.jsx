@@ -116,8 +116,15 @@ export default function Agreements() {
       className="pt-24 pb-16 min-h-screen relative"
     >
       <SEO
-        title="Service Agreements & Terms"
+        title="Service Agreements & Project Terms"
         description="Official service agreements, terms, and conditions governing all projects and engagements with Nextora Studio."
+        keywords={[
+          'service agreements',
+          'project terms',
+          'client contracts',
+          'software consulting agreement',
+          'nextora terms'
+        ]}
       />
 
       <div className="absolute top-[10%] left-[5%] w-[300px] h-[300px] bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none" />

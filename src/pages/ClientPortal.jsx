@@ -413,6 +413,7 @@ export default function ClientPortal() {
       <SEO 
         title="Client Management Portal" 
         description="Access Nextora Studio's secure customer workspace to review project milestones, view invoices, download design files, and lodge support tickets." 
+        noindex={true}
       />
 
       <div className="absolute top-[10%] left-[5%] w-[300px] h-[300px] bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none" />

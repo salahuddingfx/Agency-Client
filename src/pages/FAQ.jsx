@@ -37,6 +37,21 @@ export default function FAQ() {
     };
   }).filter(Boolean);
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': faqsData.flatMap(group => 
+      group.items.map(item => ({
+        '@type': 'Question',
+        'name': item.q,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': item.a
+        }
+      }))
+    )
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -48,6 +63,15 @@ export default function FAQ() {
       <SEO 
         title="Frequently Asked Questions" 
         description="Find answers to commonly asked questions about Nextora Studio's project timelines, source code ownership, milestones, and client portals." 
+        keywords={[
+          'frequently asked questions',
+          'software agency faq',
+          'project timelines',
+          'code ownership',
+          'milestone payments',
+          'client support'
+        ]}
+        schema={faqSchema}
       />
 
       {/* Decorative Glows */}

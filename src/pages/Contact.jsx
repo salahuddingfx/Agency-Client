@@ -101,8 +101,32 @@ export default function Contact() {
       className="pt-16 sm:pt-20 pb-16 min-h-screen relative"
     >
       <SEO
-        title="Contact Us"
+        title="Contact Us - Start Your Project"
         description="Get in touch with Nextora Studio. Submit your project scope and our team will respond within 12 business hours."
+        keywords={[
+          'hire software agency',
+          'hire developers',
+          'start custom web project',
+          'software consultation',
+          'contact nextora studio'
+        ]}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'ContactPage',
+          'name': 'Contact Nextora Studio',
+          'description': 'Contact Nextora Studio to request a software development quote or consultation.',
+          'mainEntity': {
+            '@type': 'Organization',
+            'name': 'Nextora Studio',
+            'url': 'https://nextorastudio.tech',
+            'contactPoint': {
+              '@type': 'ContactPoint',
+              'contactType': 'customer support',
+              'email': 'nextorastudio@gmail.com',
+              'availableLanguage': 'English'
+            }
+          }
+        }}
       />
 
       {/* Background glows */}

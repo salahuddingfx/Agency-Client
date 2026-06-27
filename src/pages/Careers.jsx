@@ -39,8 +39,14 @@ export default function Careers() {
       className="pt-24 pb-16 min-h-screen relative"
     >
       <SEO 
-        title="Careers & Internships" 
+        title="Careers - Join Our Remote Team" 
         description="Join Nextora Studio. Explore open technical positions for senior engineers, designers, and developer internships." 
+        keywords={[
+          'software engineer jobs',
+          'remote tech jobs',
+          'UI UX designer hiring',
+          'work at nextora studio'
+        ]}
       />
 
       {/* Decorative Glows */}

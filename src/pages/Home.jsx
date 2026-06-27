@@ -171,6 +171,28 @@ export default function Home() {
       <SEO
         title="Premium Software & Digital Agency"
         description="Nextora Studio turns ideas into custom websites, mobile applications, software architectures, POS, and ERP dashboards for enterprises and startups globally."
+        keywords={[
+          'premium software agency',
+          'custom web design',
+          'react native apps',
+          'cloud POS solutions',
+          'ERP dashboards',
+          'bespoke software',
+          'web development studio',
+          'startup developers',
+          'enterprise software architecture'
+        ]}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          'name': 'Nextora Studio',
+          'url': 'https://nextorastudio.tech',
+          'potentialAction': {
+            '@type': 'SearchAction',
+            'target': 'https://nextorastudio.tech/blog?search={search_term_string}',
+            'query-input': 'required name=search_term_string'
+          }
+        }}
       />
 
       {/* ─── HERO ──────────────────────────────────────────────── */}

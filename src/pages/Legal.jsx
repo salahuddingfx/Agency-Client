@@ -175,8 +175,14 @@ export default function Legal() {
       className="pt-24 pb-16 min-h-screen relative"
     >
       <SEO
-        title={policy.title}
-        description={`Read Nextora Studio's official ${policy.title} document.`}
+        title={`${policy.title} | Legal Policy`}
+        description={`Read Nextora Studio's official ${policy.title} document. We maintain compliance and trust with clear terms.`}
+        keywords={[
+          policy.title.toLowerCase(),
+          'nextora studio legal',
+          'privacy guidelines',
+          'service terms'
+        ]}
       />
 
       <div className="absolute top-[10%] left-[5%] w-[300px] h-[300px] bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none" />

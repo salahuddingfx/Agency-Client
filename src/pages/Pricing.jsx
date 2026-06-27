@@ -29,8 +29,15 @@ export default function Pricing() {
       className="pt-16 sm:pt-20 pb-16 min-h-screen relative animate-fade-in"
     >
       <SEO 
-        title="Pricing Packages" 
+        title="Development Packages & Retainers" 
         description="View our transparent project pricing packages, tailored from Starter landing pages to enterprise cloud ERP systems." 
+        keywords={[
+          'software development cost',
+          'custom app pricing',
+          'web development milestones',
+          'retainer agreements',
+          'nextora studio billing'
+        ]}
       />
 
       {/* Decorative background glows */}

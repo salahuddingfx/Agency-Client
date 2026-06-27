@@ -88,8 +88,26 @@ export default function Blog() {
       onKeyDown={handleKeyDown}
     >
       <SEO
-        title="Engineering Blog"
+        title="Technical Insights & Engineering Blog"
         description="Read Nextora Studio's technical blog articles about headless e-commerce, React frameworks, design systems, and mobile databases."
+        keywords={[
+          'software engineering articles',
+          'web development blog',
+          'frontend trends',
+          'tech guides',
+          'coding best practices',
+          'digital strategy'
+        ]}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          'name': "Nextora Studio's Engineering & Design Insights",
+          'description': "Read Nextora Studio's technical blog articles about headless e-commerce, React frameworks, design systems, and mobile databases.",
+          'publisher': {
+            '@type': 'Organization',
+            'name': 'Nextora Studio'
+          }
+        }}
       />
 
       <Toast show={toast} message="Thanks for the like! 🙌" />

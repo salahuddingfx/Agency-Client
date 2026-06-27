@@ -49,8 +49,66 @@ export default function Services() {
       className="pt-16 sm:pt-20 pb-16 min-h-screen relative"
     >
       <SEO 
-        title="Our Services" 
-        description="Discover our technical capabilities in React Web Development, Mobile Apps, Cloud POS solutions, custom ERP / CRM dashboards, and UI/UX design." 
+        title="Custom Software & Development Services" 
+        description="Explore our software development services: premium frontend engineering, React Native mobile apps, headless e-commerce, cloud POS, and custom ERP/CRM layouts." 
+        keywords={[
+          'react web development services',
+          'cross platform app development',
+          'react native apps',
+          'cloud POS solutions',
+          'enterprise ERP development',
+          'headless cms development',
+          'custom CRM systems',
+          'digital design UI UX'
+        ]}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          'name': 'Bespoke Software & Product Development',
+          'provider': {
+            '@type': 'Organization',
+            'name': 'Nextora Studio',
+            'url': 'https://nextorastudio.tech'
+          },
+          'hasOfferCatalog': {
+            '@type': 'OfferCatalog',
+            'name': 'Nextora Studio Services Catalog',
+            'itemListElement': [
+              {
+                '@type': 'Offer',
+                'itemOffered': {
+                  '@type': 'Service',
+                  'name': 'Web Development',
+                  'description': 'Premium high-end React, Vite, and Next.js custom web architectures.'
+                }
+              },
+              {
+                '@type': 'Offer',
+                'itemOffered': {
+                  '@type': 'Service',
+                  'name': 'Mobile Development',
+                  'description': 'Cross-platform React Native apps for iOS and Android.'
+                }
+              },
+              {
+                '@type': 'Offer',
+                'itemOffered': {
+                  '@type': 'Service',
+                  'name': 'Cloud POS & ERP Systems',
+                  'description': 'Bespoke inventory management, checkouts, and custom enterprise portals.'
+                }
+              },
+              {
+                '@type': 'Offer',
+                'itemOffered': {
+                  '@type': 'Service',
+                  'name': 'UI/UX Design',
+                  'description': 'Interactive prototyping and stunning design systems built in Figma.'
+                }
+              }
+            ]
+          }
+        }}
       />
 
       {/* Glow backgrounds */}

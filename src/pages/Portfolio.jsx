@@ -27,8 +27,16 @@ export default function Portfolio() {
       className="pt-16 sm:pt-20 pb-16 min-h-screen relative"
     >
       <SEO 
-        title="Our Portfolio" 
+        title="Our Portfolio & Software Projects" 
         description="Browse through our custom websites, React Native applications, custom ERP system layouts, and premium UI designs built by Nextora Studio." 
+        keywords={[
+          'nextora studio portfolio',
+          'software development portfolio',
+          'past client work',
+          'custom react websites',
+          'web design showcase',
+          'bespoke software case studies'
+        ]}
       />
 
       {/* Decorative Glows */}

@@ -12,7 +12,7 @@ export default function NotFound() {
       transition={{ duration: 0.5 }}
       className="pt-16 sm:pt-20 pb-16 min-h-screen relative flex items-center justify-center px-4"
     >
-      <SEO title="404 — Page Not Found" description="The page you are looking for does not exist." />
+      <SEO title="404 — Page Not Found" description="The page you are looking for does not exist." noindex={true} />
 
       {/* Background glows */}
       <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-brand-primary/10 rounded-full blur-[120px] pointer-events-none" />

@@ -20,8 +20,15 @@ export default function Team() {
       className="pt-24 pb-16 min-h-screen relative"
     >
       <SEO 
-        title="Our Team" 
+        title="Meet Our Engineers & Designers" 
         description="Meet the Nextora Studio team. Get to know our system architects, web developers, mobile designers, and performance engineers." 
+        keywords={[
+          'nextora studio leadership',
+          'software architects',
+          'UI UX designers',
+          'full stack developers',
+          'remote team'
+        ]}
       />
 
       {/* Decorative Glows */}

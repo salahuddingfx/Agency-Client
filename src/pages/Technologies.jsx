@@ -47,8 +47,16 @@ export default function Technologies() {
       className="pt-24 pb-16 min-h-screen relative"
     >
       <SEO
-        title="Our Technologies"
-        description="See Nextora Studio's tech stack: PHP, Laravel, Python, Django, MySQL, PostgreSQL, Tailwind CSS, WordPress, Figma, Adobe Creative Suite, and more."
+        title="Our Modern Technology Stack"
+        description="Explore Nextora Studio's modern tech stack: React, Vite, Node.js, Express, Fastify, PostgreSQL, MongoDB, Docker, AWS, and Figma."
+        keywords={[
+          'software development tech stack',
+          'React Vite Tailwind',
+          'Node.js backend',
+          'PostgreSQL Database',
+          'AWS cloud hosting',
+          'nextora tech expertise'
+        ]}
       />
 
       {/* Decorative Glows */}

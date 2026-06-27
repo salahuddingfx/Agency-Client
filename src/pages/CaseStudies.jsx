@@ -18,8 +18,15 @@ export default function CaseStudies() {
       className="pt-24 pb-16 min-h-screen relative"
     >
       <SEO 
-        title="Case Studies" 
+        title="Case Studies & Client Success Stories" 
         description="Read through deep dives of our client collaborations, exploring architectural challenges, database strategies, and performance outcomes." 
+        keywords={[
+          'software engineering case studies',
+          'client success stories',
+          'custom portal implementation',
+          'enterprise dashboard development',
+          'POS integration success'
+        ]}
       />
 
       {/* Decorative Glows */}
