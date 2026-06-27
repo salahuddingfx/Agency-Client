@@ -509,7 +509,7 @@ export default function ClientPortal() {
                   <button
                     type="button"
                     onClick={handleDemoLogin}
-                    className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-brand-slateAccent text-white text-xs font-bold rounded-md transition-all flex items-center justify-center space-x-1.5"
+                    className="w-full py-2.5 bg-white/5 hover:bg-brand-primary/10 border border-brand-slateAccent hover:border-brand-primary/30 text-white text-xs font-bold rounded-md transition-all duration-300 flex items-center justify-center space-x-1.5"
                   >
                     <User size={12} className="text-brand-primary" />
                     <span>Autofill Demo Login</span>
