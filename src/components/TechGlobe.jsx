@@ -2,6 +2,7 @@ import { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Sphere, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { useTheme } from '../context/ThemeContext';
 
 /* ─── Color map per category ──────────────────────────────────────── */
 const CATEGORY_COLORS = {
@@ -204,7 +205,7 @@ export function TechIcon({ name }) {
 }
 
 /* ─── Single tech node ────────────────────────────────────────────── */
-function TechNode({ tech, index, total, radius, speed, ringIndex }) {
+function TechNode({ tech, index, total, radius, speed, ringIndex, theme }) {
   const ref = useRef();
   const [hovered, setHovered] = useState(false);
 
@@ -266,7 +267,9 @@ function TechNode({ tech, index, total, radius, speed, ringIndex }) {
           >
             {/* Glowing Brand Icon Capsule */}
             <div 
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-950/90 border transition-all duration-300 shadow-xl"
+              className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-300 shadow-xl ${
+                theme === 'dark' ? 'bg-slate-950/90' : 'bg-white/90'
+              }`}
               style={{
                 borderColor: color,
                 boxShadow: hovered ? `0 0 20px ${color}` : `0 0 8px ${color}50`,
@@ -281,8 +284,8 @@ function TechNode({ tech, index, total, radius, speed, ringIndex }) {
             <span 
               className={`mt-2 text-[9px] font-bold tracking-wider font-sans select-none px-2 py-0.5 rounded border transition-all duration-300 ${
                 hovered 
-                  ? 'text-white bg-slate-900/95 border-white/30 shadow-lg' 
-                  : 'text-slate-300 bg-slate-950/65 border-transparent'
+                  ? theme === 'dark' ? 'text-white bg-slate-900/95 border-white/30 shadow-lg' : 'text-slate-950 bg-white/95 border-slate-300 shadow-lg'
+                  : theme === 'dark' ? 'text-slate-300 bg-slate-950/65 border-transparent' : 'text-slate-600 bg-white/65 border-slate-200/50'
               }`}
             >
               {tech.name}
@@ -295,7 +298,7 @@ function TechNode({ tech, index, total, radius, speed, ringIndex }) {
 }
 
 /* ─── Central core sphere ─────────────────────────────────────────── */
-function CoreSphere() {
+function CoreSphere({ theme }) {
   const ref = useRef();
 
   useFrame(({ clock }) => {
@@ -309,9 +312,9 @@ function CoreSphere() {
     <group ref={ref}>
       <Sphere args={[1.2, 64, 64]}>
         <meshStandardMaterial
-          color="#0f172a"
-          emissive="#18B7F5"
-          emissiveIntensity={0.15}
+          color={theme === 'dark' ? '#0f172a' : '#cbd5e1'}
+          emissive={theme === 'dark' ? '#18B7F5' : '#3b82f6'}
+          emissiveIntensity={theme === 'dark' ? 0.15 : 0.05}
           transparent
           opacity={0.4}
           wireframe
@@ -319,7 +322,7 @@ function CoreSphere() {
       </Sphere>
       <Sphere args={[1.22, 32, 32]}>
         <meshStandardMaterial
-          color="#18B7F5"
+          color={theme === 'dark' ? '#18B7F5' : '#3b82f6'}
           transparent
           opacity={0.05}
           side={THREE.BackSide}
@@ -330,7 +333,7 @@ function CoreSphere() {
 }
 
 /* ─── Orbit ring lines ────────────────────────────────────────────── */
-function OrbitRing({ radius, color, yOffset = 0 }) {
+function OrbitRing({ radius, color, yOffset = 0, theme }) {
   const points = useMemo(() => {
     const pts = [];
     for (let i = 0; i <= 128; i++) {
@@ -347,13 +350,13 @@ function OrbitRing({ radius, color, yOffset = 0 }) {
 
   return (
     <line geometry={lineGeometry}>
-      <lineBasicMaterial color={color} transparent opacity={0.12} />
+      <lineBasicMaterial color={color} transparent opacity={theme === 'dark' ? 0.12 : 0.22} />
     </line>
   );
 }
 
 /* ─── Floating particles background ───────────────────────────────── */
-function Particles({ count = 200 }) {
+function Particles({ count = 200, theme }) {
   const ref = useRef();
 
   const positions = useMemo(() => {
@@ -384,13 +387,13 @@ function Particles({ count = 200 }) {
           itemSize={3}
         />
       </bufferGeometry>
-      <pointsMaterial color="#18B7F5" size={0.04} transparent opacity={0.4} sizeAttenuation />
+      <pointsMaterial color={theme === 'dark' ? '#18B7F5' : '#3b82f6'} size={0.04} transparent opacity={theme === 'dark' ? 0.4 : 0.25} sizeAttenuation />
     </points>
   );
 }
 
 /* ─── Scene setup ─────────────────────────────────────────────────── */
-function Scene({ technologies }) {
+function Scene({ technologies, theme }) {
   const categorized = useMemo(() => {
     const cats = {};
     technologies.forEach(tech => {
@@ -404,13 +407,13 @@ function Scene({ technologies }) {
 
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#18B7F5" />
+      <ambientLight intensity={theme === 'dark' ? 0.3 : 0.8} />
+      <pointLight position={[10, 10, 10]} intensity={theme === 'dark' ? 1 : 1.5} color={theme === 'dark' ? '#18B7F5' : '#3b82f6'} />
       <pointLight position={[-10, -5, -10]} intensity={0.5} color="#7C3AED" />
       <pointLight position={[0, 10, 0]} intensity={0.3} color="#34d399" />
 
-      <CoreSphere />
-      <Particles />
+      <CoreSphere theme={theme} />
+      <Particles theme={theme} />
 
       {rings.map((cat, ringIdx) => {
         const techs = categorized[cat];
@@ -420,7 +423,7 @@ function Scene({ technologies }) {
 
         return (
           <group key={cat}>
-            <OrbitRing radius={radius} color={color} yOffset={(ringIdx - 1) * 1.8} />
+            <OrbitRing radius={radius} color={color} yOffset={(ringIdx - 1) * 1.8} theme={theme} />
             {techs.map((tech, i) => (
               <TechNode
                 key={tech.name}
@@ -430,6 +433,7 @@ function Scene({ technologies }) {
                 radius={radius}
                 speed={speed}
                 ringIndex={ringIdx}
+                theme={theme}
               />
             ))}
           </group>
@@ -461,20 +465,22 @@ function hasWebGL() {
 }
 
 /* ─── Fallback when WebGL unavailable ──────────────────────────────── */
-function GlobeFallback({ technologies }) {
+function GlobeFallback({ technologies, theme }) {
   const CATEGORY_COLORS = {
     Frontend: '#18B7F5', Backend: '#34d399', Database: '#f59e0b',
     Design: '#e879f9', Infrastructure: '#fb923c', Tools: '#94a3b8',
   };
   return (
-    <div className="w-full h-[500px] sm:h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border border-slate-800/50 bg-[#020617] flex items-center justify-center">
+    <div className={`w-full h-[500px] sm:h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border flex items-center justify-center transition-colors duration-300 ${
+      theme === 'dark' ? 'bg-[#020617] border-slate-800/50' : 'bg-slate-50 border-slate-200'
+    }`}>
       <div className="grid grid-cols-4 sm:grid-cols-6 gap-3 p-6 max-w-2xl">
         {(technologies || []).map((t) => (
           <div key={t.name} className="flex flex-col items-center gap-1.5 p-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: CATEGORY_COLORS[t.category] || '#94a3b8' }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow" style={{ backgroundColor: CATEGORY_COLORS[t.category] || '#94a3b8' }}>
               {t.name.slice(0, 2)}
             </div>
-            <span className="text-[9px] text-slate-400 text-center leading-tight">{t.name}</span>
+            <span className={`text-[9px] text-center leading-tight transition-colors duration-300 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{t.name}</span>
           </div>
         ))}
       </div>
@@ -485,17 +491,20 @@ function GlobeFallback({ technologies }) {
 /* ─── Exported wrapper ────────────────────────────────────────────── */
 export default function TechGlobe({ technologies }) {
   const [webgl] = useState(() => hasWebGL());
+  const { theme } = useTheme();
 
-  if (!webgl) return <GlobeFallback technologies={technologies} />;
+  if (!webgl) return <GlobeFallback technologies={technologies} theme={theme} />;
 
   return (
-    <div className="w-full h-[500px] sm:h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border border-slate-800/50 bg-[#020617]">
+    <div className={`w-full h-[500px] sm:h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border transition-colors duration-300 ${
+      theme === 'dark' ? 'bg-[#020617] border-slate-800/50' : 'bg-slate-50 border-slate-200'
+    }`}>
       <Canvas
         camera={{ position: [0, 2, 10], fov: 50 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}
       >
-        <Scene technologies={technologies} />
+        <Scene technologies={technologies} theme={theme} />
       </Canvas>
     </div>
   );
