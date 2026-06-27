@@ -244,7 +244,7 @@ export const teamMembers = [
       { name: 'Product Strategy', level: 95 }
     ],
     experience: '12+ Years (Ex-Stripe Architect)',
-    socials: { github: '#', linkedin: '#', twitter: '#' },
+    socials: { github: 'https://github.com/nextorastudio', linkedin: 'https://linkedin.com/company/nextorastudio', twitter: 'https://x.com/nextorastudio' },
     avatarGradient: 'from-blue-500 to-indigo-600'
   },
   {
@@ -258,7 +258,7 @@ export const teamMembers = [
       { name: 'CI/CD Pipelines', level: 88 }
     ],
     experience: '9 Years (Ex-Vercel Contributor)',
-    socials: { github: '#', linkedin: '#', twitter: '#' },
+    socials: { github: 'https://github.com/nextorastudio', linkedin: 'https://linkedin.com/company/nextorastudio', twitter: 'https://x.com/nextorastudio' },
     avatarGradient: 'from-cyan-500 to-blue-600'
   },
   {
@@ -272,7 +272,7 @@ export const teamMembers = [
       { name: 'Interaction Design', level: 95 }
     ],
     experience: '7 Years (Ex-Framer Designer)',
-    socials: { github: '#', linkedin: '#', twitter: '#' },
+    socials: { github: 'https://github.com/nextorastudio', linkedin: 'https://linkedin.com/company/nextorastudio', twitter: 'https://x.com/nextorastudio' },
     avatarGradient: 'from-purple-500 to-indigo-500'
   }
 ];
