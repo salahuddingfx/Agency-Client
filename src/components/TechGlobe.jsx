@@ -6,10 +6,9 @@ import * as THREE from 'three';
 /* ─── Color map per category ──────────────────────────────────────── */
 const CATEGORY_COLORS = {
   Frontend:      '#18B7F5',
-  Mobile:        '#a78bfa',
   Backend:       '#34d399',
   Database:      '#f59e0b',
-  'AI/ML':       '#f472b6',
+  Design:        '#e879f9',
   Infrastructure:'#fb923c',
   Tools:         '#94a3b8',
 };

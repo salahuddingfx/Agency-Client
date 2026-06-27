@@ -1,6 +1,6 @@
 import { useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Layers, Monitor, HardDrive, Terminal, Sliders, Smartphone, Brain, Sparkles, RotateCw } from 'lucide-react';
+import { Layers, Monitor, HardDrive, Terminal, Sliders, Palette, Sparkles } from 'lucide-react';
 import SEO from '../components/SEO';
 import { technologies } from '../data/mockData';
 import { normalizeTechnologies } from '../data/normalize';
@@ -10,10 +10,9 @@ import TechGlobe from '../components/TechGlobe';
 
 const CATEGORY_META = {
   Frontend:      { icon: Monitor,      color: '#18B7F5', gradient: 'from-sky-500/10 to-sky-600/5' },
-  Mobile:        { icon: Smartphone,   color: '#a78bfa', gradient: 'from-violet-500/10 to-purple-600/5' },
   Backend:       { icon: Terminal,     color: '#34d399', gradient: 'from-emerald-500/10 to-green-600/5' },
   Database:      { icon: HardDrive,    color: '#f59e0b', gradient: 'from-amber-500/10 to-yellow-600/5' },
-  'AI/ML':       { icon: Brain,        color: '#f472b6', gradient: 'from-pink-500/10 to-rose-600/5' },
+  Design:        { icon: Palette,      color: '#e879f9', gradient: 'from-fuchsia-500/10 to-pink-600/5' },
   Infrastructure:{ icon: Layers,       color: '#fb923c', gradient: 'from-orange-500/10 to-orange-600/5' },
   Tools:         { icon: Sliders,      color: '#94a3b8', gradient: 'from-slate-400/10 to-slate-500/5' },
 };
@@ -48,7 +47,7 @@ export default function Technologies() {
     >
       <SEO
         title="Our Technologies"
-        description="See Nextora Studio's tech stack capabilities, featuring React.js, Vite, Node.js, Express, MongoDB, Docker container setups, and Cloudflare CDNs."
+        description="See Nextora Studio's tech stack: PHP, Laravel, Python, Django, MySQL, PostgreSQL, Tailwind CSS, WordPress, Figma, Adobe Creative Suite, and more."
       />
 
       {/* Decorative Glows */}
