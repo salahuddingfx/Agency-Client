@@ -4,6 +4,8 @@ import { Search, Clock, ThumbsUp, Eye, X, Calendar, User } from 'lucide-react';
 import DOMPurify from 'dompurify';
 import SEO from '../components/SEO';
 import { blogPosts } from '../data/mockData';
+import useFetch from '../hooks/useFetch';
+import { api } from '../api/api';
 
 /* ─── Mini toast component ──────────────────────────────────────── */
 function Toast({ show, message }) {
@@ -41,17 +43,18 @@ function useLikes(initialCounts) {
 }
 
 export default function Blog() {
+  const { data: posts } = useFetch(() => api.getBlogs(), blogPosts);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [readingPost, setReadingPost] = useState(null);
   const [toast, setToast] = useState(false);
 
-  const initialLikes = Object.fromEntries(blogPosts.map(p => [p.id, p.likes]));
+  const initialLikes = Object.fromEntries(posts.map(p => [p.id, p.likes]));
   const { likes, liked, toggle } = useLikes(initialLikes);
 
   const categories = ['All', 'Web Development', 'Mobile App Development', 'UI/UX Design'];
 
-  const filteredPosts = blogPosts.filter((post) => {
+  const filteredPosts = posts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.snippet.toLowerCase().includes(searchQuery.toLowerCase()) ||
