@@ -5,7 +5,7 @@ import { Check, Info, Sparkles, MessageSquare } from 'lucide-react';
 import SEO from '../components/SEO';
 import { pricingPlans } from '../data/mockData';
 import GsapFadeIn from '../components/GsapAnimate';
-import TiltCard from '../components/TiltCard';
+import GlowCard from '../components/GlowCard';
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'annual'
@@ -77,7 +77,7 @@ export default function Pricing() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <GsapFadeIn className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
           {pricingPlans.map((plan) => (
-            <TiltCard key={plan.id} className="h-full">
+            <GlowCard key={plan.id} className="h-full">
               <div
                 className={`glass-card rounded-xl p-8 flex flex-col justify-between relative hover:border-brand-primary/20 transition-all h-full ${
                   plan.popular ? 'border-brand-primary/30 ring-1 ring-brand-primary/20 shadow-glow' : ''
@@ -133,7 +133,7 @@ export default function Pricing() {
                 </div>
 
               </div>
-            </TiltCard>
+            </GlowCard>
           ))}
         </GsapFadeIn>
       </section>
@@ -141,7 +141,7 @@ export default function Pricing() {
       {/* --- CUSTOM PLAN SECTION --- */}
       <section className="py-20 max-w-4xl mx-auto px-4 relative z-10">
         <GsapFadeIn direction="up">
-          <TiltCard>
+          <GlowCard>
             <div className="glass-card p-8 sm:p-10 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 border-brand-slateAccent">
               <div className="max-w-md">
                 <h3 className="text-lg font-bold text-white font-display">Need a custom contract or support retainers?</h3>
@@ -157,7 +157,7 @@ export default function Pricing() {
                 <span>Consult Retainers</span>
               </Link>
             </div>
-          </TiltCard>
+          </GlowCard>
         </GsapFadeIn>
       </section>
 

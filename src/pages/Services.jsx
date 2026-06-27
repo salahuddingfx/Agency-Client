@@ -4,7 +4,7 @@ import { Globe, Smartphone, Code, CreditCard, Layers, TrendingUp, Sparkles, Chec
 import SEO from '../components/SEO';
 import { servicesData } from '../data/mockData';
 import GsapFadeIn from '../components/GsapAnimate';
-import TiltCard from '../components/TiltCard';
+import GlowCard from '../components/GlowCard';
 
 const FigmaIcon = (props) => (
   <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -66,7 +66,7 @@ export default function Services() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <GsapFadeIn className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
           {servicesData.map((service, index) => (
-            <TiltCard key={service.id} className="h-full">
+            <GlowCard key={service.id} className="h-full">
               <div className="glass-card p-8 sm:p-10 rounded-xl hover:border-brand-primary/20 transition-all flex flex-col justify-between h-full">
                 <div>
                   <div className="flex items-center justify-between mb-6">
@@ -103,7 +103,7 @@ export default function Services() {
                   </Link>
                 </div>
               </div>
-            </TiltCard>
+            </GlowCard>
           ))}
         </GsapFadeIn>
       </section>
@@ -111,7 +111,7 @@ export default function Services() {
       {/* --- DYNAMIC CUSTOM DIAGRAM ACCENT --- */}
       <section className="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <GsapFadeIn direction="up">
-          <TiltCard>
+          <GlowCard>
             <div className="glass-card p-8 sm:p-12 rounded-xl text-center max-w-4xl mx-auto relative overflow-hidden">
               <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-brand-primary/5 rounded-full blur-3xl pointer-events-none" />
               
@@ -138,7 +138,7 @@ export default function Services() {
                 </div>
               </div>
             </div>
-          </TiltCard>
+          </GlowCard>
         </GsapFadeIn>
       </section>
 

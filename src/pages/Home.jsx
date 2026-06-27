@@ -9,7 +9,7 @@ import SEO from '../components/SEO';
 import TypingAnimation from '../components/TypingAnimation';
 import { servicesData, statistics, caseStudies } from '../data/mockData';
 import GsapFadeIn from '../components/GsapAnimate';
-import TiltCard from '../components/TiltCard';
+import GlowCard from '../components/GlowCard';
 import { api } from '../api/api';
 
 /* ─── CountUp Hook ─────────────────────────────────────────────── */
@@ -292,7 +292,7 @@ export default function Home() {
 
         <GsapFadeIn className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {servicesData.slice(0, 3).map((service) => (
-            <TiltCard key={service.id} className="h-full">
+            <GlowCard key={service.id} className="h-full">
               <div className="glass-card p-6 sm:p-8 rounded-lg hover:border-brand-primary/20 transition-all group flex flex-col justify-between h-full">
                 <div>
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center mb-5 sm:mb-6 group-hover:scale-110 transition-transform">
@@ -317,7 +317,7 @@ export default function Home() {
                   <ChevronRight size={13} />
                 </Link>
               </div>
-            </TiltCard>
+            </GlowCard>
           ))}
         </GsapFadeIn>
 
@@ -416,7 +416,7 @@ export default function Home() {
           {caseStudies.slice(0, 1).map((study) => (
             <GsapFadeIn key={study.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
 
-              <TiltCard className="lg:col-span-5">
+              <GlowCard className="lg:col-span-5">
                 <div className={`rounded-xl bg-gradient-to-tr ${study.coverColor} p-7 sm:p-8 flex flex-col justify-between text-white shadow-premium relative overflow-hidden min-h-[260px]`}>
                   <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl pointer-events-none" />
                   <div>
@@ -432,7 +432,7 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-              </TiltCard>
+              </GlowCard>
 
               <div className="lg:col-span-7 space-y-5 sm:space-y-6">
                 <span className="text-xs font-semibold uppercase tracking-widest text-brand-primary bg-brand-primary/5 px-2.5 py-1 rounded border border-brand-primary/15">
@@ -470,7 +470,7 @@ export default function Home() {
       {/* ─── CALL TO ACTION ─────────────────────────────────────── */}
       <section className="py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center relative z-10">
         <GsapFadeIn direction="up">
-          <TiltCard>
+          <GlowCard>
             <div className="glass-card p-8 sm:p-12 lg:p-16 rounded-2xl relative overflow-hidden">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] sm:w-[350px] h-[120px] sm:h-[150px] bg-brand-primary/10 rounded-full blur-[80px] pointer-events-none" />
 
@@ -496,7 +496,7 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-          </TiltCard>
+          </GlowCard>
         </GsapFadeIn>
       </section>
     </motion.div>
