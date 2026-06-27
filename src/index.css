@@ -134,6 +134,41 @@ html:not(.dark) .text-white:not(button):not(a):not(.bg-brand-primary):not(.bg-br
   color: #0f172a !important;
 }
 
+/* Light mode: headings (h1-h6) always dark */
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4,
+html:not(.dark) h5,
+html:not(.dark) h6 {
+  color: #0f172a !important;
+}
+
+/* Light mode: strong/bold text always dark */
+html:not(.dark) strong,
+html:not(.dark) b {
+  color: #0f172a !important;
+}
+
+/* Light mode: links use brand-primary color, never white */
+html:not(.dark) a {
+  color: #0f172a;
+}
+
+html:not(.dark) a:hover {
+  color: #18B7F5 !important;
+}
+
+/* Light mode: summary/accordion headings dark */
+html:not(.dark) summary {
+  color: #0f172a !important;
+}
+
+/* Light mode: span text inside links keeps brand color */
+html:not(.dark) a span {
+  color: inherit;
+}
+
 /* Enable 3D rendering context and smooth transitions for tilt elements */
 .tilt-container {
   transform-style: preserve-3d;
@@ -145,12 +180,6 @@ html:not(.dark) .text-white:not(button):not(a):not(.bg-brand-primary):not(.bg-br
   outline: 2px solid #18B7F5;
   outline-offset: 2px;
   border-radius: 4px;
-}
-
-/* Light mode: links never white on hover */
-html:not(.dark) a:hover,
-html:not(.dark) a:focus {
-  color: #0f172a;
 }
 
 
