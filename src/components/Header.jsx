@@ -88,8 +88,8 @@ export default function Header() {
     <header
       ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-brand-darker/90 backdrop-blur-md border-b border-brand-slateAccent/50 py-2 shadow-lg'
+        isScrolled || isOpen
+          ? 'bg-[#020617] border-b border-slate-800 py-2 shadow-lg'
           : 'bg-transparent py-3 border-b border-transparent'
       }`}
     >
