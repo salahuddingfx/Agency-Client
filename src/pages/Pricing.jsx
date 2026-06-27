@@ -26,7 +26,7 @@ export default function Pricing() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="pt-24 pb-16 min-h-screen relative animate-fade-in"
+      className="pt-16 sm:pt-20 pb-16 min-h-screen relative animate-fade-in"
     >
       <SEO 
         title="Pricing Packages" 
@@ -38,10 +38,11 @@ export default function Pricing() {
       <div className="absolute bottom-[20%] right-[5%] w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* --- HERO SECTION --- */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-brand-primary mb-3">Investment</h2>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-display mb-6">
-          Transparent, Value-Based <br />
+      <section className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
+        <h2 className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-brand-primary mb-3">Investment</h2>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-display mb-5 sm:mb-6">
+          Transparent, Value-Based{' '}
+          <br className="hidden sm:block" />
           <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">Project Packaging</span>
         </h1>
         <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl mx-auto font-sans">
