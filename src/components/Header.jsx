@@ -125,7 +125,7 @@ export default function Header() {
 
             <Link
               to="/contact"
-              className="inline-flex items-center gap-1.5 px-3.5 xl:px-4 py-2 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-semibold rounded-lg shadow-premium hover:shadow-glow transition-all duration-300 whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3.5 xl:px-4 py-2 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs font-semibold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
             >
               <span>Start Project</span>
               <ArrowRight size={12} />
@@ -225,7 +225,7 @@ export default function Header() {
                   <Link
                     to="/contact"
                     onClick={close}
-                    className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-xl shadow-premium"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-xl shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
                   >
                     <span>Start Your Project</span>
                     <ArrowRight size={15} />
