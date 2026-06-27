@@ -240,17 +240,13 @@ html:not(.dark) input[type="email"].bg-brand-slateAccent\/40 {
   color: #0f172a !important;
 }
 
-/* Dark backgrounds stay dark in light mode (modals, drawers, overlays) */
-html:not(.dark) .bg-brand-darker {
-  background-color: #0f172a !important;
-  color: #e2e8f0 !important;
-}
+/* Dark backgrounds: body adapts via CSS variables, but overlays stay dark */
 html:not(.dark) .bg-brand-dark {
   background-color: #1e293b !important;
   color: #e2e8f0 !important;
 }
 
-/* Override body text-slate-100 in light mode */
+/* Override body text in light mode */
 body {
   @apply text-slate-800 dark:text-slate-100;
 }
