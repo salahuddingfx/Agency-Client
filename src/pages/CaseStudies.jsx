@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Trophy, Code2, Users2 } from 'lucide-react';
+import { Trophy, Code2, Users2 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { caseStudies } from '../data/mockData';
 import useFetch from '../hooks/useFetch';
