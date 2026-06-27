@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowRight, CheckCircle2, Heart } from 'lucide-react';
 import Logo from './Logo';
 
 export default function Footer() {
@@ -200,9 +200,23 @@ export default function Footer() {
               </Link>
             ))}
           </div>
-          <span className="text-xs text-slate-600 whitespace-nowrap">
-            © {currentYear} Nextora Studio. All rights reserved.
-          </span>
+          <div className="flex flex-col sm:flex-row items-center gap-2 text-xs">
+            <span className="text-slate-600 whitespace-nowrap">
+              © {currentYear} Nextora Studio. All rights reserved.
+            </span>
+            <span className="hidden sm:inline text-slate-700">·</span>
+            <span className="text-slate-600 whitespace-nowrap flex items-center gap-1">
+              Crafted with <Heart size={10} className="text-red-500 fill-red-500" /> by
+              <a
+                href="https://nextorastudio.tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-primary hover:text-brand-accent transition-colors font-medium"
+              >
+                Nextora Studio Team
+              </a>
+            </span>
+          </div>
         </div>
       </div>
     </footer>
