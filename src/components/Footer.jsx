@@ -41,6 +41,7 @@ export default function Footer() {
   ];
 
   const legalLinks = [
+    { name: 'Service Agreements', path: '/agreements' },
     { name: 'Privacy Policy', path: '/legal/privacy-policy' },
     { name: 'Terms & Conditions', path: '/legal/terms-and-conditions' },
     { name: 'Cookie Policy', path: '/legal/cookie-policy' },
