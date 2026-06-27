@@ -10,6 +10,7 @@ import TypingAnimation from '../components/TypingAnimation';
 import { servicesData, statistics, caseStudies } from '../data/mockData';
 import GsapFadeIn from '../components/GsapAnimate';
 import TiltCard from '../components/TiltCard';
+import { api } from '../api/api';
 
 /* ─── CountUp Hook ─────────────────────────────────────────────── */
 function useCountUp(target, duration = 1800, start = false) {
@@ -65,32 +66,43 @@ function AnimatedStat({ stat, delay, inView }) {
   );
 }
 
-/* ─── Testimonials data ────────────────────────────────────────── */
-const testimonials = [
+/* ─── Testimonials fallback (shown when server is offline) ─────── */
+const FALLBACK_TESTIMONIALS = [
   {
+    _id: 't1',
     name: 'James Whitfield',
-    role: 'CTO, Apex Retail International',
-    rating: 5,
-    quote: 'Nextora took our bloated Shopify setup and turned it into a blazing-fast headless platform. Page load dropped from 5.6s to under a second. Incredible work.',
-    avatar: 'JW',
+    company: 'Apex Retail International',
+    stars: 5,
+    text: 'Nextora took our bloated Shopify setup and turned it into a blazing-fast headless platform. Page load dropped from 5.6s to under a second. Incredible work.',
     gradient: 'from-blue-500 to-indigo-600',
+    avatar: 'JW',
   },
   {
+    _id: 't2',
     name: 'Priya Menon',
-    role: 'Founder, Velo Delivery Inc.',
-    rating: 5,
-    quote: 'The offline-first React Native app they built works flawlessly in dead zones. Our drivers have zero complaints and the app store rating sits at 4.9. Highly recommended.',
-    avatar: 'PM',
+    company: 'Velo Delivery Inc.',
+    stars: 5,
+    text: 'The offline-first React Native app they built works flawlessly in dead zones. Our drivers have zero complaints and the app store rating sits at 4.9.',
     gradient: 'from-purple-500 to-pink-500',
+    avatar: 'PM',
   },
   {
+    _id: 't3',
     name: 'Omar Hassan',
-    role: 'COO, DineSync Hospitality Group',
-    rating: 5,
-    quote: 'Our POS system now runs on tablets at all 12 locations simultaneously. Real-time order sync, offline support, and a clean UI that staff actually love.',
-    avatar: 'OH',
+    company: 'DineSync Hospitality Group',
+    stars: 5,
+    text: 'Our POS system now runs on tablets at all 12 locations simultaneously. Real-time order sync, offline support, and a clean UI that staff actually love.',
     gradient: 'from-cyan-500 to-blue-600',
+    avatar: 'OH',
   },
+];
+
+const GRADIENTS = [
+  'from-blue-500 to-indigo-600',
+  'from-purple-500 to-pink-500',
+  'from-cyan-500 to-blue-600',
+  'from-emerald-500 to-teal-600',
+  'from-orange-500 to-red-500',
 ];
 
 /* ─── Client logo trust strip ──────────────────────────────────── */
@@ -113,6 +125,22 @@ function getServiceIcon(name) {
 export default function Home() {
   const statsRef = useRef(null);
   const [statsInView, setStatsInView] = useState(false);
+  const [liveTestimonials, setLiveTestimonials] = useState([]);
+  const [testimonialsLoading, setTestimonialsLoading] = useState(true);
+
+  // Fetch live testimonials from backend
+  useEffect(() => {
+    api.getTestimonials()
+      .then((res) => {
+        const data = res.data || res.testimonials || res || [];
+        const arr = Array.isArray(data) ? data : [];
+        setLiveTestimonials(arr.length > 0 ? arr : FALLBACK_TESTIMONIALS);
+      })
+      .catch(() => setLiveTestimonials(FALLBACK_TESTIMONIALS))
+      .finally(() => setTestimonialsLoading(false));
+  }, []);
+
+  const displayTestimonials = liveTestimonials.length > 0 ? liveTestimonials : FALLBACK_TESTIMONIALS;
 
   useEffect(() => {
     const el = statsRef.current;
@@ -319,30 +347,60 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {testimonials.map((t, idx) => (
-              <GsapFadeIn key={idx} delay={idx * 0.1} direction="up">
-                <div className="glass-card p-6 sm:p-7 rounded-xl hover:border-brand-primary/20 transition-all h-full flex flex-col">
-                  <Quote size={20} className="text-brand-primary/40 mb-4 shrink-0" />
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex-1 mb-5">
-                    "{t.quote}"
-                  </p>
+            {testimonialsLoading ? (
+              // Loading skeleton
+              Array(3).fill(0).map((_, i) => (
+                <div key={i} className="glass-card p-6 sm:p-7 rounded-xl h-full flex flex-col animate-pulse">
+                  <div className="w-5 h-5 bg-brand-slateAccent/40 rounded mb-4" />
+                  <div className="flex-1 space-y-2 mb-5">
+                    <div className="h-3 bg-brand-slateAccent/40 rounded w-full" />
+                    <div className="h-3 bg-brand-slateAccent/40 rounded w-4/5" />
+                    <div className="h-3 bg-brand-slateAccent/40 rounded w-3/5" />
+                  </div>
                   <div className="flex items-center gap-3 pt-4 border-t border-brand-slateAccent/40">
-                    <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${t.gradient} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
-                      {t.avatar}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-white">{t.name}</p>
-                      <p className="text-[10px] text-slate-500">{t.role}</p>
-                    </div>
-                    <div className="ml-auto flex gap-0.5">
-                      {Array(t.rating).fill(0).map((_, i) => (
-                        <Star key={i} size={10} className="text-yellow-400 fill-yellow-400" />
-                      ))}
+                    <div className="w-9 h-9 rounded-full bg-brand-slateAccent/40" />
+                    <div className="space-y-1.5">
+                      <div className="h-2.5 bg-brand-slateAccent/40 rounded w-24" />
+                      <div className="h-2 bg-brand-slateAccent/40 rounded w-16" />
                     </div>
                   </div>
                 </div>
-              </GsapFadeIn>
-            ))}
+              ))
+            ) : (
+              displayTestimonials.slice(0, 3).map((t, idx) => {
+                // Support both live backend shape AND fallback shape
+                const quote   = t.text  || t.quote  || '';
+                const role    = t.company || t.role   || '';
+                const rating  = t.stars || t.rating  || 5;
+                const avatar  = t.avatar || (t.name ? t.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() : '??');
+                const gradient = t.gradient || GRADIENTS[idx % GRADIENTS.length];
+
+                return (
+                  <GsapFadeIn key={t._id || t.id || idx} delay={idx * 0.1} direction="up">
+                    <div className="glass-card p-6 sm:p-7 rounded-xl hover:border-brand-primary/20 transition-all h-full flex flex-col">
+                      <Quote size={20} className="text-brand-primary/40 mb-4 shrink-0" />
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex-1 mb-5">
+                        "{quote}"
+                      </p>
+                      <div className="flex items-center gap-3 pt-4 border-t border-brand-slateAccent/40">
+                        <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                          {avatar}
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-white">{t.name}</p>
+                          <p className="text-[10px] text-slate-500">{role}</p>
+                        </div>
+                        <div className="ml-auto flex gap-0.5">
+                          {Array(Math.min(rating, 5)).fill(0).map((_, i) => (
+                            <Star key={i} size={10} className="text-yellow-400 fill-yellow-400" />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </GsapFadeIn>
+                );
+              })
+            )}
           </div>
         </div>
       </section>

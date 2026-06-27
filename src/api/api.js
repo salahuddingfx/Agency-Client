@@ -3,17 +3,14 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 // Central API fetch helper
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem('token');
-  
+
   const headers = {
     ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
-    ...(token && { 'Authorization': `Bearer ${token}` }),
+    ...(token && { Authorization: `Bearer ${token}` }),
     ...options.headers,
   };
 
-  const config = {
-    ...options,
-    headers,
-  };
+  const config = { ...options, headers };
 
   if (config.body && !(config.body instanceof FormData) && typeof config.body === 'object') {
     config.body = JSON.stringify(config.body);
@@ -23,69 +20,82 @@ async function request(endpoint, options = {}) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'Network request failed');
+    throw new Error(data.message || 'Request failed');
   }
 
   return data;
 }
 
 export const api = {
-  // Authentication API endpoints
-  login: (email, password) => 
-    request('/auth/login', {
+  // ── Auth ─────────────────────────────────────────────────────────────────
+  login: (email, password) =>
+    request('/auth/login', { method: 'POST', body: { email, password } }),
+
+  register: (name, email, password, company) =>
+    request('/auth/register', { method: 'POST', body: { name, email, password, company } }),
+
+  verifyOtp: (email, otpCode) =>
+    request('/auth/verify-otp', { method: 'POST', body: { email, otpCode } }),
+
+  resendOtp: (email) =>
+    request('/auth/resend-otp', { method: 'POST', body: { email } }),
+
+  forgotPassword: (email) =>
+    request('/auth/forgot-password', { method: 'POST', body: { email } }),
+
+  resetPasswordOtp: (email, otpCode, password) =>
+    request('/auth/reset-password-otp', { method: 'POST', body: { email, otpCode, password } }),
+
+  // ── Public: Services ─────────────────────────────────────────────────────
+  getServices: () => request('/services'),
+
+  // ── Public: Portfolio ─────────────────────────────────────────────────────
+  getPortfolios: () => request('/portfolios'),
+
+  // ── Public: Case Studies ─────────────────────────────────────────────────
+  getCaseStudies: () => request('/case-studies'),
+
+  // ── Public: Blog ──────────────────────────────────────────────────────────
+  getBlogs: () => request('/blogs'),
+  getBlog: (id) => request(`/blogs/${id}`),
+
+  // ── Public: Team ──────────────────────────────────────────────────────────
+  getTeam: () => request('/teams'),
+
+  // ── Public: Technologies ─────────────────────────────────────────────────
+  getTechnologies: () => request('/technologies'),
+
+  // ── Public: Testimonials ─────────────────────────────────────────────────
+  getTestimonials: () => request('/testimonials'),
+
+  // ── Public: Careers ───────────────────────────────────────────────────────
+  getCareers: () => request('/careers'),
+
+  // ── Public: Contact Form (no auth required) ────────────────────────────
+  // Fields: name, email, subject, text
+  submitContact: (name, email, subject, text) =>
+    request('/contacts', {
       method: 'POST',
-      body: { email, password }
+      body: { name, email, subject, text },
     }),
 
-  register: (name, email, password, company) => 
-    request('/auth/register', {
+  // ── Public: Job Application ───────────────────────────────────────────────
+  submitApplication: (name, email, roleApplied, fileUrl, coverLetter) =>
+    request('/applications', {
       method: 'POST',
-      body: { name, email, password, company }
+      body: { name, email, roleApplied, fileUrl, coverLetter },
     }),
 
-  verifyOtp: (email, otpCode) => 
-    request('/auth/verify-otp', {
-      method: 'POST',
-      body: { email, otpCode }
-    }),
+  // ── Authenticated: Client Portal ─────────────────────────────────────────
+  getProjects: () => request('/projects'),
 
-  resendOtp: (email) => 
-    request('/auth/resend-otp', {
-      method: 'POST',
-      body: { email }
-    }),
+  getInvoices: () => request('/invoices'),
 
-  forgotPassword: (email) => 
-    request('/auth/forgot-password', {
-      method: 'POST',
-      body: { email }
-    }),
+  getTickets: () => request('/tickets'),
 
-  resetPasswordOtp: (email, otpCode, password) => 
-    request('/auth/reset-password-otp', {
-      method: 'POST',
-      body: { email, otpCode, password }
-    }),
+  createTicket: (subject, category, urgency, message) =>
+    request('/tickets', { method: 'POST', body: { subject, category, urgency, message } }),
 
-  // Client Data API endpoints
-  getProjects: () => 
-    request('/projects'),
-
-  getInvoices: () => 
-    request('/invoices'),
-
-  getTickets: () => 
-    request('/tickets'),
-
-  createTicket: (subject, category, urgency, message) => 
-    request('/tickets', {
-      method: 'POST',
-      body: { subject, category, urgency, message }
-    }),
-
-  updateProfile: (formData) => 
-    request('/users/me', {
-      method: 'PUT',
-      body: formData
-    })
+  updateProfile: (formData) =>
+    request('/users/me', { method: 'PUT', body: formData }),
 };

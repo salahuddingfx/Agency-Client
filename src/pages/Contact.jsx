@@ -2,23 +2,33 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, MessageSquare, MapPin, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import SEO from '../components/SEO';
+import { api } from '../api/api';
 
-// Real WhatsApp number — update to your actual business number
-const WHATSAPP_NUMBER = '8801XXXXXXXXX'; // e.g. '8801711234567'
-const CONTACT_EMAIL = 'hello@nextorastudio.com';
+// ── Config ─────────────────────────────────────────────────────
+const WHATSAPP_NUMBER = '8801XXXXXXXXX'; // ← Replace with your real WhatsApp Business number
+const CONTACT_EMAIL   = 'hello@nextorastudio.com';
+
+const BUDGET_OPTIONS = [
+  '$5k - $10k (Starter)',
+  '$10k - $25k (Professional)',
+  '$25k - $50k (Enterprise)',
+  '$50k+ (Custom Solution)',
+];
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    budget: '$10k - $25k',
-    desc: '',
+    budget: BUDGET_OPTIONS[1],
+    details: '',
   });
-  const [formErrors, setFormErrors] = useState({});
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [errorMsg, setErrorMsg] = useState('');
 
+  // ── Inline validation ──────────────────────────────────────────
   const validateField = (name, value) => {
-    const errs = { ...formErrors };
+    const errs = { ...errors };
     if (name === 'name') {
       if (value.trim().length < 2) errs.name = 'Name must be at least 2 characters.';
       else delete errs.name;
@@ -27,11 +37,11 @@ export default function Contact() {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errs.email = 'Enter a valid email address.';
       else delete errs.email;
     }
-    if (name === 'desc') {
-      if (value.trim().length < 10) errs.desc = 'Description must be at least 10 characters.';
-      else delete errs.desc;
+    if (name === 'details') {
+      if (value.trim().length < 10) errs.details = 'Please provide at least 10 characters.';
+      else delete errs.details;
     }
-    setFormErrors(errs);
+    setErrors(errs);
   };
 
   const handleChange = (e) => {
@@ -40,45 +50,44 @@ export default function Contact() {
     validateField(name, value);
   };
 
+  // ── Submit → POST /api/v1/contacts ────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     const finalErrors = {};
     if (!formData.name.trim()) finalErrors.name = 'Name is required.';
     if (!formData.email.trim()) finalErrors.email = 'Email is required.';
-    if (formData.desc.trim().length < 10) finalErrors.desc = 'Project details are required.';
+    if (formData.details.trim().length < 10) finalErrors.details = 'Project details are required (min 10 chars).';
 
     if (Object.keys(finalErrors).length > 0) {
-      setFormErrors(finalErrors);
+      setErrors(finalErrors);
       return;
     }
 
     setStatus('loading');
+    setErrorMsg('');
+
     try {
-      // Try to POST to server endpoint; fall back to success for demo
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      if (res.ok || res.status === 404) {
-        // 404 means no server route yet — still show success for demo
-        setStatus('success');
-        setFormData({ name: '', email: '', budget: '$10k - $25k', desc: '' });
-      } else {
-        setStatus('error');
-      }
-    } catch {
-      // No server / CORS — treat as demo success
+      // Backend schema: { name, email, subject, text }
+      // We map budget + details → subject + text
+      const subject = `Project Inquiry — Budget: ${formData.budget}`;
+      const text = formData.details;
+
+      await api.submitContact(formData.name, formData.email, subject, text);
+
       setStatus('success');
-      setFormData({ name: '', email: '', budget: '$10k - $25k', desc: '' });
+      setFormData({ name: '', email: '', budget: BUDGET_OPTIONS[1], details: '' });
+    } catch (err) {
+      setStatus('error');
+      setErrorMsg(err.message || 'Something went wrong. Please email us directly.');
     }
 
-    setTimeout(() => setStatus('idle'), 6000);
+    setTimeout(() => setStatus('idle'), 7000);
   };
 
+  // ── WhatsApp click ─────────────────────────────────────────────
   const openWhatsApp = () => {
     const msg = encodeURIComponent(
-      `Hi Nextora Studio! My name is ${formData.name || 'there'}. Budget: ${formData.budget}. ${formData.desc || 'I would like to discuss a project.'}`
+      `Hi Nextora Studio! My name is ${formData.name || 'there'}. Budget: ${formData.budget}. ${formData.details || 'I would like to discuss a project.'}`
     );
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
   };
@@ -93,7 +102,7 @@ export default function Contact() {
     >
       <SEO
         title="Contact Us"
-        description="Get in touch with Nextora Studio. Submit project scopes, chat via WhatsApp, or email us directly."
+        description="Get in touch with Nextora Studio. Submit your project scope and our team will respond within 12 business hours."
       />
 
       {/* Background glows */}
@@ -111,7 +120,7 @@ export default function Contact() {
           </span>
         </h1>
         <p className="text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
-          Submit project parameters to receive scope estimates, or chat instantly via WhatsApp.
+          Fill in the form and our team will respond within 12 business hours — or chat instantly via WhatsApp.
         </p>
       </section>
 
@@ -119,8 +128,8 @@ export default function Contact() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
 
-          {/* Left — Channel cards */}
-          <div className="lg:col-span-5 space-y-5">
+          {/* Left column */}
+          <div className="lg:col-span-5 space-y-4 sm:space-y-5">
             <div className="glass-card p-5 sm:p-7 rounded-xl space-y-4">
               <h3 className="text-sm font-bold text-white font-display">Communication Channels</h3>
 
@@ -141,7 +150,7 @@ export default function Contact() {
               {/* WhatsApp */}
               <button
                 onClick={openWhatsApp}
-                className="w-full flex items-center gap-4 p-3.5 bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 rounded-xl border border-brand-slateAccent/30 hover:border-green-500/30 transition-all group cursor-pointer text-left"
+                className="w-full flex items-center gap-4 p-3.5 bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 rounded-xl border border-brand-slateAccent/30 hover:border-green-500/30 transition-all group text-left"
               >
                 <div className="w-9 h-9 rounded-lg bg-green-500/5 border border-green-500/10 flex items-center justify-center shrink-0">
                   <MessageSquare size={16} className="text-green-400" />
@@ -151,7 +160,7 @@ export default function Contact() {
                     WhatsApp Chat
                     <span className="text-[9px] bg-green-500/10 text-green-400 border border-green-500/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Live</span>
                   </h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Click to open pre-filled message</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Pre-fills from your form data</p>
                 </div>
               </button>
 
@@ -167,19 +176,21 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Response time card */}
+            {/* Response time */}
             <div className="glass-card p-5 rounded-xl border border-brand-primary/10">
               <p className="text-xs font-semibold text-white mb-2">⚡ Response Time</p>
               <p className="text-xs text-slate-400 leading-relaxed">
-                We respond to all project inquiries within <strong className="text-white">12 business hours</strong>. For urgent matters, WhatsApp is fastest.
+                We respond to all project inquiries within{' '}
+                <strong className="text-white">12 business hours</strong>. For urgent matters, WhatsApp is fastest.
               </p>
             </div>
           </div>
 
-          {/* Right — Contact form */}
+          {/* Right column — Form */}
           <div className="lg:col-span-7">
-            <div className="glass-card p-5 sm:p-8 lg:p-10 rounded-xl relative">
+            <div className="glass-card p-5 sm:p-8 lg:p-10 rounded-xl relative overflow-hidden">
 
+              {/* Success overlay */}
               <AnimatePresence>
                 {status === 'success' && (
                   <motion.div
@@ -189,12 +200,13 @@ export default function Contact() {
                     className="absolute inset-0 bg-brand-darker/96 rounded-xl z-20 flex flex-col items-center justify-center p-8 text-center"
                   >
                     <CheckCircle2 size={44} className="text-brand-primary mb-4" />
-                    <h3 className="text-lg font-bold text-white font-display">Message Sent!</h3>
-                    <p className="text-xs text-slate-400 mt-2 max-w-sm">
-                      Thank you! Our team has received your inquiry and will respond within 12 business hours.
+                    <h3 className="text-lg font-bold text-white font-display">Message Sent! 🎉</h3>
+                    <p className="text-xs text-slate-400 mt-2 max-w-sm leading-relaxed">
+                      Your inquiry has been saved to our CRM. Our team will contact you within 12 business hours.
                     </p>
                   </motion.div>
                 )}
+
                 {status === 'error' && (
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -204,16 +216,28 @@ export default function Contact() {
                   >
                     <AlertCircle size={44} className="text-red-400 mb-4" />
                     <h3 className="text-lg font-bold text-white font-display">Submission Failed</h3>
-                    <p className="text-xs text-slate-400 mt-2">Please email us directly at {CONTACT_EMAIL}</p>
-                    <button onClick={() => setStatus('idle')} className="mt-4 text-xs text-brand-primary underline">Try again</button>
+                    <p className="text-xs text-slate-400 mt-2 max-w-sm">{errorMsg}</p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Or email us directly at{' '}
+                      <a href={`mailto:${CONTACT_EMAIL}`} className="text-brand-primary underline">{CONTACT_EMAIL}</a>
+                    </p>
+                    <button
+                      onClick={() => setStatus('idle')}
+                      className="mt-5 text-xs text-brand-primary border border-brand-primary/30 px-4 py-1.5 rounded-lg hover:bg-brand-primary/10 transition-colors"
+                    >
+                      Try Again
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <h3 className="text-base sm:text-lg font-bold text-white font-display mb-5 sm:mb-6">Project Inquiry Form</h3>
+              <h3 className="text-base sm:text-lg font-bold text-white font-display mb-5 sm:mb-6">
+                Project Inquiry Form
+              </h3>
 
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5" noValidate>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  {/* Name */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-slate-300">Full Name *</label>
                     <input
@@ -224,12 +248,14 @@ export default function Contact() {
                       placeholder="Jane Doe"
                       className="glass-input"
                     />
-                    {formErrors.name && (
+                    {errors.name && (
                       <p className="text-[10px] text-red-400 flex items-center gap-1">
-                        <AlertCircle size={10} />{formErrors.name}
+                        <AlertCircle size={10} />{errors.name}
                       </p>
                     )}
                   </div>
+
+                  {/* Email */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-slate-300">Work Email *</label>
                     <input
@@ -240,53 +266,58 @@ export default function Contact() {
                       placeholder="jane@company.com"
                       className="glass-input"
                     />
-                    {formErrors.email && (
+                    {errors.email && (
                       <p className="text-[10px] text-red-400 flex items-center gap-1">
-                        <AlertCircle size={10} />{formErrors.email}
+                        <AlertCircle size={10} />{errors.email}
                       </p>
                     )}
                   </div>
                 </div>
 
+                {/* Budget */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-300">Estimated Budget</label>
                   <select name="budget" value={formData.budget} onChange={handleChange} className="glass-input">
-                    <option>$5k - $10k (Starter)</option>
-                    <option>$10k - $25k (Professional)</option>
-                    <option>$25k - $50k (Enterprise)</option>
-                    <option>$50k+ (Custom Solution)</option>
+                    {BUDGET_OPTIONS.map((opt) => (
+                      <option key={opt}>{opt}</option>
+                    ))}
                   </select>
                 </div>
 
+                {/* Project Details */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-300">Project Details *</label>
                   <textarea
-                    name="desc"
+                    name="details"
                     rows={4}
-                    value={formData.desc}
+                    value={formData.details}
                     onChange={handleChange}
-                    placeholder="Describe your project, integrations, target launch date, and key features..."
+                    placeholder="Describe your project, required integrations, target launch date, and key features..."
                     className="glass-input resize-none"
                   />
-                  {formErrors.desc && (
+                  {errors.details && (
                     <p className="text-[10px] text-red-400 flex items-center gap-1">
-                      <AlertCircle size={10} />{formErrors.desc}
+                      <AlertCircle size={10} />{errors.details}
                     </p>
                   )}
                 </div>
 
+                {/* Submit */}
                 <div className="pt-1">
                   <button
                     type="submit"
                     disabled={status === 'loading'}
-                    className="w-full flex items-center justify-center gap-2 py-3 sm:py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs sm:text-sm font-bold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full flex items-center justify-center gap-2 py-3 sm:py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs sm:text-sm font-bold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
                   >
                     {status === 'loading' ? (
-                      <><Loader2 size={14} className="animate-spin" /><span>Sending...</span></>
+                      <><Loader2 size={14} className="animate-spin" /><span>Sending to CRM...</span></>
                     ) : (
                       <><Send size={14} /><span>Launch Inquiry</span></>
                     )}
                   </button>
+                  <p className="text-[10px] text-slate-600 text-center mt-2">
+                    Your data is saved securely to our admin CRM. No spam, ever.
+                  </p>
                 </div>
               </form>
             </div>
