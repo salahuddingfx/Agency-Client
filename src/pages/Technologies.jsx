@@ -1,16 +1,18 @@
 import { motion } from 'framer-motion';
-import { Layers, Monitor, HardDrive, Terminal, Sliders } from 'lucide-react';
+import { Layers, Monitor, HardDrive, Terminal, Sliders, Smartphone, Brain } from 'lucide-react';
 import SEO from '../components/SEO';
 import { technologies } from '../data/mockData';
 
 export default function Technologies() {
-  const categories = ['All', 'Frontend', 'Backend', 'Database', 'Infrastructure', 'Tools'];
+  const categories = ['All', 'Frontend', 'Mobile', 'Backend', 'Database', 'AI/ML', 'Infrastructure', 'Tools'];
 
   const getCategoryIcon = (category) => {
     switch (category) {
       case 'Frontend': return <Monitor className="text-brand-primary" size={16} />;
+      case 'Mobile': return <Smartphone className="text-brand-primary" size={16} />;
       case 'Backend': return <Terminal className="text-brand-primary" size={16} />;
       case 'Database': return <HardDrive className="text-brand-primary" size={16} />;
+      case 'AI/ML': return <Brain className="text-brand-primary" size={16} />;
       case 'Infrastructure': return <Layers className="text-brand-primary" size={16} />;
       default: return <Sliders className="text-brand-primary" size={16} />;
     }

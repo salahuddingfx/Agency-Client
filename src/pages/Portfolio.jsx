@@ -7,7 +7,7 @@ import { projectsData } from '../data/mockData';
 export default function Portfolio() {
   const [activeFilter, setActiveFilter] = useState('All');
 
-  const categories = ['All', 'Web Development', 'Mobile App Development', 'POS Solutions', 'ERP & CRM Systems', 'UI/UX Design'];
+  const categories = ['All', 'Web Development', 'Mobile App Development', 'POS Solutions', 'ERP & CRM Systems', 'UI/UX Design', 'Graphics Design', 'AI & Machine Learning', 'SEO & Digital Marketing'];
 
   const filteredProjects = activeFilter === 'All'
     ? projectsData

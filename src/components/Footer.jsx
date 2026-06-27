@@ -31,6 +31,8 @@ export default function Footer() {
     { name: 'POS Solutions', path: '/services' },
     { name: 'ERP & CRM Systems', path: '/services' },
     { name: 'UI/UX Design', path: '/services' },
+    { name: 'Graphics Design', path: '/services' },
+    { name: 'AI & Machine Learning', path: '/services' },
   ];
 
   const resourcesLinks = [

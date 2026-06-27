@@ -202,6 +202,8 @@ export default function Home() {
                 'Scalable Cloud Systems',
                 'Custom CRM & ERP Dashboards',
                 'Premium Mobile Apps',
+                'AI & Machine Learning',
+                'Graphics Design & Branding',
               ]}
               className="bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent"
               cursorColor="bg-brand-primary"
@@ -215,7 +217,7 @@ export default function Home() {
             transition={{ delay: 0.15, duration: 0.7 }}
             className="mt-5 sm:mt-6 text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto font-sans leading-relaxed px-2"
           >
-            We design, develop, and deploy websites, mobile apps, POS platforms, and custom CRM/ERP tools that scale your operations globally.
+            We design, develop, and deploy websites, mobile apps, POS platforms, CRM/ERP tools, AI solutions, and brand identities that scale your operations globally.
           </motion.p>
 
           {/* Hero Buttons */}

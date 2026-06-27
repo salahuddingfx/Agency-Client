@@ -68,13 +68,33 @@ export const servicesData = [
     features: ['Technical SEO code optimization', 'Competitor keyword intelligence', 'Structured Schema markup & Rich Snippets', 'High-conversion copy audits', 'Performance-tracked marketing dashboards'],
     metric: '+310% Avg Organic Traffic Increase',
     slug: 'seo-digital-marketing'
+  },
+  {
+    id: 'graphics-design',
+    title: 'Graphics Design',
+    shortDesc: 'Brand identities, visual assets, and creative designs that make businesses stand out.',
+    longDesc: 'From logo design and brand guidelines to marketing collateral and social media creatives, we craft visually compelling graphics that communicate your brand story. Our design team combines aesthetics with strategy to deliver assets that convert.',
+    iconName: 'Palette',
+    features: ['Logo design & brand identity systems', 'Marketing collateral & brochures', 'Social media templates & content kits', 'Pitch deck & presentation design', 'Print-ready artwork & packaging design'],
+    metric: '200+ Brands Designed',
+    slug: 'graphics-design'
+  },
+  {
+    id: 'ai-ml',
+    title: 'AI & Machine Learning',
+    shortDesc: 'Intelligent automation, predictive analytics, and custom AI solutions for modern businesses.',
+    longDesc: 'Harness the power of artificial intelligence to automate workflows, predict trends, and unlock insights hidden in your data. We build custom ML models, NLP systems, computer vision pipelines, and AI-powered features that give your product a competitive edge.',
+    iconName: 'Brain',
+    features: ['Custom ML model development & training', 'Natural Language Processing (NLP) solutions', 'Computer vision & image recognition', 'Predictive analytics & recommendation engines', 'AI API integration (OpenAI, Hugging Face, TensorFlow)'],
+    metric: '95%+ Model Accuracy',
+    slug: 'ai-machine-learning'
   }
 ];
 
 export const statistics = [
   { value: '120+', label: 'Projects Completed', description: 'Enterprise platforms, mobile apps, and custom systems delivered globally.' },
   { value: '98%', label: 'Client Retention Rate', description: 'Long-term partnerships supporting our clients as their technology needs evolve.' },
-  { value: '8+', label: 'Years of Experience', description: 'Over a decade of refining code standards, user experience, and architecture.' },
+  { value: '30+', label: 'Team Members', description: 'Engineers, designers, and strategists building the future of digital products.' },
   { value: '15m+', label: 'End Users Reached', description: 'Digital products built by us that power active user engagement worldwide.' }
 ];
 
@@ -137,7 +157,7 @@ export const projectsData = [
   {
     id: 'proj-6',
     title: 'Launchpad SaaS SEO Strategy',
-    category: 'Branding',
+    category: 'SEO & Digital Marketing',
     client: 'Launchpad Tools Inc.',
     summary: 'A full content hub rebuild and schema optimization campaign leading to first-page ranking for competitive SaaS keywords.',
     imageColor: 'from-blue-600 to-purple-600',
@@ -184,16 +204,32 @@ export const caseStudies = [
 
 export const technologies = [
   { name: 'React', category: 'Frontend', iconName: 'ReactIcon', desc: 'Component-driven frontend UI development.' },
+  { name: 'Next.js', category: 'Frontend', iconName: 'NextjsIcon', desc: 'Full-stack React framework with SSR and SSG.' },
   { name: 'Vite', category: 'Frontend', iconName: 'ViteIcon', desc: 'Ultra-fast build tooling and hot module replacement.' },
   { name: 'JavaScript', category: 'Frontend', iconName: 'JSIcon', desc: 'Dynamic programming scripting language.' },
+  { name: 'TypeScript', category: 'Frontend', iconName: 'TSIcon', desc: 'Type-safe JavaScript for scalable codebases.' },
   { name: 'Tailwind CSS', category: 'Frontend', iconName: 'TailwindIcon', desc: 'Utility-first styling for modern design tokens.' },
   { name: 'Framer Motion', category: 'Frontend', iconName: 'MotionIcon', desc: 'Premium page transitions and scroll animations.' },
+  { name: 'React Native', category: 'Mobile', iconName: 'ReactNativeIcon', desc: 'Cross-platform mobile apps with native performance.' },
+  { name: 'Flutter', category: 'Mobile', iconName: 'FlutterIcon', desc: 'Google UI toolkit for multi-platform apps.' },
   { name: 'Node.js', category: 'Backend', iconName: 'NodeIcon', desc: 'Server-side runtime environment.' },
   { name: 'Express.js', category: 'Backend', iconName: 'ExpressIcon', desc: 'Fast minimalist web framework for APIs.' },
+  { name: 'Python', category: 'Backend', iconName: 'PythonIcon', desc: 'Versatile language for backend, AI/ML, and automation.' },
+  { name: 'Go', category: 'Backend', iconName: 'GoIcon', desc: 'High-performance language for concurrent systems.' },
+  { name: 'GraphQL', category: 'Backend', iconName: 'GraphqlIcon', desc: 'Flexible query language for efficient API data fetching.' },
   { name: 'MongoDB', category: 'Database', iconName: 'MongoIcon', desc: 'NoSQL document database for scalable JSON storage.' },
+  { name: 'PostgreSQL', category: 'Database', iconName: 'PostgresIcon', desc: 'Powerful relational database for complex queries.' },
+  { name: 'SQLite', category: 'Database', iconName: 'SqliteIcon', desc: 'Lightweight embedded database for offline-first apps.' },
+  { name: 'Redis', category: 'Database', iconName: 'RedisIcon', desc: 'In-memory cache for ultra-fast data retrieval.' },
+  { name: 'TensorFlow', category: 'AI/ML', iconName: 'TensorflowIcon', desc: 'End-to-end ML framework for deep learning models.' },
+  { name: 'PyTorch', category: 'AI/ML', iconName: 'PytorchIcon', desc: 'Flexible ML framework for research and production.' },
+  { name: 'OpenAI API', category: 'AI/ML', iconName: 'OpenAIIcon', desc: 'GPT integration for NLP and generative AI features.' },
   { name: 'Docker', category: 'Infrastructure', iconName: 'DockerIcon', desc: 'Containerization for consistent environment hosting.' },
+  { name: 'AWS', category: 'Infrastructure', iconName: 'AWSIcon', desc: 'Cloud computing platform for scalable infrastructure.' },
+  { name: 'GCP', category: 'Infrastructure', iconName: 'GCPIcon', desc: 'Google Cloud for AI/ML and data analytics workloads.' },
+  { name: 'Cloudflare', category: 'Infrastructure', iconName: 'CloudflareIcon', desc: 'Edge CDN routing, caching, and DNS management.' },
   { name: 'GitHub', category: 'Tools', iconName: 'GithubIcon', desc: 'Version control, issue tracking, and CI/CD automation.' },
-  { name: 'Cloudflare', category: 'Infrastructure', iconName: 'CloudflareIcon', desc: 'Edge CDN routing, caching, and DNS management.' }
+  { name: 'Figma', category: 'Tools', iconName: 'FigmaIcon', desc: 'Collaborative design tool for UI/UX prototyping.' },
 ];
 
 export const teamMembers = [

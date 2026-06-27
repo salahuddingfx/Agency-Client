@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Globe, Smartphone, Code, CreditCard, Layers, TrendingUp, Sparkles, Check, ChevronRight } from 'lucide-react';
+import { Globe, Smartphone, Code, CreditCard, Layers, TrendingUp, Sparkles, Check, ChevronRight, Palette, Brain } from 'lucide-react';
 import SEO from '../components/SEO';
 import { servicesData } from '../data/mockData';
 import GsapFadeIn from '../components/GsapAnimate';
@@ -27,6 +27,8 @@ export default function Services() {
       case 'Layers': return <Layers {...props} />;
       case 'Figma': return <FigmaIcon {...props} />;
       case 'TrendingUp': return <TrendingUp {...props} />;
+      case 'Palette': return <Palette {...props} />;
+      case 'Brain': return <Brain {...props} />;
       default: return <Sparkles {...props} />;
     }
   };
