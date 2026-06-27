@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, User, FileText, CheckCircle2, AlertTriangle, FileUp, Send, MessageSquare, Download, LogOut, Plus, Clock, HelpCircle, X, Eye, EyeOff } from 'lucide-react';
 import SEO from '../components/SEO';
 import { api } from '../api/api';
+import { useToast } from '../components/Toast';
 import Logo from '../components/Logo';
 
 export default function ClientPortal() {
+  const { toast } = useToast();
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'register' | 'verify' | 'forgot' | 'reset'
@@ -206,7 +208,7 @@ export default function ClientPortal() {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) {
-      alert('Please fill out login credentials.');
+      toast.warning('Please fill out login credentials.');
       return;
     }
     
@@ -220,15 +222,15 @@ export default function ClientPortal() {
         setToken(data.accessToken);
         setUser(data.user);
       } else {
-        alert(data.message || 'Login failed.');
+        toast.error(data.message || 'Login failed.');
       }
     } catch (err) {
       if (err.message && (err.message.toLowerCase().includes('verification') || err.message.toLowerCase().includes('pending'))) {
-        alert(err.message);
+        toast.info(err.message);
         setVerifyEmail(username);
         setAuthMode('verify');
       } else {
-        alert(err.message || 'Login credentials incorrect.');
+        toast.error(err.message || 'Login credentials incorrect.');
       }
     } finally {
       setIsLoading(false);
@@ -238,7 +240,7 @@ export default function ClientPortal() {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     if (!registerName.trim() || !registerEmail.trim() || !registerPassword.trim() || !registerCompany.trim()) {
-      alert('Please fill out all registration fields.');
+      toast.warning('Please fill out all registration fields.');
       return;
     }
     
@@ -252,14 +254,14 @@ export default function ClientPortal() {
       );
       
       if (data.success) {
-        alert(data.message || 'Registration pending verification. Verification code sent.');
+        toast.success(data.message || 'Registration pending verification. Verification code sent.');
         setVerifyEmail(registerEmail);
         setAuthMode('verify');
       } else {
-        alert(data.message || 'Registration failed.');
+        toast.error(data.message || 'Registration failed.');
       }
     } catch (err) {
-      alert(err.message || 'Failed to create workspace.');
+      toast.error(err.message || 'Failed to create workspace.');
     } finally {
       setIsLoading(false);
     }
@@ -268,7 +270,7 @@ export default function ClientPortal() {
   const handleVerifyOtpSubmit = async (e) => {
     e.preventDefault();
     if (!verifyEmail.trim() || !verifyOtpVal.trim()) {
-      alert('Please provide your email and the 6-digit verification code.');
+      toast.warning('Please provide your email and the 6-digit verification code.');
       return;
     }
 
@@ -281,12 +283,12 @@ export default function ClientPortal() {
         setToken(data.accessToken);
         setUser(data.user);
         setVerifyOtpVal('');
-        alert('Email verified successfully! Welcome to your workspace.');
+        toast.success('Email verified successfully! Welcome to your workspace.');
       } else {
-        alert(data.message || 'Verification failed.');
+        toast.error(data.message || 'Verification failed.');
       }
     } catch (err) {
-      alert(err.message || 'Invalid or expired OTP.');
+      toast.error(err.message || 'Invalid or expired OTP.');
     } finally {
       setIsLoading(false);
     }
@@ -294,7 +296,7 @@ export default function ClientPortal() {
 
   const handleResendOtp = async () => {
     if (!verifyEmail.trim()) {
-      alert('Please enter your verification email.');
+      toast.warning('Please enter your verification email.');
       return;
     }
 
@@ -302,12 +304,12 @@ export default function ClientPortal() {
       setIsLoading(true);
       const data = await api.resendOtp(verifyEmail);
       if (data.success) {
-        alert(data.message || 'A new verification code has been sent.');
+        toast.success(data.message || 'A new verification code has been sent.');
       } else {
-        alert(data.message || 'Failed to resend code.');
+        toast.error(data.message || 'Failed to resend code.');
       }
     } catch (err) {
-      alert(err.message || 'Error resending verification code.');
+      toast.error(err.message || 'Error resending verification code.');
     } finally {
       setIsLoading(false);
     }
@@ -316,7 +318,7 @@ export default function ClientPortal() {
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
     if (!forgotEmail.trim()) {
-      alert('Please enter your workspace email.');
+      toast.warning('Please enter your workspace email.');
       return;
     }
 
@@ -324,13 +326,13 @@ export default function ClientPortal() {
       setIsLoading(true);
       const data = await api.forgotPassword(forgotEmail);
       if (data.success) {
-        alert('A verification code has been sent to your email.');
+        toast.success('A verification code has been sent to your email.');
         setAuthMode('reset');
       } else {
-        alert(data.message || 'Failed to request reset.');
+        toast.error(data.message || 'Failed to request reset.');
       }
     } catch (err) {
-      alert(err.message || 'Error occurred during password reset request.');
+      toast.error(err.message || 'Error occurred during password reset request.');
     } finally {
       setIsLoading(false);
     }
@@ -339,7 +341,7 @@ export default function ClientPortal() {
   const handleResetPasswordSubmit = async (e) => {
     e.preventDefault();
     if (!forgotEmail.trim() || !resetOtpVal.trim() || !resetPasswordVal.trim()) {
-      alert('Please provide email, verification code, and new password.');
+      toast.warning('Please provide email, verification code, and new password.');
       return;
     }
 
@@ -347,7 +349,7 @@ export default function ClientPortal() {
       setIsLoading(true);
       const data = await api.resetPasswordOtp(forgotEmail, resetOtpVal, resetPasswordVal);
       if (data.success) {
-        alert('Password updated successfully! Please login.');
+        toast.success('Password updated successfully! Please login.');
         setAuthMode('login');
         setUsername(forgotEmail);
         setPassword('');
