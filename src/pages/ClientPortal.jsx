@@ -57,7 +57,9 @@ export default function ClientPortal() {
 
   const getAvatarUrl = (avatarPath) => {
     if (!avatarPath) return null;
+    // Cloudinary and external URLs start with http — use them directly
     if (avatarPath.startsWith('http') || avatarPath.startsWith('data:')) return avatarPath;
+    // Legacy local path fallback
     const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
     const hostUrl = baseUrl.replace('/api/v1', '');
     return `${hostUrl}${avatarPath}`;
