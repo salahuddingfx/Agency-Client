@@ -489,16 +489,20 @@ function GlobeFallback({ technologies, theme }) {
 }
 
 /* ─── Exported wrapper ────────────────────────────────────────────── */
-export default function TechGlobe({ technologies }) {
+export default function TechGlobe({ technologies, transparent = false, className = "" }) {
   const [webgl] = useState(() => hasWebGL());
   const { theme } = useTheme();
 
   if (!webgl) return <GlobeFallback technologies={technologies} theme={theme} />;
 
+  const containerClasses = transparent
+    ? `w-full h-full overflow-hidden ${className}`
+    : `w-full h-[500px] sm:h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border transition-colors duration-300 ${
+        theme === 'dark' ? 'bg-[#020617] border-slate-800/50' : 'bg-slate-50 border-slate-200'
+      } ${className}`;
+
   return (
-    <div className={`w-full h-[500px] sm:h-[600px] lg:h-[700px] rounded-2xl overflow-hidden border transition-colors duration-300 ${
-      theme === 'dark' ? 'bg-[#020617] border-slate-800/50' : 'bg-slate-50 border-slate-200'
-    }`}>
+    <div className={containerClasses}>
       <Canvas
         camera={{ position: [0, 2, 10], fov: 50 }}
         dpr={[1, 2]}

@@ -46,7 +46,7 @@ export default function Services() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="pt-16 sm:pt-20 pb-16 min-h-screen relative"
+      className="pt-16 sm:pt-20 pb-16 min-h-screen relative overflow-hidden"
     >
       <SEO 
         title="Custom Software & Development Services" 
@@ -135,7 +135,7 @@ export default function Services() {
             <GlowCard key={service.id} className="h-full">
               <div className="glass-card p-8 sm:p-10 rounded-xl hover:border-brand-primary/20 transition-all flex flex-col justify-between h-full">
                 <div>
-                  <div className="flex flex-col gap-4 xs:flex-row xs:items-center xs:justify-between mb-6">
+                  <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                     <div className="w-14 h-14 rounded-lg bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center">
                       {getIcon(service.iconName)}
                     </div>

@@ -201,11 +201,11 @@ export default function Footer() {
             ))}
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-2 text-xs">
-            <span className="text-slate-600 whitespace-nowrap">
+            <span className="text-slate-600 text-center sm:text-left">
               © {currentYear} Nextora Studio. All rights reserved.
             </span>
             <span className="hidden sm:inline text-slate-700">·</span>
-            <span className="text-slate-600 whitespace-nowrap flex items-center gap-1">
+            <span className="text-slate-600 flex flex-wrap items-center justify-center sm:justify-start gap-1">
               Crafted with <Heart size={10} className="text-red-500 fill-red-500" /> by
               <a
                 href="https://nextorastudio.tech"

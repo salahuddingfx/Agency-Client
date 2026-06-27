@@ -7,12 +7,14 @@ import {
 } from 'lucide-react';
 import SEO from '../components/SEO';
 import TypingAnimation from '../components/TypingAnimation';
-import { servicesData, statistics, caseStudies } from '../data/mockData';
-import { normalizeServices, normalizeCaseStudies, normalizeTestimonials } from '../data/normalize';
+import { servicesData, statistics, caseStudies, technologies } from '../data/mockData';
+import { normalizeServices, normalizeCaseStudies, normalizeTestimonials, normalizeTechnologies } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import GsapFadeIn from '../components/GsapAnimate';
 import GlowCard from '../components/GlowCard';
 import { api } from '../api/api';
+import TechGlobe from '../components/TechGlobe';
+import { Suspense } from 'react';
 
 /* ─── CountUp Hook ─────────────────────────────────────────────── */
 function useCountUp(target, duration = 1800, start = false) {
@@ -132,8 +134,10 @@ export default function Home() {
 
   const { data: rawHomeServices = servicesData } = useFetch(() => api.getServices(), servicesData);
   const { data: rawHomeCaseStudies = caseStudies } = useFetch(() => api.getCaseStudies(), caseStudies);
+  const { data: rawHomeTechs = technologies } = useFetch(() => api.getTechnologies(), technologies);
   const homeServices = normalizeServices(rawHomeServices);
   const homeCaseStudies = normalizeCaseStudies(rawHomeCaseStudies);
+  const homeTechs = normalizeTechnologies(rawHomeTechs);
 
   // Fetch live testimonials from backend
   useEffect(() => {
@@ -196,101 +200,121 @@ export default function Home() {
       />
 
       {/* ─── HERO ──────────────────────────────────────────────── */}
-      <section className="relative flex flex-col items-center justify-center py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 text-center bg-mesh-pattern">
+      <section className="relative py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 bg-mesh-pattern overflow-hidden">
 
         {/* Floating glows */}
         <div className="absolute top-[15%] left-[5%] sm:left-[10%] w-[200px] sm:w-[350px] h-[200px] sm:h-[350px] bg-brand-primary/10 rounded-full blur-[80px] sm:blur-[100px] animate-float pointer-events-none" />
         <div className="absolute bottom-[5%] right-[5%] sm:right-[10%] w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-brand-accent/10 rounded-full blur-[100px] sm:blur-[120px] animate-pulse-subtle pointer-events-none" />
 
-        <div className="max-w-4xl mx-auto relative z-10 w-full">
+        <div className="max-w-7xl mx-auto relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Left: Text Info */}
+          <div className="lg:col-span-7 text-center lg:text-left flex flex-col items-center lg:items-start w-full">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 mb-5 sm:mb-6 text-[10px] sm:text-xs text-brand-primary font-medium tracking-wider uppercase"
+            >
+              <Sparkles size={11} className="animate-spin-slow" />
+              <span>Introducing Nextora Studio</span>
+            </motion.div>
 
-          {/* Badge */}
+            {/* Headline */}
+            <motion.h1
+              initial={{ y: 25, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-display leading-[1.15] px-2 lg:px-0 w-full"
+            >
+              Transforming Ideas Into{' '}
+              <br className="hidden sm:block" />
+              <TypingAnimation
+                words={[
+                  'Powerful Digital Solutions',
+                  'Bespoke Web Applications',
+                  'Scalable Cloud Systems',
+                  'Custom CRM & ERP Dashboards',
+                  'Premium Mobile Apps',
+                  'AI & Machine Learning',
+                  'Graphics Design & Branding',
+                ]}
+                className="bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent"
+                cursorColor="bg-brand-primary"
+              />
+            </motion.h1>
+
+            {/* Sub-headline */}
+            <motion.p
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.15, duration: 0.7 }}
+              className="mt-5 sm:mt-6 text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto lg:mx-0 font-sans leading-relaxed px-2 lg:px-0"
+            >
+              We design, develop, and deploy websites, mobile apps, POS platforms, CRM/ERP tools, AI solutions, and brand identities that scale your operations globally.
+            </motion.p>
+
+            {/* Hero Buttons */}
+            <motion.div
+              initial={{ y: 15, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0"
+            >
+              <Link
+                to="/contact"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <span>Start Your Project</span>
+                <ArrowRight size={15} />
+              </Link>
+              <Link
+                to="/portfolio"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-brand-slateAccent bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 hover:border-slate-700 text-white text-sm font-semibold rounded-lg transition-all duration-300"
+              >
+                <span>View Portfolio</span>
+              </Link>
+            </motion.div>
+
+            {/* Client trust strip */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="mt-10 sm:mt-12 w-full"
+            >
+              <p className="text-[10px] sm:text-xs text-slate-600 uppercase tracking-widest mb-4">
+                Trusted by teams at
+              </p>
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 sm:gap-4">
+                {clientLogos.map((logo) => (
+                  <span
+                    key={logo}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-brand-slateAccent/20 border border-brand-slateAccent/40 rounded-full text-[10px] sm:text-xs text-slate-500 font-medium hover:text-slate-300 hover:border-slate-600 transition-colors duration-200"
+                  >
+                    {logo}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right: Interactive 3D TechGlobe */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 mb-5 sm:mb-6 text-[10px] sm:text-xs text-brand-primary font-medium tracking-wider uppercase"
+            transition={{ delay: 0.35, duration: 0.8 }}
+            className="lg:col-span-5 w-full h-[350px] sm:h-[450px] lg:h-[520px] relative flex items-center justify-center pointer-events-auto"
           >
-            <Sparkles size={11} className="animate-spin-slow" />
-            <span>Introducing Nextora Studio</span>
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            initial={{ y: 25, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-display leading-[1.15] px-2"
-          >
-            Transforming Ideas Into{' '}
-            <br className="hidden sm:block" />
-            <TypingAnimation
-              words={[
-                'Powerful Digital Solutions',
-                'Bespoke Web Applications',
-                'Scalable Cloud Systems',
-                'Custom CRM & ERP Dashboards',
-                'Premium Mobile Apps',
-                'AI & Machine Learning',
-                'Graphics Design & Branding',
-              ]}
-              className="bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent"
-              cursorColor="bg-brand-primary"
-            />
-          </motion.h1>
-
-          {/* Sub-headline */}
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.15, duration: 0.7 }}
-            className="mt-5 sm:mt-6 text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mx-auto font-sans leading-relaxed px-2"
-          >
-            We design, develop, and deploy websites, mobile apps, POS platforms, CRM/ERP tools, AI solutions, and brand identities that scale your operations globally.
-          </motion.p>
-
-          {/* Hero Buttons */}
-          <motion.div
-            initial={{ y: 15, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 px-4 sm:px-0"
-          >
-            <Link
-              to="/contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
-            >
-              <span>Start Your Project</span>
-              <ArrowRight size={15} />
-            </Link>
-            <Link
-              to="/portfolio"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-brand-slateAccent bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 hover:border-slate-700 text-white text-sm font-semibold rounded-lg transition-all duration-300"
-            >
-              <span>View Portfolio</span>
-            </Link>
-          </motion.div>
-
-          {/* Client trust strip */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-10 sm:mt-12"
-          >
-            <p className="text-[10px] sm:text-xs text-slate-600 uppercase tracking-widest mb-4">
-              Trusted by teams at
-            </p>
-            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-              {clientLogos.map((logo) => (
-                <span
-                  key={logo}
-                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-brand-slateAccent/20 border border-brand-slateAccent/40 rounded-full text-[10px] sm:text-xs text-slate-500 font-medium hover:text-slate-300 hover:border-slate-600 transition-colors duration-200"
-                >
-                  {logo}
-                </span>
-              ))}
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-brand-primary/5 to-brand-accent/5 rounded-full blur-3xl pointer-events-none" />
+            <Suspense fallback={
+              <div className="flex flex-col items-center justify-center gap-3">
+                <div className="w-10 h-10 border-2 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin" />
+                <span className="text-xs text-slate-500">Loading 3D Experience...</span>
+              </div>
+            }>
+              <TechGlobe technologies={homeTechs} transparent={true} />
+            </Suspense>
           </motion.div>
         </div>
       </section>
