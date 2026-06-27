@@ -19,8 +19,20 @@ export default function useFetch(apiCall, fallback = []) {
       try {
         const res = await apiCall();
         if (!cancelled) {
-          const items = res?.data ?? res?.services ?? res?.portfolios ?? res?.blogs ?? res?.teams ?? res?.technologies ?? res?.careers ?? res?.caseStudies ?? res?.testimonials ?? res;
-          setData(Array.isArray(items) ? items : fallback);
+          // Extract array from various API response shapes
+          let items = res;
+
+          // Handle { success, count, data: [...] } shape
+          if (res && typeof res === 'object' && !Array.isArray(res)) {
+            items = res.data ?? res.services ?? res.portfolios ?? res.blogs ?? res.teams ?? res.technologies ?? res.careers ?? res.caseStudies ?? res.testimonials ?? res.projects ?? res.users ?? null;
+          }
+
+          // If items is still not an array, use fallback
+          if (!Array.isArray(items)) {
+            items = fallback;
+          }
+
+          setData(items);
         }
       } catch (err) {
         if (!cancelled) {
@@ -39,4 +51,3 @@ export default function useFetch(apiCall, fallback = []) {
 
   return { data, loading, error };
 }
-
