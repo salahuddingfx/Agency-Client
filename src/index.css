@@ -140,4 +140,11 @@ html:not(.dark) .text-white:not(button):not(a):not(.bg-brand-primary):not(.bg-br
   perspective: 1000px;
 }
 
+/* TV / Keyboard focus-visible ring */
+*:focus-visible {
+  outline: 2px solid #18B7F5;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 
