@@ -4,15 +4,21 @@ import { Mail, MessageSquare, MapPin, Send, CheckCircle2, AlertCircle, Loader2 }
 import SEO from '../components/SEO';
 import { api } from '../api/api';
 
-// ── Config ─────────────────────────────────────────────────────
+// Import Reusable UI Components
+import GlassCard from '../components/ui/GlassCard';
+import GlassButton from '../components/ui/GlassButton';
+import GlassBadge from '../components/ui/GlassBadge';
+import GlassInput from '../components/ui/GlassInput';
+import GlassDropdown from '../components/ui/GlassDropdown';
+
 const WHATSAPP_NUMBER = '8801851075537';
 const CONTACT_EMAIL   = 'nextorastudio@gmail.com';
 
 const BUDGET_OPTIONS = [
-  '$5k - $10k (Starter)',
-  '$10k - $25k (Professional)',
-  '$25k - $50k (Enterprise)',
-  '$50k+ (Custom Solution)',
+  { value: '$5k - $10k (Starter)', label: '$5k - $10k (Starter)' },
+  { value: '$10k - $25k (Professional)', label: '$10k - $25k (Professional)' },
+  { value: '$25k - $50k (Enterprise)', label: '$25k - $50k (Enterprise)' },
+  { value: '$50k+ (Custom Solution)', label: '$50k+ (Custom Solution)' },
 ];
 
 export default function Contact() {
@@ -26,7 +32,6 @@ export default function Contact() {
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('');
 
-  // ── Inline validation ──────────────────────────────────────────
   const validateField = (name, value) => {
     const errs = { ...errors };
     if (name === 'name') {
@@ -50,7 +55,10 @@ export default function Contact() {
     validateField(name, value);
   };
 
-  // ── Submit → POST /api/v1/contacts ────────────────────────────
+  const handleDropdownSelect = (opt) => {
+    setFormData((prev) => ({ ...prev, budget: opt }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const finalErrors = {};
@@ -67,9 +75,7 @@ export default function Contact() {
     setErrorMsg('');
 
     try {
-      // Backend schema: { name, email, subject, text }
-      // We map budget + details → subject + text
-      const subject = `Project Inquiry — Budget: ${formData.budget}`;
+      const subject = `Project Inquiry — Budget: ${formData.budget.value}`;
       const text = formData.details;
 
       await api.submitContact(formData.name, formData.email, subject, text);
@@ -84,10 +90,9 @@ export default function Contact() {
     setTimeout(() => setStatus('idle'), 7000);
   };
 
-  // ── WhatsApp click ─────────────────────────────────────────────
   const openWhatsApp = () => {
     const msg = encodeURIComponent(
-      `Hi Nextora Studio! My name is ${formData.name || 'there'}. Budget: ${formData.budget}. ${formData.details || 'I would like to discuss a project.'}`
+      `Hi Nextora Studio! My name is ${formData.name || 'there'}. Budget: ${formData.budget.value}. ${formData.details || 'I would like to discuss a project.'}`
     );
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
   };
@@ -98,7 +103,7 @@ export default function Contact() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="pt-16 sm:pt-20 pb-16 min-h-screen relative"
+      className="pt-24 pb-16 min-h-screen relative"
     >
       <SEO
         title="Contact Us - Start Your Project"
@@ -110,23 +115,6 @@ export default function Contact() {
           'software consultation',
           'contact nextora studio'
         ]}
-        schema={{
-          '@context': 'https://schema.org',
-          '@type': 'ContactPage',
-          'name': 'Contact Nextora Studio',
-          'description': 'Contact Nextora Studio to request a software development quote or consultation.',
-          'mainEntity': {
-            '@type': 'Organization',
-            'name': 'Nextora Studio',
-            'url': 'https://nextorastudio.tech',
-            'contactPoint': {
-              '@type': 'ContactPoint',
-              'contactType': 'customer support',
-              'email': 'nextorastudio@gmail.com',
-              'availableLanguage': 'English'
-            }
-          }
-        }}
       />
 
       {/* Background glows */}
@@ -134,85 +122,85 @@ export default function Contact() {
       <div className="absolute bottom-[20%] right-[5%] w-[250px] sm:w-[350px] h-[250px] sm:h-[350px] bg-brand-accent/5 rounded-full blur-[100px] sm:blur-[120px] pointer-events-none" />
 
       {/* ─── HERO ──────────────────────────────────────────────── */}
-      <section className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
-        <h2 className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-brand-primary mb-3">Connect</h2>
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight font-display mb-4">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
+        <GlassBadge variant="primary" className="mb-4 font-semibold">Connect</GlassBadge>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight font-display mb-4">
           Start Your Technical{' '}
           <br className="hidden sm:block" />
-          <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent">
             Discovery Session
           </span>
         </h1>
-        <p className="text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-slate-550 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
           Fill in the form and our team will respond within 12 business hours — or chat instantly via WhatsApp.
         </p>
       </section>
 
       {/* ─── CONTACT GRID ───────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-left">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
 
           {/* Left column */}
-          <div className="lg:col-span-5 space-y-4 sm:space-y-5">
-            <div className="glass-card p-5 sm:p-7 rounded-xl space-y-4">
-              <h3 className="text-sm font-bold text-white font-display">Communication Channels</h3>
+          <div className="lg:col-span-5 space-y-6">
+            <GlassCard className="space-y-5 p-6 sm:p-8" hoverEffect="none">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-display mb-2 pl-1 uppercase tracking-widest text-slate-400 dark:text-slate-500">Communication Channels</h3>
 
               {/* Email */}
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="flex items-center gap-4 p-3.5 bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 rounded-xl border border-brand-slateAccent/30 hover:border-brand-primary/20 transition-all group"
+                className="flex items-center gap-4.5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5 hover:border-brand-primary/30 transition-all duration-300 group"
               >
-                <div className="w-9 h-9 rounded-lg bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center shrink-0">
-                  <Mail size={16} className="text-brand-primary" />
+                <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
+                  <Mail size={18} className="text-brand-primary" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-semibold text-white group-hover:text-brand-primary transition-colors">Direct Email</h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">{CONTACT_EMAIL}</p>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-brand-primary transition-colors font-display">Direct Email</h4>
+                  <p className="text-[11px] font-medium text-slate-550 dark:text-slate-450 mt-1">{CONTACT_EMAIL}</p>
                 </div>
               </a>
 
               {/* WhatsApp */}
               <button
                 onClick={openWhatsApp}
-                className="w-full flex items-center gap-4 p-3.5 bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 rounded-xl border border-brand-slateAccent/30 hover:border-green-500/30 transition-all group text-left"
+                className="w-full flex items-center gap-4.5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5 hover:border-green-500/30 transition-all duration-300 group text-left"
               >
-                <div className="w-9 h-9 rounded-lg bg-green-500/5 border border-green-500/10 flex items-center justify-center shrink-0">
-                  <MessageSquare size={16} className="text-green-400" />
+                <div className="w-10 h-10 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0">
+                  <MessageSquare size={18} className="text-green-500" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-semibold text-white group-hover:text-green-400 transition-colors flex items-center gap-2">
-                    WhatsApp Chat
-                    <span className="text-[9px] bg-green-500/10 text-green-400 border border-green-500/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Live</span>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-green-500 transition-colors flex items-center gap-2.5 font-display">
+                    <span>WhatsApp Chat</span>
+                    <span className="text-[8px] font-bold bg-green-500/10 text-green-500 border border-green-500/20 px-2 py-0.5 rounded-full tracking-widest uppercase">Live</span>
                   </h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Pre-fills from your form data</p>
+                  <p className="text-[11px] font-medium text-slate-555 dark:text-slate-450 mt-1">Pre-fills from your form data</p>
                 </div>
               </button>
 
               {/* Location */}
-              <div className="flex items-center gap-4 p-3.5 bg-brand-slateAccent/20 rounded-xl border border-brand-slateAccent/30">
-                <div className="w-9 h-9 rounded-lg bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center shrink-0">
-                  <MapPin size={16} className="text-brand-primary" />
+              <div className="flex items-center gap-4.5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5">
+                <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
+                  <MapPin size={18} className="text-brand-primary" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-semibold text-white">Global Remote Agency</h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Serving clients worldwide · Est. 2025</p>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white font-display">Global Remote Agency</h4>
+                  <p className="text-[11px] font-medium text-slate-550 dark:text-slate-450 mt-1">Serving clients worldwide · Est. 2025</p>
                 </div>
               </div>
-            </div>
+            </GlassCard>
 
             {/* Response time */}
-            <div className="glass-card p-5 rounded-xl border border-brand-primary/10">
-              <p className="text-xs font-semibold text-white mb-2">⚡ Response Time</p>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <GlassCard className="p-6 sm:p-8" hoverEffect="none">
+              <p className="text-sm font-bold text-slate-800 dark:text-white mb-2.5 pl-1 font-display">⚡ Response Time</p>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed pl-1">
                 We respond to all project inquiries within{' '}
-                <strong className="text-white">12 business hours</strong>. For urgent matters, WhatsApp is fastest.
+                <strong className="text-slate-900 dark:text-white font-semibold">12 business hours</strong>. For urgent matters, WhatsApp is fastest.
               </p>
-            </div>
+            </GlassCard>
           </div>
 
           {/* Right column — Form */}
           <div className="lg:col-span-7">
-            <div className="glass-card p-5 sm:p-8 lg:p-10 rounded-xl relative overflow-hidden">
+            <GlassCard className="relative overflow-hidden p-6 sm:p-10" hoverEffect="none">
 
               {/* Success overlay */}
               <AnimatePresence>
@@ -221,11 +209,11 @@ export default function Contact() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute inset-0 bg-brand-darker/96 rounded-xl z-20 flex flex-col items-center justify-center p-8 text-center"
+                    className="absolute inset-0 bg-white/96 dark:bg-brand-darker/96 rounded-xl z-20 flex flex-col items-center justify-center p-8 text-center"
                   >
-                    <CheckCircle2 size={44} className="text-brand-primary mb-4" />
-                    <h3 className="text-lg font-bold text-white font-display">Message Sent! 🎉</h3>
-                    <p className="text-xs text-slate-400 mt-2 max-w-sm leading-relaxed">
+                    <CheckCircle2 size={48} className="text-brand-primary mb-4" />
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display">Message Sent! 🎉</h3>
+                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2.5 max-w-sm leading-relaxed">
                       Your inquiry has been saved to our CRM. Our team will contact you within 12 business hours.
                     </p>
                   </motion.div>
@@ -236,115 +224,99 @@ export default function Contact() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute inset-0 bg-brand-darker/96 rounded-xl z-20 flex flex-col items-center justify-center p-8 text-center"
+                    className="absolute inset-0 bg-white/96 dark:bg-brand-darker/96 rounded-xl z-20 flex flex-col items-center justify-center p-8 text-center"
                   >
-                    <AlertCircle size={44} className="text-red-400 mb-4" />
-                    <h3 className="text-lg font-bold text-white font-display">Submission Failed</h3>
-                    <p className="text-xs text-slate-400 mt-2 max-w-sm">{errorMsg}</p>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <AlertCircle size={48} className="text-red-500 mb-4" />
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display">Submission Failed</h3>
+                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-sm">{errorMsg}</p>
+                    <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-500 mt-2.5">
                       Or email us directly at{' '}
-                      <a href={`mailto:${CONTACT_EMAIL}`} className="text-brand-primary underline">{CONTACT_EMAIL}</a>
+                      <a href={`mailto:${CONTACT_EMAIL}`} className="text-brand-primary underline font-semibold">{CONTACT_EMAIL}</a>
                     </p>
-                    <button
+                    <GlassButton
                       onClick={() => setStatus('idle')}
-                      className="mt-5 text-xs text-brand-primary border border-brand-primary/30 px-4 py-1.5 rounded-lg hover:bg-brand-primary/10 transition-colors"
+                      variant="outline"
+                      className="mt-6 px-6"
                     >
                       Try Again
-                    </button>
+                    </GlassButton>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <h3 className="text-base sm:text-lg font-bold text-white font-display mb-5 sm:mb-6">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white font-display mb-6 border-b border-slate-200/50 dark:border-white/5 pb-4 uppercase tracking-widest text-slate-400 dark:text-slate-500">
                 Project Inquiry Form
               </h3>
 
-              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5" noValidate>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {/* Name */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-300">Full Name *</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Jane Doe"
-                      className="glass-input"
-                    />
-                    {errors.name && (
-                      <p className="text-[10px] text-red-400 flex items-center gap-1">
-                        <AlertCircle size={10} />{errors.name}
-                      </p>
-                    )}
-                  </div>
+                  <GlassInput
+                    label="Full Name *"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Jane Doe"
+                    error={errors.name}
+                  />
 
                   {/* Email */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-300">Work Email *</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="jane@company.com"
-                      className="glass-input"
-                    />
-                    {errors.email && (
-                      <p className="text-[10px] text-red-400 flex items-center gap-1">
-                        <AlertCircle size={10} />{errors.email}
-                      </p>
-                    )}
-                  </div>
+                  <GlassInput
+                    label="Work Email *"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="jane@company.com"
+                    error={errors.email}
+                  />
                 </div>
 
                 {/* Budget */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-300">Estimated Budget</label>
-                  <select name="budget" value={formData.budget} onChange={handleChange} className="glass-input">
-                    {BUDGET_OPTIONS.map((opt) => (
-                      <option key={opt}>{opt}</option>
-                    ))}
-                  </select>
+                <div className="w-full flex flex-col space-y-1.5 text-left">
+                  <span className="block text-xs font-semibold text-slate-550 dark:text-slate-400 uppercase tracking-wider pl-1">
+                    Estimated Budget
+                  </span>
+                  <GlassDropdown
+                    options={BUDGET_OPTIONS}
+                    selectedOption={formData.budget}
+                    onSelect={handleDropdownSelect}
+                    className="w-full"
+                  />
                 </div>
 
                 {/* Project Details */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-300">Project Details *</label>
-                  <textarea
-                    name="details"
-                    rows={4}
-                    value={formData.details}
-                    onChange={handleChange}
-                    placeholder="Describe your project, required integrations, target launch date, and key features..."
-                    className="glass-input resize-none"
-                  />
-                  {errors.details && (
-                    <p className="text-[10px] text-red-400 flex items-center gap-1">
-                      <AlertCircle size={10} />{errors.details}
-                    </p>
-                  )}
-                </div>
+                <GlassInput
+                  label="Project Details *"
+                  textarea
+                  rows={5}
+                  name="details"
+                  value={formData.details}
+                  onChange={handleChange}
+                  placeholder="Describe your project, required integrations, target launch date, and key features..."
+                  error={errors.details}
+                />
 
                 {/* Submit */}
-                <div className="pt-1">
-                  <button
+                <div className="pt-2">
+                  <GlassButton
                     type="submit"
                     disabled={status === 'loading'}
-                    className="w-full flex items-center justify-center gap-2 py-3 sm:py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-xs sm:text-sm font-bold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
+                    variant="primary"
+                    className="w-full py-3.5"
                   >
                     {status === 'loading' ? (
-                      <><Loader2 size={14} className="animate-spin" /><span>Sending to CRM...</span></>
+                      <><Loader2 size={15} className="animate-spin" /><span>Sending to CRM...</span></>
                     ) : (
-                      <><Send size={14} /><span>Launch Inquiry</span></>
+                      <><Send size={15} /><span>Launch Inquiry</span></>
                     )}
-                  </button>
-                  <p className="text-[10px] text-slate-600 text-center mt-2">
+                  </GlassButton>
+                  <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 text-center mt-3">
                     Your data is saved securely to our admin CRM. No spam, ever.
                   </p>
                 </div>
               </form>
-            </div>
+            </GlassCard>
           </div>
 
         </div>

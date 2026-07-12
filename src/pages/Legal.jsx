@@ -3,6 +3,10 @@ import { motion } from 'framer-motion';
 import { Shield, FileText, CheckCircle, ArrowLeft } from 'lucide-react';
 import SEO from '../components/SEO';
 
+// Import Reusable UI Components
+import GlassCard from '../components/ui/GlassCard';
+import GlassBadge from '../components/ui/GlassBadge';
+
 const POLICIES = {
   'privacy-policy': {
     title: 'Privacy Policy',
@@ -42,7 +46,7 @@ const POLICIES = {
       { title: '3. Eligibility', content: 'Our services are available to individuals who are at least 18 years old and capable of forming a binding contract. By engaging our services, you represent and warrant that you meet these eligibility requirements and have the legal authority to bind the entity you represent.' },
       { title: '4. Account Registration', content: 'Access to the client portal requires accurate and complete registration information. You are responsible for maintaining the confidentiality of your credentials and for all activities under your account. Notify us immediately of any unauthorized access.' },
       { title: '5. Project Proposals & SOWs', content: 'Project proposals and Statements of Work (SOWs) define the specific scope, deliverables, timeline, and pricing for each engagement. These documents become binding upon signing by authorized representatives of both parties. Proposals are valid for 30 days from the date of issue.' },
-      { title: '6. Payment Terms', content: 'Standard payment schedule: 30% deposit upon signing, 30% at midpoint milestone, 30% upon final delivery, 10% upon sign-off. All invoices are net-15. Late payments incur 2% monthly compounding interest. We accept bank transfers, credit cards, and cryptocurrency payments.' },
+      { title: '6. Payment Terms', content: 'Standard payment schedule: 30% deposit upon signing, 35% at midpoint milestone, 35% upon final delivery. All invoices are net-15. Late payments incur 2% monthly compounding interest. We accept bank transfers, credit cards, and cryptocurrency payments.' },
       { title: '7. Late Payment Penalties', content: 'Unpaid invoices beyond 15 days result in work suspension. Beyond 30 days, staging environment access is revoked. Beyond 60 days, accounts are referred to collections. The client is responsible for all recovery costs, legal fees, and accrued interest.' },
       { title: '8. Intellectual Property', content: 'All custom work product (source code, designs, databases, configurations) transfers to the client upon full payment. Pre-existing libraries, frameworks, open-source packages, and internal tooling remain property of their respective owners and are licensed for project use.' },
       { title: '9. Client Responsibilities', content: 'Clients must provide: timely feedback (within 5 business days of review requests), complete branding assets, accurate content copy, valid API credentials, database access, and hosting configurations. Delays in client deliverables result in proportional timeline extensions.' },
@@ -172,7 +176,7 @@ export default function Legal() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="pt-24 pb-16 min-h-screen relative"
+      className="pt-24 pb-16 min-h-screen relative text-left animate-fade-in"
     >
       <SEO
         title={`${policy.title} | Legal Policy`}
@@ -191,44 +195,46 @@ export default function Legal() {
       <section className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10 py-12">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-brand-primary transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-brand-primary transition-colors mb-8 uppercase tracking-widest"
         >
           <ArrowLeft size={14} />
-          Back to Home
+          <span>Back to Home</span>
         </Link>
 
-        <div className="glass-card p-8 sm:p-12 rounded-xl border border-brand-slateAccent">
-          <div className="flex items-center space-x-3 border-b border-brand-slateAccent/40 pb-5 mb-8">
-            <div className="w-10 h-10 rounded-md bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center flex-shrink-0">
+        <GlassCard className="p-8 sm:p-12 border-slate-200 dark:border-white/5" hoverEffect="none">
+          {/* Header */}
+          <div className="flex items-center space-x-4 border-b border-slate-200/50 dark:border-white/5 pb-5 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
               {policy.icon}
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white font-display leading-tight">{policy.title}</h1>
-              <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Last Updated: {policy.lastUpdated}</p>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-display leading-tight">{policy.title}</h1>
+              <p className="text-[10px] text-slate-550 dark:text-slate-500 mt-1.5 uppercase font-bold tracking-wider">Last Updated: {policy.lastUpdated}</p>
             </div>
           </div>
 
-          <div className="space-y-1">
+          {/* Sections */}
+          <div className="space-y-4">
             {policy.sections.map((section, i) => (
               <details
                 key={i}
-                className="group border border-brand-slateAccent/30 rounded-lg overflow-hidden"
+                className="group border border-slate-200/50 dark:border-white/5 rounded-xl overflow-hidden glass-card transition-all duration-300"
               >
-                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer select-none text-sm font-semibold text-slate-200 dark:text-slate-200 hover:bg-white/5 dark:hover:bg-white/5 transition-colors list-none">
+                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer select-none text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors list-none font-display">
                   <span>{section.title}</span>
-                  <span className="text-slate-500 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-4">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <span className="text-slate-500 group-open:rotate-180 transition-transform duration-350 shrink-0 ml-4">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="6 9 12 15 18 9" />
                     </svg>
                   </span>
                 </summary>
-                <div className="px-5 pb-4 text-xs sm:text-sm text-slate-400 leading-relaxed">
+                <div className="px-5 pb-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-sans border-t border-slate-100 dark:border-white/5 pt-3 mt-1">
                   {section.content}
                 </div>
               </details>
             ))}
           </div>
-        </div>
+        </GlassCard>
       </section>
     </motion.div>
   );

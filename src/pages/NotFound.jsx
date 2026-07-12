@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { Home, ArrowLeft, Sparkles } from 'lucide-react';
 import SEO from '../components/SEO';
 
+// Import Reusable UI Components
+import GlassBadge from '../components/ui/GlassBadge';
+import GlassButton from '../components/ui/GlassButton';
+
 export default function NotFound() {
   return (
     <motion.div
@@ -49,13 +53,13 @@ export default function NotFound() {
             </defs>
 
             {/* Radar / Grid Circles */}
-            <circle cx="200" cy="150" r="130" stroke="#1e293b" strokeWidth="1" fill="none" />
-            <circle cx="200" cy="150" r="100" stroke="#1e293b" strokeWidth="1" strokeDasharray="5 5" fill="none" />
-            <circle cx="200" cy="150" r="70" stroke="#334155" strokeWidth="1" fill="none" />
+            <circle cx="200" cy="150" r="130" stroke="#1e293b" strokeWidth="1" fill="none" className="stroke-slate-200 dark:stroke-slate-800" />
+            <circle cx="200" cy="150" r="100" stroke="#1e293b" strokeWidth="1" strokeDasharray="5 5" fill="none" className="stroke-slate-200 dark:stroke-slate-800" />
+            <circle cx="200" cy="150" r="70" stroke="#334155" strokeWidth="1" fill="none" className="stroke-slate-300 dark:stroke-slate-700" />
 
             {/* Background Grid Lines */}
-            <line x1="200" y1="20" x2="200" y2="280" stroke="#1e293b" strokeWidth="1" />
-            <line x1="70" y1="150" x2="330" y2="150" stroke="#1e293b" strokeWidth="1" />
+            <line x1="200" y1="20" x2="200" y2="280" stroke="#1e293b" strokeWidth="1" className="stroke-slate-200 dark:stroke-slate-800" />
+            <line x1="70" y1="150" x2="330" y2="150" stroke="#1e293b" strokeWidth="1" className="stroke-slate-200 dark:stroke-slate-800" />
 
             {/* Glowing Space Particles (Stars) */}
             <motion.circle cx="90" cy="60" r="2" fill="#3b82f6" animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 2, repeat: Infinity }} />
@@ -222,38 +226,40 @@ export default function NotFound() {
         </div>
 
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-primary/20 bg-brand-primary/5 mb-5 text-[10px] text-brand-primary font-medium tracking-wider uppercase">
-          <Sparkles size={11} />
+        <GlassBadge variant="primary" className="mb-5 font-semibold">
+          <Sparkles size={11} className="mr-1" />
           <span>Page Not Found</span>
-        </div>
+        </GlassBadge>
 
-        <h1 className="text-2xl sm:text-3xl font-bold text-white font-display mb-4 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-display mb-4 tracking-tight">
           Oops! Lost in the Digital Space
         </h1>
-        <p className="text-sm sm:text-base text-slate-400 leading-relaxed mb-8 sm:mb-10 max-w-md mx-auto">
+        <p className="text-sm sm:text-base text-slate-550 dark:text-slate-400 leading-relaxed mb-8 sm:mb-10 max-w-md mx-auto">
           The page you're looking for doesn't exist, has been moved, or the URL might be wrong. Let's get you back on track.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-          <Link
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-sm mx-auto">
+          <GlassButton
             to="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-brand-primary to-brand-accent text-white text-sm font-semibold rounded-lg shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
+            variant="primary"
+            className="w-full"
           >
             <Home size={15} />
-            Back to Home
-          </Link>
-          <button
+            <span>Back to Home</span>
+          </GlassButton>
+          <GlassButton
             onClick={() => window.history.back()}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-brand-slateAccent bg-brand-slateAccent/20 hover:bg-brand-slateAccent/40 text-white text-sm font-semibold rounded-lg transition-all duration-300"
+            variant="outline"
+            className="w-full"
           >
             <ArrowLeft size={15} />
-            Go Back
-          </button>
+            <span>Go Back</span>
+          </GlassButton>
         </div>
 
         {/* Helpful quick links */}
-        <div className="mt-10 sm:mt-14 pt-6 border-t border-brand-slateAccent/30">
-          <p className="text-xs text-slate-500 mb-4">Popular pages:</p>
+        <div className="mt-12 sm:mt-16 pt-6 border-t border-slate-200/50 dark:border-white/5">
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4">Popular pages</p>
           <div className="flex flex-wrap justify-center gap-2">
             {[
               { name: 'Services', path: '/services' },
@@ -265,7 +271,7 @@ export default function NotFound() {
               <Link
                 key={link.name}
                 to={link.path}
-                className="px-3 py-1.5 text-xs text-slate-400 hover:text-white border border-brand-slateAccent/50 hover:border-slate-600 rounded-full transition-all duration-150"
+                className="px-3.5 py-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-brand-primary dark:hover:text-white border border-slate-200 dark:border-white/5 hover:border-brand-primary/45 rounded-full transition-all duration-300"
               >
                 {link.name}
               </Link>

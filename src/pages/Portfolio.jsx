@@ -7,6 +7,10 @@ import { normalizePortfolios } from '../data/normalize';
 import useFetch from '../hooks/useFetch';
 import { api } from '../api/api';
 
+// Import Reusable UI Components
+import GlassCard from '../components/ui/GlassCard';
+import GlassBadge from '../components/ui/GlassBadge';
+
 export default function Portfolio() {
   const { data: rawProjects = projectsData } = useFetch(() => api.getPortfolios(), projectsData);
   const allProjects = normalizePortfolios(rawProjects);
@@ -24,7 +28,7 @@ export default function Portfolio() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="pt-16 sm:pt-20 pb-16 min-h-screen relative"
+      className="pt-24 pb-16 min-h-screen relative"
     >
       <SEO 
         title="Our Portfolio & Software Projects" 
@@ -44,33 +48,33 @@ export default function Portfolio() {
       <div className="absolute bottom-[10%] right-[5%] w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* --- HERO SECTION --- */}
-      <section className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
-        <h2 className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-brand-primary mb-3">Showcase</h2>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-display mb-5 sm:mb-6">
+      <section className="py-12 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto relative z-10">
+        <GlassBadge variant="primary" className="mb-4 font-semibold">Showcase</GlassBadge>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight font-display mb-6">
           Crafting Digital Products{' '}
           <br className="hidden sm:block" />
-          <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">That Make an Impact</span>
+          <span className="bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent">That Make an Impact</span>
         </h1>
-        <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl mx-auto font-sans">
+        <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto font-sans">
           Explore our select agency portfolio covering web applications, mobile platforms, enterprise management systems, and modular SaaS designs.
         </p>
       </section>
 
       {/* --- FILTER TAB BAR --- */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 relative z-10">
-        <div className="flex flex-wrap items-center justify-center gap-2 border-b border-brand-slateAccent/40 pb-6">
-          <div className="flex items-center space-x-2 text-slate-500 mr-2 text-xs uppercase tracking-wider font-semibold">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
+        <div className="flex flex-wrap items-center justify-center gap-2 border-b border-slate-200/50 dark:border-white/5 pb-8">
+          <div className="flex items-center space-x-2 text-slate-500 mr-3 text-xs uppercase tracking-widest font-bold">
             <Filter size={14} />
-            <span>Filter:</span>
+            <span>Filter</span>
           </div>
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveFilter(cat)}
-              className={`px-4 py-2 text-xs font-medium rounded-full border transition-all ${
+              className={`px-4 py-2 text-xs font-semibold rounded-full border transition-all duration-300 ${
                 activeFilter === cat
                   ? 'bg-brand-primary text-white border-brand-primary shadow-premium'
-                  : 'bg-brand-slateAccent/20 text-slate-400 border-brand-slateAccent hover:text-white hover:border-slate-600'
+                  : 'bg-slate-100/60 dark:bg-brand-slateAccent/10 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/5 hover:text-slate-800 dark:hover:text-white hover:border-brand-primary/30'
               }`}
             >
               {cat === 'All' ? 'All Projects' : cat}
@@ -83,78 +87,76 @@ export default function Portfolio() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
               <motion.div
                 layout
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.4 }}
                 key={project.id}
-                className="glass-card rounded-xl overflow-hidden hover:border-brand-primary/20 transition-all flex flex-col group"
+                className="h-full flex text-left"
               >
-                {/* Simulated Device Screen Color Blocks */}
-                <div className={`h-48 bg-gradient-to-tr ${project.imageColor} relative p-6 flex items-center justify-center overflow-hidden`}>
-                  <div className="absolute inset-0 bg-black/10 mix-blend-multiply" />
-                  
-                  {/* Subtle Grid backdrop */}
-                  <div className="absolute inset-0 bg-grid-glow opacity-10 pointer-events-none" />
+                <GlassCard className="overflow-hidden hover:border-brand-primary/30 w-full flex flex-col group p-0" hoverEffect="lift">
+                  {/* Simulated Device Screen Color Blocks */}
+                  <div className={`h-52 bg-gradient-to-tr ${project.imageColor} relative p-6 flex items-center justify-center overflow-hidden`}>
+                    <div className="absolute inset-0 bg-black/10 mix-blend-multiply" />
+                    
+                    {/* Subtle Grid backdrop */}
+                    <div className="absolute inset-0 bg-grid-glow opacity-15 pointer-events-none" />
 
-                  {/* High end UI Card mockup placeholder */}
-                  <div className="w-[85%] h-[80%] bg-slate-900/95 rounded-t-lg border border-white/10 shadow-2xl p-4 transform translate-y-8 group-hover:translate-y-4 transition-transform duration-300 relative">
-                    <div className="flex items-center space-x-1.5 mb-3">
-                      <span className="w-2 h-2 rounded-full bg-red-500" />
-                      <span className="w-2 h-2 rounded-full bg-yellow-500" />
-                      <span className="w-2 h-2 rounded-full bg-green-500" />
-                    </div>
-                    <div className="h-1 bg-white/10 w-2/3 rounded mb-2" />
-                    <div className="h-1 bg-white/5 w-1/2 rounded" />
-                  </div>
-                </div>
-
-                {/* Text details */}
-                <div className="p-6 flex-grow flex flex-col justify-between">
-                  <div>
-                    <span className="text-[10px] font-semibold text-brand-primary uppercase tracking-widest block mb-2">
-                      {project.category}
-                    </span>
-                    <h3 className="text-lg font-bold text-white mb-2 font-display group-hover:text-brand-primary transition-colors flex items-center justify-between">
-                      <span>{project.title}</span>
-                      <ArrowUpRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-4">
-                      {project.summary}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-brand-slateAccent/40">
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.services.map((serv, idx) => (
-                        <span 
-                          key={idx} 
-                          className="text-[9px] font-medium text-slate-500 bg-brand-slateAccent/30 px-2 py-0.5 rounded"
-                        >
-                          {serv}
-                        </span>
-                      ))}
+                    {/* High end UI Card mockup placeholder */}
+                    <div className="w-[88%] h-[85%] bg-slate-900/95 rounded-t-xl border border-white/10 shadow-2xl p-4 transform translate-y-10 group-hover:translate-y-5 transition-transform duration-500 relative">
+                      <div className="flex items-center space-x-1.5 mb-3">
+                        <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                      </div>
+                      <div className="h-1.5 bg-white/10 w-2/3 rounded-full mb-2.5" />
+                      <div className="h-1.5 bg-white/5 w-1/2 rounded-full" />
                     </div>
                   </div>
-                </div>
+
+                  {/* Text details */}
+                  <div className="p-6 sm:p-8 flex-grow flex flex-col justify-between">
+                    <div>
+                      <span className="text-[10px] font-bold text-brand-primary uppercase tracking-widest block mb-2.5">
+                        {project.category}
+                      </span>
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2.5 font-display group-hover:text-brand-primary transition-colors flex items-center justify-between">
+                        <span>{project.title}</span>
+                        <ArrowUpRight size={18} className="text-slate-400 group-hover:text-brand-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
+                        {project.summary}
+                      </p>
+                    </div>
+
+                    <div className="pt-5 border-t border-slate-200/50 dark:border-white/5">
+                      <div className="flex flex-wrap gap-2">
+                        {project.services.map((serv, idx) => (
+                          <GlassBadge key={idx} variant="secondary" className="font-semibold text-[9px]">
+                            {serv}
+                          </GlassBadge>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </GlassCard>
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
         
         {filteredProjects.length === 0 && (
-          <div className="text-center py-20 text-slate-500 text-sm">
+          <div className="text-center py-24 text-slate-500 text-sm">
             No projects found in this category.
           </div>
         )}
       </section>
-
     </motion.div>
   );
 }

@@ -3,6 +3,10 @@ import { FileText, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 
+// Import Reusable UI Components
+import GlassCard from '../components/ui/GlassCard';
+import GlassBadge from '../components/ui/GlassBadge';
+
 const SECTIONS = [
   {
     title: '1. Service Scope & Project Definition',
@@ -94,7 +98,7 @@ const SECTIONS = [
   },
   {
     title: '23. Data Protection & Privacy',
-    content: `Both parties agree to comply with all applicable data protection regulations, including the General Data Protection Regulation (GDPR), California Consumer Privacy Act (CCPA), and any other relevant data protection laws. If the project involves processing personal data of EU residents, a separate Data Processing Agreement (DPA) shall be executed. Nextora Studio implements industry-standard encryption, access controls, and security practices to protect all client data.`,
+    content: `Both parties agree to comply with all applicable data protection regulations, including the General Data Protection Regulation (GDPR), California Consumer Privacy Act (CCPA), and any other relevant data protection laws. If the project involves processing personal data of EU residents, a separate Data Processing Agreement (DPA) shall be executed. Nextora Studio implements industry-standard encryption, access controls, and security practices to protect all data.`,
   },
   {
     title: '24. Severability & Waiver',
@@ -113,7 +117,7 @@ export default function Agreements() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="pt-24 pb-16 min-h-screen relative"
+      className="pt-24 pb-16 min-h-screen relative text-left animate-fade-in"
     >
       <SEO
         title="Service Agreements & Project Terms"
@@ -134,49 +138,49 @@ export default function Agreements() {
         {/* Back link */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-brand-primary transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-brand-primary transition-colors mb-8 uppercase tracking-widest"
         >
           <ArrowLeft size={14} />
-          Back to Home
+          <span>Back to Home</span>
         </Link>
 
-        <div className="glass-card p-8 sm:p-12 rounded-xl border border-brand-slateAccent">
+        <GlassCard className="p-8 sm:p-12 border-slate-200 dark:border-white/5" hoverEffect="none">
           {/* Header */}
-          <div className="flex items-center space-x-3 border-b border-brand-slateAccent/40 pb-5 mb-8">
-            <div className="w-10 h-10 rounded-md bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center flex-shrink-0">
+          <div className="flex items-center space-x-4 border-b border-slate-200/50 dark:border-white/5 pb-5 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
               <FileText className="text-brand-primary" size={24} />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white font-display leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-display leading-tight">
                 Service Agreements & Terms
               </h1>
-              <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">
+              <p className="text-[10px] text-slate-550 dark:text-slate-500 mt-1.5 uppercase font-bold tracking-wider">
                 Effective Date: June 2026 &middot; 25 Sections
               </p>
             </div>
           </div>
 
           {/* Intro */}
-          <p className="text-sm text-slate-400 leading-relaxed mb-8">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-8 font-sans">
             This Service Agreement ("Agreement") is entered into between Nextora Studio ("Provider", "we", "us") and the client ("Client", "you") engaging our services. By signing a project proposal, submitting a deposit, or accessing the client portal, you acknowledge that you have read, understood, and agree to be bound by all terms and conditions set forth herein.
           </p>
 
           {/* Sections */}
-          <div className="space-y-1">
+          <div className="space-y-4">
             {SECTIONS.map((section, i) => (
               <details
                 key={i}
-                className="group border border-brand-slateAccent/30 rounded-lg overflow-hidden"
+                className="group border border-slate-200/50 dark:border-white/5 rounded-xl overflow-hidden glass-card transition-all duration-300"
               >
-                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer select-none text-sm font-semibold text-slate-200 dark:text-slate-200 hover:bg-white/5 dark:hover:bg-white/5 transition-colors list-none">
+                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer select-none text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors list-none font-display">
                   <span>{section.title}</span>
-                  <span className="text-slate-500 group-open:rotate-180 transition-transform duration-200">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <span className="text-slate-500 group-open:rotate-180 transition-transform duration-350">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="6 9 12 15 18 9" />
                     </svg>
                   </span>
                 </summary>
-                <div className="px-5 pb-4 text-xs sm:text-sm text-slate-400 leading-relaxed">
+                <div className="px-5 pb-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-sans border-t border-slate-100 dark:border-white/5 pt-3 mt-1">
                   {section.content}
                 </div>
               </details>
@@ -184,12 +188,12 @@ export default function Agreements() {
           </div>
 
           {/* Footer note */}
-          <div className="mt-10 pt-6 border-t border-brand-slateAccent/40">
-            <p className="text-xs text-slate-500 leading-relaxed">
+          <div className="mt-10 pt-6 border-t border-slate-200/50 dark:border-white/5">
+            <p className="text-xs text-slate-450 dark:text-slate-500 leading-relaxed font-semibold">
               By engaging Nextora Studio's services, signing a project proposal, or accessing the client portal, you confirm that you are authorized to bind the entity you represent to this Agreement. If you do not agree to any provision herein, do not proceed with the engagement.
             </p>
           </div>
-        </div>
+        </GlassCard>
       </section>
     </motion.div>
   );

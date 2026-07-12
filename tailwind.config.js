@@ -37,7 +37,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        display: ['Poppins', 'sans-serif'],
+        display: ['Space Grotesk', 'sans-serif'],
       },
       boxShadow: {
         'glass': '0 8px 32px 0 rgba(15, 23, 42, 0.05)',
