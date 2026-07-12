@@ -95,10 +95,10 @@ export default function App() {
         <Loader finishLoading={() => setLoading(false)} />
       ) : (
         <div className="flex flex-col min-h-screen bg-brand-darker text-slate-800 dark:text-slate-100 relative transition-colors duration-300">
-          {/* Global MacBook-style dynamic ambient backgrounds */}
-          <div className="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vh] bg-brand-primary/15 rounded-full blur-[120px] pointer-events-none -z-20 ambient-orb opacity-60 dark:opacity-40" />
-          <div className="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[50vh] bg-brand-accent/15 rounded-full blur-[140px] pointer-events-none -z-20 ambient-orb opacity-50 dark:opacity-30" style={{ animationDelay: '-4s', animationDuration: '15s' }} />
-          <div className="fixed top-[40%] right-[15%] w-[35vw] h-[35vh] bg-brand-secondary/10 rounded-full blur-[100px] pointer-events-none -z-20 ambient-orb opacity-40 dark:opacity-20" style={{ animationDelay: '-8s', animationDuration: '18s' }} />
+          {/* Global MacBook-style dynamic ambient backgrounds (compositor-optimized) */}
+          <div className="fixed top-[-5%] left-[-5%] w-[45vw] h-[45vh] bg-brand-primary/10 rounded-full blur-[90px] pointer-events-none -z-20 ambient-orb opacity-50 dark:opacity-30" />
+          <div className="fixed bottom-[-5%] right-[-5%] w-[50vw] h-[45vh] bg-brand-accent/10 rounded-full blur-[100px] pointer-events-none -z-20 ambient-orb-delayed opacity-40 dark:opacity-20" style={{ animationDelay: '-4s', animationDuration: '28s' }} />
+          <div className="fixed top-[35%] right-[10%] w-[30vw] h-[30vh] bg-brand-secondary/8 rounded-full blur-[80px] pointer-events-none -z-20 ambient-orb opacity-30 dark:opacity-15" style={{ animationDelay: '-8s', animationDuration: '32s' }} />
           <CursorGlow />
           <Header />
           <main className="flex-grow">
