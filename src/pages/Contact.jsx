@@ -21,10 +21,21 @@ const BUDGET_OPTIONS = [
   { value: '$50k+ (Custom Solution)', label: '$50k+ (Custom Solution)' },
 ];
 
+const CATEGORY_OPTIONS = [
+  { value: 'Web Development', label: 'Web Development' },
+  { value: 'Mobile App Development', label: 'Mobile App Development' },
+  { value: 'Point of Sale (POS) Systems', label: 'Point of Sale (POS) Systems' },
+  { value: 'ERP & CRM Systems', label: 'ERP & CRM Systems' },
+  { value: 'AI & Machine Learning', label: 'AI & Machine Learning' },
+  { value: 'Graphics Design & Branding', label: 'Graphics Design & Branding' },
+  { value: 'Others', label: 'Others' },
+];
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    category: CATEGORY_OPTIONS[0],
     budget: BUDGET_OPTIONS[1],
     details: '',
   });
@@ -59,6 +70,10 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, budget: opt }));
   };
 
+  const handleCategorySelect = (opt) => {
+    setFormData((prev) => ({ ...prev, category: opt }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const finalErrors = {};
@@ -75,13 +90,13 @@ export default function Contact() {
     setErrorMsg('');
 
     try {
-      const subject = `Project Inquiry — Budget: ${formData.budget.value}`;
-      const text = formData.details;
+      const subject = `Project Inquiry: ${formData.category.value} — Budget: ${formData.budget.value}`;
+      const text = `Interested in: ${formData.category.value}\nBudget range: ${formData.budget.value}\n\nProject Scope:\n${formData.details}`;
 
       await api.submitContact(formData.name, formData.email, subject, text);
 
       setStatus('success');
-      setFormData({ name: '', email: '', budget: BUDGET_OPTIONS[1], details: '' });
+      setFormData({ name: '', email: '', category: CATEGORY_OPTIONS[0], budget: BUDGET_OPTIONS[1], details: '' });
     } catch (err) {
       setStatus('error');
       setErrorMsg(err.message || 'Something went wrong. Please email us directly.');
@@ -92,7 +107,7 @@ export default function Contact() {
 
   const openWhatsApp = () => {
     const msg = encodeURIComponent(
-      `Hi Nextora Studio! My name is ${formData.name || 'there'}. Budget: ${formData.budget.value}. ${formData.details || 'I would like to discuss a project.'}`
+      `Hi Nextora Studio! My name is ${formData.name || 'there'}. I am interested in ${formData.category.value}. Budget: ${formData.budget.value}. Details: ${formData.details || 'I would like to discuss a project.'}`
     );
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
   };
@@ -142,48 +157,50 @@ export default function Contact() {
 
           {/* Left column */}
           <div className="lg:col-span-5 space-y-6">
-            <GlassCard className="space-y-5 p-6 sm:p-8" hoverEffect="none">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-display mb-2 pl-1 uppercase tracking-widest text-slate-400 dark:text-slate-500">Communication Channels</h3>
+            <GlassCard className="p-6 sm:p-8" hoverEffect="none">
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white font-display mb-2 pl-1 uppercase tracking-widest text-slate-400 dark:text-slate-500">Communication Channels</h3>
 
-              {/* Email */}
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="flex items-center gap-4.5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5 hover:border-brand-primary/30 transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
-                  <Mail size={18} className="text-brand-primary" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-brand-primary transition-colors font-display">Direct Email</h4>
-                  <p className="text-[11px] font-medium text-slate-550 dark:text-slate-450 mt-1">{CONTACT_EMAIL}</p>
-                </div>
-              </a>
+                {/* Email */}
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="flex items-center gap-5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5 hover:border-brand-primary/30 transition-all duration-300 group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
+                    <Mail size={18} className="text-brand-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-brand-primary transition-colors font-display">Direct Email</h4>
+                    <p className="text-[11px] font-medium text-slate-550 dark:text-slate-450 mt-1">{CONTACT_EMAIL}</p>
+                  </div>
+                </a>
 
-              {/* WhatsApp */}
-              <button
-                onClick={openWhatsApp}
-                className="w-full flex items-center gap-4.5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5 hover:border-green-500/30 transition-all duration-300 group text-left"
-              >
-                <div className="w-10 h-10 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0">
-                  <MessageSquare size={18} className="text-green-500" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-green-500 transition-colors flex items-center gap-2.5 font-display">
-                    <span>WhatsApp Chat</span>
-                    <span className="text-[8px] font-bold bg-green-500/10 text-green-500 border border-green-500/20 px-2 py-0.5 rounded-full tracking-widest uppercase">Live</span>
-                  </h4>
-                  <p className="text-[11px] font-medium text-slate-555 dark:text-slate-450 mt-1">Pre-fills from your form data</p>
-                </div>
-              </button>
+                {/* WhatsApp */}
+                <button
+                  onClick={openWhatsApp}
+                  className="w-full flex items-center gap-5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5 hover:border-green-500/30 transition-all duration-300 group text-left"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0">
+                    <MessageSquare size={18} className="text-green-500" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-green-500 transition-colors flex items-center gap-2.5 font-display">
+                      <span>WhatsApp Chat</span>
+                      <span className="text-[8px] font-bold bg-green-500/10 text-green-500 border border-green-500/20 px-2 py-0.5 rounded-full tracking-widest uppercase">Live</span>
+                    </h4>
+                    <p className="text-[11px] font-medium text-slate-555 dark:text-slate-450 mt-1">Pre-fills from your form data</p>
+                  </div>
+                </button>
 
-              {/* Location */}
-              <div className="flex items-center gap-4.5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5">
-                <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
-                  <MapPin size={18} className="text-brand-primary" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white font-display">Global Remote Agency</h4>
-                  <p className="text-[11px] font-medium text-slate-550 dark:text-slate-450 mt-1">Serving clients worldwide · Est. 2025</p>
+                {/* Location */}
+                <div className="flex items-center gap-5 p-4 bg-slate-100/50 dark:bg-brand-slateAccent/10 rounded-2xl border border-slate-200 dark:border-white/5">
+                  <div className="w-10 h-10 rounded-xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center shrink-0">
+                    <MapPin size={18} className="text-brand-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white font-display">Global Remote Agency</h4>
+                    <p className="text-[11px] font-medium text-slate-550 dark:text-slate-450 mt-1">Serving clients worldwide · Est. 2025</p>
+                  </div>
                 </div>
               </div>
             </GlassCard>
@@ -272,17 +289,32 @@ export default function Contact() {
                   />
                 </div>
 
-                {/* Budget */}
-                <div className="w-full flex flex-col space-y-1.5 text-left">
-                  <span className="block text-xs font-semibold text-slate-550 dark:text-slate-400 uppercase tracking-wider pl-1">
-                    Estimated Budget
-                  </span>
-                  <GlassDropdown
-                    options={BUDGET_OPTIONS}
-                    selectedOption={formData.budget}
-                    onSelect={handleDropdownSelect}
-                    className="w-full"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Category */}
+                  <div className="w-full flex flex-col space-y-1.5 text-left">
+                    <span className="block text-xs font-semibold text-slate-550 dark:text-slate-400 uppercase tracking-wider pl-1">
+                      Project Category
+                    </span>
+                    <GlassDropdown
+                      options={CATEGORY_OPTIONS}
+                      selectedOption={formData.category}
+                      onSelect={handleCategorySelect}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Budget */}
+                  <div className="w-full flex flex-col space-y-1.5 text-left">
+                    <span className="block text-xs font-semibold text-slate-550 dark:text-slate-400 uppercase tracking-wider pl-1">
+                      Estimated Budget
+                    </span>
+                    <GlassDropdown
+                      options={BUDGET_OPTIONS}
+                      selectedOption={formData.budget}
+                      onSelect={handleDropdownSelect}
+                      className="w-full"
+                    />
+                  </div>
                 </div>
 
                 {/* Project Details */}
@@ -320,6 +352,22 @@ export default function Contact() {
           </div>
 
         </div>
+      </section>
+
+      {/* ─── GOOGLE MAP SECTION ─────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 relative z-10">
+        <GlassCard className="p-0 overflow-hidden rounded-2xl h-[350px] sm:h-[450px]" hoverEffect="none">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d118944.52044812836!2d91.93240409890919!3d21.427845347209355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30adc7ea2ab114ef%3A0x3d6d55a1274533cf!2sCox&#39;s%20Bazar%2C%20Bangladesh!5e0!3m2!1sen!2sus!4v1710500000000!5m2!1sen!2sus"
+            width="100%"
+            height="100%"
+            style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(1.2)' }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Nextora Studio Global Operations Base"
+          />
+        </GlassCard>
       </section>
     </motion.div>
   );

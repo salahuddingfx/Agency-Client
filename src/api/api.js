@@ -1,4 +1,19 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const getApiBase = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // Automatically switch subdomains on nextorastudio.tech
+  if (window.location.hostname.includes('nextorastudio.tech')) {
+    return 'https://api.nextorastudio.tech/api/v1';
+  }
+  // Automatically switch subdomains on nextora.tech
+  if (window.location.hostname.includes('nextora.tech')) {
+    return 'https://api.nextora.tech/api/v1';
+  }
+  return 'http://localhost:5000/api/v1';
+};
+
+const API_BASE = getApiBase();
 
 // Central API fetch helper
 async function request(endpoint, options = {}) {
