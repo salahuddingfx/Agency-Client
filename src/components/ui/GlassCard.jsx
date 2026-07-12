@@ -12,8 +12,8 @@ export default function GlassCard({
   ...props
 }) {
   const hoverClasses = {
-    lift: 'hover:-translate-y-1.5 hover:shadow-premium hover:border-brand-primary/35',
-    scale: 'hover:scale-[1.02] hover:border-brand-primary/35',
+    lift: 'hover:-translate-y-1.5',
+    scale: 'hover:scale-[1.015]',
     none: ''
   }[hoverEffect];
 
