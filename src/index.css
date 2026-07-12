@@ -58,6 +58,8 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 .glass-card {
+  --mouse-x: -9999px;
+  --mouse-y: -9999px;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.4) 0%,
@@ -80,7 +82,7 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    300px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    circle 300px at var(--mouse-x) var(--mouse-y),
     rgba(24, 183, 245, 0.24),
     transparent 80%
   );
@@ -96,7 +98,7 @@
 
 .dark .glass-card::before {
   background: radial-gradient(
-    300px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    circle 300px at var(--mouse-x) var(--mouse-y),
     rgba(24, 183, 245, 0.34),
     rgba(37, 99, 235, 0.14) 50%,
     transparent 80%
