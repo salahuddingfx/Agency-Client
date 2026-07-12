@@ -128,10 +128,10 @@ export default function Header() {
 
             <Link
               to="/contact"
-              className="inline-flex items-center gap-1.5 px-4.5 py-2.5 bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent text-white text-xs font-semibold rounded-full shadow-premium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
+              className="group inline-flex items-center gap-1.5 px-5 py-2.5 bg-brand-primary/10 hover:bg-brand-primary/20 dark:bg-white/[0.03] dark:hover:bg-brand-primary/15 border border-brand-primary/25 dark:border-white/10 text-brand-primary dark:text-white text-xs font-bold rounded-full transition-all duration-300 shadow-sm hover:shadow-glow hover:-translate-y-0.5 whitespace-nowrap"
             >
               <span>Start Project</span>
-              <ArrowRight size={12} />
+              <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 text-brand-primary dark:text-white" />
             </Link>
           </div>
 
@@ -228,10 +228,10 @@ export default function Header() {
                   <Link
                     to="/contact"
                     onClick={close}
-                    className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent text-white text-sm font-semibold rounded-xl shadow-premium hover:shadow-glow transition-all duration-300"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 bg-brand-primary/10 dark:bg-white/[0.03] border border-brand-primary/25 dark:border-white/10 text-brand-primary dark:text-white text-sm font-bold rounded-xl shadow-sm hover:shadow-glow transition-all duration-300"
                   >
                     <span>Start Your Project</span>
-                    <ArrowRight size={15} />
+                    <ArrowRight size={15} className="text-brand-primary dark:text-white" />
                   </Link>
                 </div>
               </div>

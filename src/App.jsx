@@ -10,10 +10,8 @@ import ScrollToTop from './components/ScrollToTop';
 import BackToTop from './components/BackToTop';
 import CursorGlow from './components/CursorGlow';
 
-// Critical pages — loaded eagerly
-import Home from './pages/Home';
-
-// Secondary pages — lazy loaded for performance
+// Pages — lazy loaded for performance and chunk splitting
+const Home         = lazy(() => import('./pages/Home'));
 const About        = lazy(() => import('./pages/About'));
 const Services     = lazy(() => import('./pages/Services'));
 const Portfolio    = lazy(() => import('./pages/Portfolio'));

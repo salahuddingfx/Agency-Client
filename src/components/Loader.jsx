@@ -53,13 +53,13 @@ export default function Loader({ finishLoading }) {
   useEffect(() => {
     let start = 0;
     const interval = setInterval(() => {
-      start += Math.floor(Math.random() * 8) + 4;
+      start += Math.floor(Math.random() * 12) + 12; // Increases faster for snappier experience
       if (start >= 100) {
         start = 100;
         clearInterval(interval);
       }
       setProgress(start);
-    }, 80);
+    }, 35); // 35ms interval instead of 80ms
     return () => clearInterval(interval);
   }, []);
 
@@ -67,8 +67,8 @@ export default function Loader({ finishLoading }) {
     if (progress === 100) {
       const timer = setTimeout(() => {
         setIsMounted(false);
-        setTimeout(finishLoading, 800);
-      }, 450);
+        setTimeout(finishLoading, 400); // Reduced delay from 800ms
+      }, 200); // Reduced delay from 450ms
       return () => clearTimeout(timer);
     }
   }, [progress, finishLoading]);
@@ -80,7 +80,7 @@ export default function Loader({ finishLoading }) {
           initial={{ opacity: 1 }}
           exit={{
             y: '-100%',
-            transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
+            transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] }, // Faster animation transition duration
           }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-brand-darker text-white overflow-hidden"
         >
@@ -99,7 +99,7 @@ export default function Loader({ finishLoading }) {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
               className="mb-6"
             >
               <Logo size={80} animated={true} />
@@ -108,7 +108,7 @@ export default function Loader({ finishLoading }) {
             <motion.h1
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
               className="text-2xl font-bold tracking-[0.3em] font-display text-white"
             >
               NEXTORA
@@ -117,14 +117,14 @@ export default function Loader({ finishLoading }) {
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ delay: 0.8, duration: 0.6, ease: 'easeInOut' }}
+              transition={{ delay: 0.4, duration: 0.4, ease: 'easeInOut' }}
               className="h-[1px] w-24 bg-gradient-to-r from-transparent via-brand-primary to-transparent my-3"
             />
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.6 }}
-              transition={{ delay: 1.0, duration: 0.6 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
               className="text-[10px] uppercase tracking-[0.4em] text-slate-300 font-sans"
             >
               Where Ideas Take Shape
