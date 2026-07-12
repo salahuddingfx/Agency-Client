@@ -25,9 +25,9 @@ export default function GlassCard({
       } ${hoverClasses} ${className}`}
       {...props}
     >
-      {/* Light Reflection diagonal sheens */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-white/[0.08] pointer-events-none" />
-      <div className="absolute -top-[150%] -left-[150%] w-[300%] h-[300%] bg-gradient-to-tr from-transparent via-white/[0.02] to-transparent rotate-45 transition-transform duration-1000 group-hover:translate-x-[50%] group-hover:translate-y-[50%] pointer-events-none" />
+      {/* Specular glass reflection layer */}
+      <div className="glass-shine" />
+      <div className="absolute -top-[150%] -left-[150%] w-[300%] h-[300%] bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent rotate-45 transition-transform duration-1000 group-hover:translate-x-[50%] group-hover:translate-y-[50%] pointer-events-none" />
 
       {/* Content wrapper */}
       <div className="relative z-10">{children}</div>

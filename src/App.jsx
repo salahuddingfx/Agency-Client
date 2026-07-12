@@ -97,8 +97,10 @@ export default function App() {
         <Loader finishLoading={() => setLoading(false)} />
       ) : (
         <div className="flex flex-col min-h-screen bg-brand-darker text-slate-800 dark:text-slate-100 relative transition-colors duration-300">
-          {/* Global accent glow */}
-          <div className="fixed top-0 left-1/4 w-[600px] h-[400px] bg-brand-primary/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+          {/* Global MacBook-style dynamic ambient backgrounds */}
+          <div className="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vh] bg-brand-primary/15 rounded-full blur-[120px] pointer-events-none -z-20 ambient-orb opacity-60 dark:opacity-40" />
+          <div className="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[50vh] bg-brand-accent/15 rounded-full blur-[140px] pointer-events-none -z-20 ambient-orb opacity-50 dark:opacity-30" style={{ animationDelay: '-4s', animationDuration: '15s' }} />
+          <div className="fixed top-[40%] right-[15%] w-[35vw] h-[35vh] bg-brand-secondary/10 rounded-full blur-[100px] pointer-events-none -z-20 ambient-orb opacity-40 dark:opacity-20" style={{ animationDelay: '-8s', animationDuration: '18s' }} />
           <CursorGlow />
           <Header />
           <main className="flex-grow">
