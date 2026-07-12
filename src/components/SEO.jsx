@@ -18,7 +18,8 @@ export default function SEO({
 }) {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | Where Ideas Take Shape`;
   const metaDesc  = description || `${SITE_NAME} builds premium custom websites, React Native mobile apps, cloud POS systems, and ERP / CRM software layouts globally.`;
-  const canonicalUrl = canonical || window.location.origin + window.location.pathname;
+  // Canonical URL is derived inside useEffect to avoid SSR/window access issues
+  const canonicalUrl = canonical || SITE_URL;
   
   const defaultKeywords = [
     'Nextora Studio', 'Nextora', 'software development agency', 'web development',

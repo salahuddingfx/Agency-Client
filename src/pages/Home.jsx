@@ -436,17 +436,17 @@ export default function Home() {
           <GsapFadeIn key={study.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
             <div className="lg:col-span-5">
               <GlassCard className="relative overflow-hidden p-8" hoverEffect="scale">
-                <div className={`rounded-xl bg-gradient-to-tr ${study.coverColor} p-6 sm:p-8 flex flex-col justify-between text-white shadow-premium min-h-[280px]`}>
-                  <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl pointer-events-none" />
+                <div className="rounded-xl bg-gradient-to-tr from-brand-primary/10 via-brand-secondary/5 to-brand-accent/15 border border-slate-200/40 dark:border-white/10 p-6 sm:p-8 flex flex-col justify-between text-slate-800 dark:text-white shadow-premium min-h-[280px]">
+                  <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-brand-primary/5 rounded-full blur-2xl pointer-events-none" />
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-white/10 px-2.5 py-1 rounded">Featured Client</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-brand-primary/10 text-brand-primary px-2.5 py-1 rounded">Featured Client</span>
                     <h4 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-4 font-display">{study.client}</h4>
                   </div>
                   <div className="space-y-4">
                     {study.stats.map((stat, i) => (
-                      <div key={i} className="flex justify-between items-end border-b border-white/15 pb-2">
-                        <span className="text-xs text-white/70 font-semibold">{stat.label}</span>
-                        <span className="text-lg sm:text-xl font-extrabold">{stat.value}</span>
+                      <div key={i} className="flex justify-between items-end border-b border-slate-200/40 dark:border-white/10 pb-2">
+                        <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">{stat.label}</span>
+                        <span className="text-lg sm:text-xl font-extrabold text-brand-primary">{stat.value}</span>
                       </div>
                     ))}
                   </div>
