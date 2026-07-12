@@ -358,14 +358,14 @@ export default function Contact() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 relative z-10">
         <GlassCard className="p-0 overflow-hidden rounded-2xl h-[350px] sm:h-[450px]" hoverEffect="none">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d118944.52044812836!2d91.93240409890919!3d21.427845347209355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30adc7ea2ab114ef%3A0x3d6d55a1274533cf!2sCox&#39;s%20Bazar%2C%20Bangladesh!5e0!3m2!1sen!2sus!4v1710500000000!5m2!1sen!2sus"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3716.664795997418!2d92.07100457511362!3d21.324257580399998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30adc34f0598d58f%3A0xe4809bd721d06fbb!2sNextora%20Studio!5e0!3m2!1sen!2sus!4v1783876992779!5m2!1sen!2sus"
             width="100%"
             height="100%"
             style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(1.2)' }}
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Nextora Studio Global Operations Base"
+            title="Nextora Studio Head Office Coordinates"
           />
         </GlassCard>
       </section>
